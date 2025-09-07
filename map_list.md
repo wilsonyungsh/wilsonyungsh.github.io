@@ -17,4 +17,4 @@
 ## Shiny Dashboard
 | Name   | Link    |
 | :----:| :------ |
-| PT Service Explorer| https://wilsonyung.shinyapps.io/PT_Service_explorer/ |
+| PT Service Explorer| https://wilsonyung.shinyapps.io/BNE_PT_Service_explorer/ |
