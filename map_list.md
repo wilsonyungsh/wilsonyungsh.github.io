@@ -13,9 +13,10 @@
 |-|Bus Route Cumulative passenger count|R + Mapdeck|[Brisbane Bus Route 431](https://wilsonyungsh.github.io/interactive/bus431_capacity.html)|
 |-|2025 June PT usage by time bucket and trip directions|R + MapGL|[PT usage by time](https://wilsonyungsh.github.io/interactive/Commuting_trips.html)|
 |-|Dwelling Proportion by Motor Vehicle Ownership|R + Mapgl|[MV ownership 1 or no cars:](interactive/Dwelling_prop_by_mv_ownership/1orNoMV_dwellings.html)<br>[MV ownership 2 cars](interactive/Dwelling_prop_by_mv_ownership/2_vehicles_dwelling_prop_over_30pr.html)<br>[MV ownership 3+ cars](interactive/Dwelling_prop_by_mv_ownership/3_or_more_vehicles_dwelling_prop_over_15pr.html)|
-|-|Maps with Felicity|[interactive map](interactive/explore.html)|
+|-|Maps with Felicity|R + MapGL|[interactive map](interactive/explore.html)|
 
 ## Shiny Dashboard
-| Name   | Link    |
-| :----:| :------ |
-| PT Service Explorer| [dashboard](https://wilsonyung.shinyapps.io/BNE_PT_Service_explorer/) |
+
+|Name|Key usage|Link|
+|:----:|:------|:------:|
+|PT Service Explorer|- Explore Stop service level trend, such as maximum headway, total service count, hourly service count <br>- Explore Route extent |[dashboard](https://wilsonyung.shinyapps.io/BNE_PT_Service_explorer/) |
