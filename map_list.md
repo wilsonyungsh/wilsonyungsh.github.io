@@ -16,6 +16,7 @@
 |-|Maps with Felicity|R + MapGL|[interactive map](interactive/explore.html)|
 |-|Fly through example | R + MapGL |[flying map](interactive/apcs.html)
 
+For 30DayMapChallenge see [here](https://github.com/wilsonyungsh/30DayMapChallenge2025)
 
 ## Shiny Dashboard
 
