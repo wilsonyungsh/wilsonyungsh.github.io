@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Team Booking Calendar</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f5f5f5; padding: 2rem; color: #1a1a1a; }
+.cal-wrap { max-width: 760px; margin: 0 auto; background: #fff; border-radius: 12px; padding: 1.5rem; border: 1px solid #e0e0e0; }
+.cal-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.25rem; }
+.cal-title { font-size: 17px; font-weight: 600; color: #1a1a1a; }
+.cal-nav { display: flex; gap: 6px; }
+.cal-nav button { background: transparent; border: 1px solid #d0d0d0; border-radius: 8px; padding: 4px 12px; cursor: pointer; font-size: 13px; color: #555; }
+.cal-nav button:hover { background: #f0f0f0; }
+.cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 3px; }
+.cal-dow { text-align: center; font-size: 11px; color: #999; padding: 4px 0 6px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.03em; }
+.cal-day { min-height: 56px; border-radius: 8px; border: 1px solid #ebebeb; padding: 5px 6px; cursor: pointer; transition: border-color 0.15s; background: #fff; }
+.cal-day:hover { border-color: #bbb; }
+.cal-day.other-month { background: #fafafa; opacity: 0.45; cursor: default; pointer-events: none; }
+.cal-day.has-bookings { border-color: #93c5fd; }
+.cal-day.selected { border: 2px solid #3b82f6; background: #eff6ff; }
+.day-num { font-size: 12px; color: #888; margin-bottom: 3px; }
+.cal-day.selected .day-num { color: #1d4ed8; font-weight: 600; }
+.cal-day.today .day-num { color: #3b82f6; font-weight: 700; }
+.pip-row { display: flex; flex-wrap: wrap; gap: 2px; }
+.pip { width: 6px; height: 6px; border-radius: 50%; background: #3b82f6; }
+.panel { margin-top: 1.25rem; background: #fff; border: 1px solid #ebebeb; border-radius: 12px; padding: 1rem 1.25rem; min-height: 80px; }
+.panel-title { font-size: 13px; color: #888; margin-bottom: 10px; }
+.booking-list { display: flex; flex-direction: column; gap: 6px; }
+.booking-item { display: flex; align-items: center; gap: 10px; padding: 8px 12px; background: #f8f9fa; border-radius: 8px; }
+.avatar { width: 32px; height: 32px; border-radius: 50%; background: #dbeafe; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 600; color: #1d4ed8; flex-shrink: 0; }
+.booking-name { font-size: 13px; font-weight: 600; color: #1a1a1a; }
+.booking-seat { font-size: 12px; color: #777; }
+.empty-msg { font-size: 13px; color: #bbb; text-align: center; padding: 1rem 0; }
+.count-badge { display: inline-block; background: #dbeafe; color: #1d4ed8; font-size: 11px; font-weight: 600; border-radius: 20px; padding: 2px 8px; margin-left: 6px; }
+.last-updated { margin-top: 0.75rem; text-align: right; font-size: 11px; color: #bbb; }
+</style>
+</head>
+<body>
+<div class="cal-wrap">
+  <div class="cal-header">
+    <div class="cal-title" id="calTitle"></div>
+    <div class="cal-nav">
+      <button onclick="changeMonth(-1)">&#8592; Prev</button>
+      <button onclick="changeMonth(1)">Next &#8594;</button>
+    </div>
+  </div>
+  <div class="cal-grid" id="calGrid"></div>
+  <div class="panel" id="panel">
+    <div class="empty-msg">Select a date to see bookings</div>
+  </div>
+  <div class="last-updated">Last updated: <span id="lastUpdated">01 May 2026 16:47</span></div>
+</div>
+
+<script>
+// ── INJECT YOUR DATA HERE ──────────────────────────────────────────────────
+// In R: json_data <- toJSON(df[, c("workpoint","date","person","team")], dataframe="rows")
+// Then replace everything between the square brackets below with your json_data output.
+const DATA = [{"workpoint":"BSQ 08.074","date":"2026-05-01","person":"Aaron Lakeman","team":"RMU"},{"workpoint":"BSQ 08.074","date":"2026-05-08","person":"Aaron Lakeman","team":"RMU"},{"workpoint":"BSQ 08.074","date":"2026-05-11","person":"Aaron Lakeman","team":"RMU"},{"workpoint":"BSQ 08.073","date":"2026-05-14","person":"Aaron Lakeman","team":"RMU"},{"workpoint":"BSQ 08.074","date":"2026-05-15","person":"Aaron Lakeman","team":"RMU"},{"workpoint":"BSQ 08.074","date":"2026-05-18","person":"Aaron Lakeman","team":"RMU"},{"workpoint":"BSQ 08.074","date":"2026-05-21","person":"Aaron Lakeman","team":"RMU"},{"workpoint":"BSQ 08.074","date":"2026-05-22","person":"Aaron Lakeman","team":"RMU"},{"workpoint":"BSQ 08.074","date":"2026-05-25","person":"Aaron Lakeman","team":"RMU"},{"workpoint":"BSQ 08.074","date":"2026-05-28","person":"Aaron Lakeman","team":"RMU"},{"workpoint":"BSQ 08.074","date":"2026-05-29","person":"Aaron Lakeman","team":"RMU"},{"workpoint":"BSQ 08.065","date":"2026-05-01","person":"Alfred Gasore","team":"RMU"},{"workpoint":"BSQ 08.065","date":"2026-05-08","person":"Alfred Gasore","team":"RMU"},{"workpoint":"BSQ 08.065","date":"2026-05-11","person":"Alfred Gasore","team":"RMU"},{"workpoint":"BSQ 08.065","date":"2026-05-15","person":"Alfred Gasore","team":"RMU"},{"workpoint":"BSQ 08.065","date":"2026-05-18","person":"Alfred Gasore","team":"RMU"},{"workpoint":"BSQ 08.065","date":"2026-05-22","person":"Alfred Gasore","team":"RMU"},{"workpoint":"BSQ 08.065","date":"2026-05-25","person":"Alfred Gasore","team":"RMU"},{"workpoint":"BSQ 08.065","date":"2026-05-29","person":"Alfred Gasore","team":"RMU"},{"workpoint":"BSQ 08.072","date":"2026-05-01","person":"Andy Park","team":"RMU"},{"workpoint":"BSQ 08.072","date":"2026-05-05","person":"Andy Park","team":"RMU"},{"workpoint":"BSQ 08.072","date":"2026-05-07","person":"Andy Park","team":"RMU"},{"workpoint":"BSQ 08.072","date":"2026-05-08","person":"Andy Park","team":"RMU"},{"workpoint":"BSQ 08.072","date":"2026-05-11","person":"Andy Park","team":"RMU"},{"workpoint":"BSQ 08.072","date":"2026-05-14","person":"Andy Park","team":"RMU"},{"workpoint":"BSQ 08.072","date":"2026-05-15","person":"Andy Park","team":"RMU"},{"workpoint":"BSQ 08.071","date":"2026-05-05","person":"Avik Nandy","team":"RMU"},{"workpoint":"BSQ 08.070","date":"2026-05-08","person":"Avik Nandy","team":"RMU"},{"workpoint":"BSQ 08.070","date":"2026-05-11","person":"Avik Nandy","team":"RMU"},{"workpoint":"BSQ 08.070","date":"2026-05-14","person":"Avik Nandy","team":"RMU"},{"workpoint":"BSQ 08.070","date":"2026-05-15","person":"Avik Nandy","team":"RMU"},{"workpoint":"BSQ 08.070","date":"2026-05-18","person":"Avik Nandy","team":"RMU"},{"workpoint":"BSQ 08.070","date":"2026-05-21","person":"Avik Nandy","team":"RMU"},{"workpoint":"BSQ 08.070","date":"2026-05-22","person":"Avik Nandy","team":"RMU"},{"workpoint":"BSQ 08.070","date":"2026-05-25","person":"Avik Nandy","team":"RMU"},{"workpoint":"BSQ 08.070","date":"2026-05-28","person":"Avik Nandy","team":"RMU"},{"workpoint":"BSQ 08.070","date":"2026-05-29","person":"Avik Nandy","team":"RMU"},{"workpoint":"BSQ 08.076","date":"2026-05-01","person":"Christian Hill","team":"PU"},{"workpoint":"BSQ 08.070","date":"2026-05-07","person":"Christian Hill","team":"PU"},{"workpoint":"BSQ 08.076","date":"2026-05-08","person":"Christian Hill","team":"PU"},{"workpoint":"BSQ 08.076","date":"2026-05-18","person":"Christian Hill","team":"PU"},{"workpoint":"BSQ 08.076","date":"2026-05-22","person":"Christian Hill","team":"PU"},{"workpoint":"BSQ 08.076","date":"2026-05-25","person":"Christian Hill","team":"PU"},{"workpoint":"BSQ 08.076","date":"2026-05-29","person":"Christian Hill","team":"PU"},{"workpoint":"BSQ 08.075","date":"2026-05-08","person":"Kasey Seawright","team":"PU"},{"workpoint":"BSQ 08.075","date":"2026-05-11","person":"Kasey Seawright","team":"PU"},{"workpoint":"BSQ 08.075","date":"2026-05-14","person":"Kasey Seawright","team":"PU"},{"workpoint":"BSQ 08.075","date":"2026-05-15","person":"Kasey Seawright","team":"PU"},{"workpoint":"BSQ 08.075","date":"2026-05-18","person":"Kasey Seawright","team":"PU"},{"workpoint":"BSQ 08.075","date":"2026-05-22","person":"Kasey Seawright","team":"PU"},{"workpoint":"BSQ 08.075","date":"2026-05-25","person":"Kasey Seawright","team":"PU"},{"workpoint":"BSQ 08.075","date":"2026-05-29","person":"Kasey Seawright","team":"PU"},{"workpoint":"BSQ 08.068","date":"2026-05-01","person":"Kenny Fu","team":"RMU"},{"workpoint":"BSQ 08.068","date":"2026-05-05","person":"Kenny Fu","team":"RMU"},{"workpoint":"BSQ 08.068","date":"2026-05-07","person":"Kenny Fu","team":"RMU"},{"workpoint":"BSQ 08.068","date":"2026-05-08","person":"Kenny Fu","team":"RMU"},{"workpoint":"BSQ 08.068","date":"2026-05-11","person":"Kenny Fu","team":"RMU"},{"workpoint":"BSQ 08.068","date":"2026-05-14","person":"Kenny Fu","team":"RMU"},{"workpoint":"BSQ 08.068","date":"2026-05-15","person":"Kenny Fu","team":"RMU"},{"workpoint":"BSQ 08.068","date":"2026-05-18","person":"Kenny Fu","team":"RMU"},{"workpoint":"BSQ 08.068","date":"2026-05-21","person":"Kenny Fu","team":"RMU"},{"workpoint":"BSQ 08.068","date":"2026-05-22","person":"Kenny Fu","team":"RMU"},{"workpoint":"BSQ 08.068","date":"2026-05-25","person":"Kenny Fu","team":"RMU"},{"workpoint":"BSQ 08.068","date":"2026-05-28","person":"Kenny Fu","team":"RMU"},{"workpoint":"BSQ 08.068","date":"2026-05-29","person":"Kenny Fu","team":"RMU"},{"workpoint":"BSQ 08.066","date":"2026-05-01","person":"Mahsa Abdollahyar","team":"RMU"},{"workpoint":"BSQ 08.066","date":"2026-05-07","person":"Mahsa Abdollahyar","team":"RMU"},{"workpoint":"BSQ 08.066","date":"2026-05-08","person":"Mahsa Abdollahyar","team":"RMU"},{"workpoint":"BSQ 08.066","date":"2026-05-11","person":"Mahsa Abdollahyar","team":"RMU"},{"workpoint":"BSQ 08.066","date":"2026-05-14","person":"Mahsa Abdollahyar","team":"RMU"},{"workpoint":"BSQ 08.066","date":"2026-05-15","person":"Mahsa Abdollahyar","team":"RMU"},{"workpoint":"BSQ 08.066","date":"2026-05-18","person":"Mahsa Abdollahyar","team":"RMU"},{"workpoint":"BSQ 08.066","date":"2026-05-21","person":"Mahsa Abdollahyar","team":"RMU"},{"workpoint":"BSQ 08.066","date":"2026-05-22","person":"Mahsa Abdollahyar","team":"RMU"},{"workpoint":"BSQ 08.066","date":"2026-05-25","person":"Mahsa Abdollahyar","team":"RMU"},{"workpoint":"BSQ 08.066","date":"2026-05-28","person":"Mahsa Abdollahyar","team":"RMU"},{"workpoint":"BSQ 08.066","date":"2026-05-29","person":"Mahsa Abdollahyar","team":"RMU"},{"workpoint":"BSQ 08.065","date":"2026-05-05","person":"Michael Pendergast","team":"RMU"},{"workpoint":"BSQ 08.065","date":"2026-05-07","person":"Michael Pendergast","team":"RMU"},{"workpoint":"BSQ 08.073","date":"2026-05-11","person":"Michael Pendergast","team":"RMU"},{"workpoint":"BSQ 08.073","date":"2026-05-18","person":"Michael Pendergast","team":"RMU"},{"workpoint":"BSQ 08.073","date":"2026-05-25","person":"Michael Pendergast","team":"RMU"},{"workpoint":"BSQ 08.069","date":"2026-05-05","person":"Natasha Bowers","team":"PU"},{"workpoint":"BSQ 08.073","date":"2026-05-07","person":"Natasha Bowers","team":"PU"},{"workpoint":"BSQ 08.063","date":"2026-05-08","person":"Natasha Bowers","team":"PU"},{"workpoint":"BSQ 08.062","date":"2026-05-11","person":"Natasha Bowers","team":"PU"},{"workpoint":"BSQ 08.061","date":"2026-05-14","person":"Natasha Bowers","team":"PU"},{"workpoint":"BSQ 08.061","date":"2026-05-18","person":"Natasha Bowers","team":"PU"},{"workpoint":"BSQ 08.061","date":"2026-05-21","person":"Natasha Bowers","team":"PU"},{"workpoint":"BSQ 08.063","date":"2026-05-22","person":"Natasha Bowers","team":"PU"},{"workpoint":"BSQ 08.061","date":"2026-05-25","person":"Natasha Bowers","team":"PU"},{"workpoint":"BSQ 08.061","date":"2026-05-28","person":"Natasha Bowers","team":"PU"},{"workpoint":"BSQ 08.073","date":"2026-05-01","person":"Regina Mendoza","team":"PU"},{"workpoint":"BSQ 08.073","date":"2026-05-08","person":"Regina Mendoza","team":"PU"},{"workpoint":"BSQ 08.063","date":"2026-05-11","person":"Regina Mendoza","team":"PU"},{"workpoint":"BSQ 08.065","date":"2026-05-14","person":"Regina Mendoza","team":"PU"},{"workpoint":"BSQ 08.073","date":"2026-05-15","person":"Regina Mendoza","team":"PU"},{"workpoint":"BSQ 08.063","date":"2026-05-18","person":"Regina Mendoza","team":"PU"},{"workpoint":"BSQ 08.073","date":"2026-05-22","person":"Regina Mendoza","team":"PU"},{"workpoint":"BSQ 08.063","date":"2026-05-25","person":"Regina Mendoza","team":"PU"},{"workpoint":"BSQ 08.073","date":"2026-05-29","person":"Regina Mendoza","team":"PU"},{"workpoint":"BSQ 08.070","date":"2026-05-01","person":"Stephanie  Breuer","team":"PU"},{"workpoint":"BSQ 08.067","date":"2026-05-07","person":"Stephanie  Breuer","team":"PU"},{"workpoint":"BSQ 08.064","date":"2026-05-08","person":"Stephanie  Breuer","team":"PU"},{"workpoint":"BSQ 08.064","date":"2026-05-11","person":"Stephanie  Breuer","team":"PU"},{"workpoint":"BSQ 08.067","date":"2026-05-14","person":"Stephanie  Breuer","team":"PU"},{"workpoint":"BSQ 08.064","date":"2026-05-15","person":"Stephanie  Breuer","team":"PU"},{"workpoint":"BSQ 08.064","date":"2026-05-18","person":"Stephanie  Breuer","team":"PU"},{"workpoint":"BSQ 08.067","date":"2026-05-21","person":"Stephanie  Breuer","team":"PU"},{"workpoint":"BSQ 08.064","date":"2026-05-25","person":"Stephanie  Breuer","team":"PU"},{"workpoint":"BSQ 08.067","date":"2026-05-28","person":"Stephanie  Breuer","team":"PU"},{"workpoint":"BSQ 08.064","date":"2026-05-29","person":"Stephanie  Breuer","team":"PU"},{"workpoint":"BSQ 08.071","date":"2026-05-07","person":"Stephen Price","team":"RMU"},{"workpoint":"BSQ 08.071","date":"2026-05-08","person":"Stephen Price","team":"RMU"},{"workpoint":"BSQ 08.071","date":"2026-05-11","person":"Stephen Price","team":"RMU"},{"workpoint":"BSQ 08.071","date":"2026-05-12","person":"Stephen Price","team":"RMU"},{"workpoint":"BSQ 08.071","date":"2026-05-14","person":"Stephen Price","team":"RMU"},{"workpoint":"BSQ 08.071","date":"2026-05-15","person":"Stephen Price","team":"RMU"},{"workpoint":"BSQ 08.071","date":"2026-05-18","person":"Stephen Price","team":"RMU"},{"workpoint":"BSQ 08.071","date":"2026-05-19","person":"Stephen Price","team":"RMU"},{"workpoint":"BSQ 08.071","date":"2026-05-21","person":"Stephen Price","team":"RMU"},{"workpoint":"BSQ 08.071","date":"2026-05-22","person":"Stephen Price","team":"RMU"},{"workpoint":"BSQ 08.071","date":"2026-05-25","person":"Stephen Price","team":"RMU"},{"workpoint":"BSQ 08.071","date":"2026-05-26","person":"Stephen Price","team":"RMU"},{"workpoint":"BSQ 08.071","date":"2026-05-28","person":"Stephen Price","team":"RMU"},{"workpoint":"BSQ 08.071","date":"2026-05-29","person":"Stephen Price","team":"RMU"},{"workpoint":"BSQ 08.071","date":"2026-05-01","person":"Suvela Tieken","team":"PU"},{"workpoint":"BSQ 08.066","date":"2026-05-05","person":"Suvela Tieken","team":"PU"},{"workpoint":"BSQ 08.070","date":"2026-05-05","person":"Suvela Tieken","team":"PU"},{"workpoint":"BSQ 08.074","date":"2026-05-07","person":"Suvela Tieken","team":"PU"},{"workpoint":"BSQ 08.062","date":"2026-05-08","person":"Suvela Tieken","team":"PU"},{"workpoint":"BSQ 08.061","date":"2026-05-11","person":"Suvela Tieken","team":"PU"},{"workpoint":"BSQ 08.074","date":"2026-05-14","person":"Suvela Tieken","team":"PU"},{"workpoint":"BSQ 08.076","date":"2026-05-15","person":"Suvela Tieken","team":"PU"},{"workpoint":"BSQ 08.062","date":"2026-05-18","person":"Suvela Tieken","team":"PU"},{"workpoint":"BSQ 08.062","date":"2026-05-22","person":"Suvela Tieken","team":"PU"},{"workpoint":"BSQ 08.062","date":"2026-05-25","person":"Suvela Tieken","team":"PU"},{"workpoint":"BSQ 08.062","date":"2026-05-29","person":"Suvela Tieken","team":"PU"},{"workpoint":"BSQ 08.067","date":"2026-05-01","person":"Vasilios Bourdaniotis","team":"RMU"},{"workpoint":"BSQ 08.067","date":"2026-05-05","person":"Vasilios Bourdaniotis","team":"RMU"},{"workpoint":"BSQ 08.067","date":"2026-05-08","person":"Vasilios Bourdaniotis","team":"RMU"},{"workpoint":"BSQ 08.067","date":"2026-05-11","person":"Vasilios Bourdaniotis","team":"RMU"},{"workpoint":"BSQ 08.067","date":"2026-05-15","person":"Vasilios Bourdaniotis","team":"RMU"},{"workpoint":"BSQ 08.067","date":"2026-05-18","person":"Vasilios Bourdaniotis","team":"RMU"},{"workpoint":"BSQ 08.067","date":"2026-05-22","person":"Vasilios Bourdaniotis","team":"RMU"},{"workpoint":"BSQ 08.067","date":"2026-05-25","person":"Vasilios Bourdaniotis","team":"RMU"},{"workpoint":"BSQ 08.067","date":"2026-05-29","person":"Vasilios Bourdaniotis","team":"RMU"},{"workpoint":"BSQ 08.069","date":"2026-05-01","person":"Wilson Yung","team":"RMU"},{"workpoint":"BSQ 08.069","date":"2026-05-07","person":"Wilson Yung","team":"RMU"},{"workpoint":"BSQ 08.069","date":"2026-05-08","person":"Wilson Yung","team":"RMU"},{"workpoint":"BSQ 08.069","date":"2026-05-11","person":"Wilson Yung","team":"RMU"},{"workpoint":"BSQ 08.069","date":"2026-05-14","person":"Wilson Yung","team":"RMU"},{"workpoint":"BSQ 08.069","date":"2026-05-15","person":"Wilson Yung","team":"RMU"},{"workpoint":"BSQ 08.069","date":"2026-05-18","person":"Wilson Yung","team":"RMU"},{"workpoint":"BSQ 08.069","date":"2026-05-21","person":"Wilson Yung","team":"RMU"},{"workpoint":"BSQ 08.069","date":"2026-05-22","person":"Wilson Yung","team":"RMU"},{"workpoint":"BSQ 08.069","date":"2026-05-25","person":"Wilson Yung","team":"RMU"},{"workpoint":"BSQ 08.069","date":"2026-05-28","person":"Wilson Yung","team":"RMU"},{"workpoint":"BSQ 08.069","date":"2026-05-29","person":"Wilson Yung","team":"RMU"}];
+// ──────────────────────────────────────────────────────────────────────────
+
+const MONTHS = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+const DOWS = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+
+// Index bookings by date string
+function buildIndex(data) {
+  const m = {};
+  data.forEach(r => {
+    const key = String(r.date).slice(0, 10); // handles Date objects or strings
+    if (!m[key]) m[key] = [];
+    m[key].push(r);
+  });
+  return m;
+}
+const indexed = buildIndex(DATA);
+
+// ── Timezone-safe local ISO date (fixes off-by-one) ──────────────────────
+function localISO(date) {
+  return date.getFullYear() + '-' +
+    String(date.getMonth() + 1).padStart(2, '0') + '-' +
+    String(date.getDate()).padStart(2, '0');
+}
+
+function initials(name) {
+  return name.split(' ').map(p => p[0]).join('').toUpperCase().slice(0, 2);
+}
+
+const todayISO = localISO(new Date());
+let cur = (function() {
+  // Default to current month, or first month with data if DATA is populated
+  if (DATA.length > 0) {
+    const dates = Object.keys(indexed).sort();
+    const d = new Date(dates[0] + 'T00:00:00');
+    return new Date(d.getFullYear(), d.getMonth(), 1);
+  }
+  const n = new Date();
+  return new Date(n.getFullYear(), n.getMonth(), 1);
+})();
+
+let selectedDate = null;
+
+function renderCalendar() {
+  const grid = document.getElementById('calGrid');
+  const title = document.getElementById('calTitle');
+  grid.innerHTML = '';
+  title.textContent = MONTHS[cur.getMonth()] + ' ' + cur.getFullYear();
+
+  DOWS.forEach(d => {
+    const el = document.createElement('div');
+    el.className = 'cal-dow';
+    el.textContent = d;
+    grid.appendChild(el);
+  });
+
+  const first = new Date(cur.getFullYear(), cur.getMonth(), 1);
+  const last  = new Date(cur.getFullYear(), cur.getMonth() + 1, 0);
+  const startDow = first.getDay();
+
+  for (let i = 0; i < startDow; i++) {
+    const prev = new Date(cur.getFullYear(), cur.getMonth(), i - startDow + 1);
+    grid.appendChild(makeDayEl(prev, true));
+  }
+  for (let d = 1; d <= last.getDate(); d++) {
+    grid.appendChild(makeDayEl(new Date(cur.getFullYear(), cur.getMonth(), d), false));
+  }
+  const remaining = 42 - (startDow + last.getDate());
+  for (let i = 1; i <= remaining; i++) {
+    grid.appendChild(makeDayEl(new Date(cur.getFullYear(), cur.getMonth() + 1, i), true));
+  }
+}
+
+function makeDayEl(date, other) {
+  const el = document.createElement('div');
+  const iso = localISO(date); // ← timezone-safe
+  const bookings = indexed[iso] || [];
+
+  let cls = 'cal-day';
+  if (other)            cls += ' other-month';
+  if (bookings.length)  cls += ' has-bookings';
+  if (iso === todayISO) cls += ' today';
+  if (iso === selectedDate) cls += ' selected';
+  el.className = cls;
+
+  const num = document.createElement('div');
+  num.className = 'day-num';
+  num.textContent = date.getDate();
+  el.appendChild(num);
+
+  if (bookings.length) {
+    const pips = document.createElement('div');
+    pips.className = 'pip-row';
+    const show = Math.min(bookings.length, 7);
+    for (let i = 0; i < show; i++) {
+      const p = document.createElement('div');
+      p.className = 'pip';
+      pips.appendChild(p);
+    }
+    el.appendChild(pips);
+  }
+
+  if (!other) {
+    el.onclick = () => {
+      selectedDate = iso;
+      renderCalendar();
+      showPanel(iso, bookings);
+    };
+  }
+  return el;
+}
+
+function showPanel(iso, bookings) {
+  const panel = document.getElementById('panel');
+  // Parse as local time
+  const [y, mo, d] = iso.split('-').map(Number);
+  const date = new Date(y, mo - 1, d);
+  const label = date.toLocaleDateString('en-AU', {
+    weekday: 'long', day: 'numeric', month: 'long', year: 'numeric'
+  });
+
+  if (!bookings.length) {
+    panel.innerHTML = '<div class="panel-title">' + label + '</div><div class="empty-msg">No bookings on this day</div>';
+    return;
+  }
+
+  const count = bookings.length;
+  const items = bookings.map(b => {
+    const ini = initials(b.person);
+    return `<div class="booking-item">
+      <div class="avatar">${ini}</div>
+      <div>
+        <div class="booking-name">${b.person}</div>
+        <div class="booking-seat">${b.workpoint}${b.team ? ' &middot; ' + b.team : ''}</div>
+      </div>
+    </div>`;
+  }).join('');
+
+  panel.innerHTML = `
+    <div class="panel-title">${label} <span class="count-badge">${count} booking${count > 1 ? 's' : ''}</span></div>
+    <div class="booking-list">${items}</div>`;
+}
+
+function changeMonth(dir) {
+  cur = new Date(cur.getFullYear(), cur.getMonth() + dir, 1);
+  renderCalendar();
+}
+
+renderCalendar();
+</script>
+</body>
+</html>
