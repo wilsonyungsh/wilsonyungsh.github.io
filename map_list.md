@@ -23,3 +23,9 @@ For 30DayMapChallenge see [here](https://github.com/wilsonyungsh/30DayMapChallen
 |Name|Key usage|Link|
 |:----:|:------|:------:|
 |PT Service Explorer|- Explore Stop service level trend, such as maximum headway, total service count, hourly service count <br>- Explore Route extent |[dashboard](https://wilsonyung.shinyapps.io/BNE_PT_Service_explorer/) |
+
+
+## Some Pilot little helper tool
+|Name|Key usage|Link|
+|:----:|:------|:------:|
+|BCC RMU Hotdesk Booking Query| Easier view, with last update|[page](https://wilsonyungsh.github.io/interactive/team_calendar.html)|
