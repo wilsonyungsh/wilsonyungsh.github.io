@@ -29,3 +29,4 @@ For 30DayMapChallenge see [here](https://github.com/wilsonyungsh/30DayMapChallen
 |Name|Key usage|Link|
 |:----:|:------|:------:|
 |BCC RMU Hotdesk Booking Query| Easier view, with last update|[page](https://wilsonyungsh.github.io/interactive/team_calendar.html)|
+|BCC Lvl 8 Hotdesk Booking Query| Easier view, with last update|[page](https://wilsonyungsh.github.io/interactive/team_calendar_lv8.html)|
