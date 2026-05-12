@@ -22,11 +22,11 @@ For 30DayMapChallenge see [here](https://github.com/wilsonyungsh/30DayMapChallen
 
 |Name|Key usage|Link|
 |:----:|:------|:------:|
-|PT Service Explorer|- Explore Stop service level trend, such as maximum headway, total service count, hourly service count <br>- Explore Route extent |[dashboard](https://wilsonyung.shinyapps.io/BNE_PT_Service_explorer/) |
+|PT Service Explorer|- Explore Stop service level trend, such as maximum headway, total service count, hourly service count <br>- Explore Route geometry extent <br>- Switchable layers <br>- Slider bar for hightlighting stops based on service frequency criteria <br>- Auto-zoom to route or stops in query|[dashboard](https://wilsonyung.shinyapps.io/BNE_PT_Service_explorer/) <br>[HF dashboard](https://huggingface.co/spaces/wilsonyung/bne_pt_service_explorer)</br> |
 
 ## Some Pilot little helper tool
 
 |Name|Key usage|Link|
 |:----:|:------|:------:|
-|BCC RMU Hotdesk Booking Query| Easier view, with last update|[page](https://wilsonyungsh.github.io/interactive/team_calendar.html)|
+|BCC RMU Hotdesk Booking Query| Easier view, with last update for our team|[page](https://wilsonyungsh.github.io/interactive/team_calendar.html)|
 |BCC Lvl 8 Hotdesk Booking Query| Easier view, with last update|[page](https://wilsonyungsh.github.io/interactive/team_calendar_lv8.html)|
