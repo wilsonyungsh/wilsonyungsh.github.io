@@ -13,7 +13,7 @@
 | Day 29 | Overturemaps | R + Mapdeck | [Greater Taipei Buidling Height](https://wilsonyungsh.github.io/interactive/Map29.html)|
 |2025 Map Challenge|
 | Day 1 | OvertureMap|R + duckdb + mapgl|[Ipswich Suburb Address Count Map](https://wilsonyungsh.github.io/interactive/30DayMapChallenge2025/map1_ipswich_address_map.html)|
-| Day 3 | R + duckdb + mapgl|OvertureMap|[South East Queensland Address Density Map](https://wilsonyungsh.github.io/interactive/30DayMapChallenge2025/map3_address_density_map.html)|
+| Day 3 | OvertureMap | R + duckdb + mapgl|[South East Queensland Address Density Map](https://wilsonyungsh.github.io/interactive/30DayMapChallenge2025/map3_address_density_map.html)|
 | Day 4| My Data - GoogleTimeline | R + Mapdeck |[My footprint 2013-2025](https://wilsonyungsh.github.io/interactive/30DayMapChallenge2025/Map4_Mydata_2013-2025.html)|
 |Others|
 |-|Bus Route Cumulative passenger count|R + Mapdeck|[Brisbane Bus Route 431](https://wilsonyungsh.github.io/interactive/bus431_capacity.html)|
