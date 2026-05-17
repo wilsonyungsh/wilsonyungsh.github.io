@@ -1,101 +1,144 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
-<head><meta charset="UTF-8"><title>東京旅遊費用明細 2026</title>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>東京旅遊費用明細 2026</title>
 <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
 <style>
-body{font-family:"Noto Sans TC","PingFang TC",sans-serif;max-width:900px;margin:40px auto;padding:0 24px;font-size:14px;color:#1a1917;background:#faf8f3;}
-h1{font-size:22px;font-weight:600;margin-bottom:4px;}
-.sub{color:#888;font-size:13px;margin-bottom:28px;}
-.btn{display:inline-flex;align-items:center;gap:7px;background:#1d6f42;color:#fff;font-size:13px;font-weight:600;font-family:inherit;padding:8px 18px;border-radius:6px;border:none;cursor:pointer;margin-bottom:24px;}
-table{width:100%;border-collapse:collapse;margin-bottom:28px;}
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600;700&display=swap');
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:"Noto Sans TC","PingFang TC",sans-serif;max-width:960px;margin:40px auto;padding:0 32px 60px;font-size:14px;color:#1a1917;background:#faf8f3;}
+h1{font-size:22px;font-weight:700;margin-bottom:4px;}
+.sub{color:#888;font-size:13px;margin-bottom:12px;}
+.rate-note{font-size:12px;background:#e8f0fe;border:1px solid #c5d8fc;border-radius:6px;padding:8px 14px;display:inline-block;color:#1a4db5;margin-bottom:20px;line-height:1.6;}
+.btn{display:inline-flex;align-items:center;gap:7px;background:#1d6f42;color:#fff;font-size:13px;font-weight:600;font-family:inherit;padding:8px 18px;border-radius:6px;border:none;cursor:pointer;margin-bottom:28px;}
+.btn:hover{background:#155534;}
+.section{font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#888;margin:28px 0 10px;padding-bottom:7px;border-bottom:1.5px solid #e8e4da;}
+table{width:100%;border-collapse:collapse;margin-bottom:6px;}
 th{background:#1a1917;color:#faf8f3;font-size:12px;padding:9px 14px;text-align:left;font-weight:600;}
-td{padding:9px 14px;border-bottom:1px solid #e8e4da;font-size:13px;}
+th.r{text-align:right;}
+td{padding:8px 14px;border-bottom:1px solid #e8e4da;font-size:13px;vertical-align:top;}
+td.r{text-align:right;font-variant-numeric:tabular-nums;}
+td.jpy{text-align:right;color:#666;font-size:12px;font-variant-numeric:tabular-nums;}
 tr:last-child td{border-bottom:none;}
-.total td{font-weight:700;background:#f0ede5;}
-.section{font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#888;margin:24px 0 10px;border-bottom:1px solid #e8e4da;padding-bottom:6px;}
-.right{text-align:right;}
-.green{color:#1a5c38;}
-.orange{color:#856404;}
-.red{color:#a32d2d;}
+.subtotal td{font-weight:600;background:#f7f5f0;border-top:1.5px solid #c8c4bc;}
+.grand td{font-weight:700;background:#1a1917;color:#faf8f3;font-size:14px;padding:12px 14px;}
+.grand td.r{color:#4a9eff;}
+.grand td.jpy{color:#f0a500;font-size:13px;}
+.badge-done{display:inline-block;background:#e8f5ed;color:#1a5c38;font-size:10px;font-weight:700;padding:1px 6px;border-radius:3px;margin-left:5px;}
+.badge-pend{display:inline-block;background:#fff3cd;color:#856404;font-size:10px;font-weight:700;padding:1px 6px;border-radius:3px;margin-left:5px;}
+.badge-est{display:inline-block;background:#f0ede5;color:#888;font-size:10px;font-weight:600;padding:1px 6px;border-radius:3px;margin-left:5px;}
+.note-row td{font-size:11px;color:#aaa;padding:3px 14px 8px;border-bottom:none;background:transparent;}
 </style>
 </head>
 <body>
+
 <h1>東京家庭旅遊 2026 — 費用明細</h1>
-<div class="sub">2大人 + 1小孩（8歲） · 6/14–6/26 · 布里斯本出發</div>
-<button class="btn" onclick="dl()">⬇ 下載 Excel</button>
+<div class="sub">2大人 + 1小孩（8歲）· 6/14–6/26 · 布里斯本出發 · 不含機票</div>
+<div class="rate-note">
+  💳 <strong>Macquarie Mastercard 匯率</strong>：1 AUD = ¥113.47（2026年5月17日 mid-market）<br>
+  Macquarie 使用 Mastercard 網絡匯率，接近市場中間價，無額外外匯手續費。<br>
+  實際扣款匯率以交易當日為準，建議留意旅遊期間匯率波動。
+</div>
+
+<button class="btn" onclick="exportExcel()">
+  <svg width="15" height="15" viewBox="0 0 16 16" fill="none"><rect x="1" y="1" width="14" height="14" rx="2" fill="#155534"/><path d="M4 5l2.5 3L4 11h1.5l1.75-2.2L9 11h1.5L8 8l2.5-3H9L7.25 7.2 5.5 5H4z" fill="white"/></svg>
+  下載 Excel
+</button>
 
 <div class="section">住宿 Accommodation</div>
-<table id="t1">
-<tr><th>段</th><th>住宿</th><th>日期</th><th>晚數</th><th>付款狀態</th><th class="right">金額 AUD</th></tr>
-<tr><td>第一段</td><td>hotel MONday Premium Ueno</td><td>6/14–6/17</td><td>3</td><td class="orange">Klook已付（確認碼FKT130221）</td><td class="right">待確認</td></tr>
-<tr><td>第二段</td><td>ibis Styles Tokyo Bay</td><td>6/17（1晚）</td><td>1</td><td class="orange">到店付</td><td class="right">$175.77</td></tr>
-<tr><td>第二段</td><td>ibis Styles Tokyo Bay</td><td>6/18–20（3晚）</td><td>3</td><td class="green">已付</td><td class="right">$713.67</td></tr>
-<tr><td>第三段</td><td>Mario主題公寓 新宿御苑前</td><td>6/21–6/26</td><td>6</td><td class="green">已付（確認碼5930380389）</td><td class="right">$1,096.00</td></tr>
-<tr class="total"><td colspan="5">住宿小計（不含MONday）</td><td class="right">~$1,985+</td></tr>
+<table id="t_accom">
+  <tr><th>住宿</th><th>日期</th><th>晚</th><th>狀態</th><th class="r">AUD</th><th class="r">JPY</th></tr>
+  <tr><td>hotel MONday Premium Ueno<br><span style="font-size:11px;color:#888">確認碼 FCC858691 · 無早餐</span></td><td>6/14–6/17</td><td>3</td><td><span class="badge-done">✓</span></td><td class="r">$820.44</td><td class="jpy">¥93,095</td></tr>
+  <tr><td>ibis Styles Tokyo Bay（到店付）<br><span style="font-size:11px;color:#888">6/17 Standard Twin</span></td><td>6/17</td><td>1</td><td><span class="badge-done">✓</span> 含早</td><td class="r">$175.77</td><td class="jpy">¥19,945</td></tr>
+  <tr><td>ibis Styles Tokyo Bay<br><span style="font-size:11px;color:#888">6/18–20 Superior 3 Single Beds</span></td><td>6/18–20</td><td>3</td><td><span class="badge-done">✓ 已付</span> 含早</td><td class="r">$713.67</td><td class="jpy">¥80,980</td></tr>
+  <tr><td>Mario主題公寓 新宿御苑前<br><span style="font-size:11px;color:#888">確認碼 5930380389</span></td><td>6/21–6/26</td><td>6</td><td><span class="badge-done">✓ 已付</span></td><td class="r">$1,096.00</td><td class="jpy">¥124,363</td></tr>
+  <tr class="subtotal"><td colspan="4">住宿小計</td><td class="r">$2,805.88</td><td class="jpy">¥318,383</td></tr>
 </table>
 
-<div class="section">票務 Tickets（已購）</div>
-<table id="t2">
-<tr><th>項目</th><th>日期</th><th>平台</th><th>確認碼</th><th>成人</th><th>兒童</th><th class="right">合計 JPY</th></tr>
-<tr><td>東京迪士尼海洋 DisneySea</td><td>6/18</td><td>Klook</td><td>EZQ795906</td><td>¥9,400×2</td><td>¥5,600</td><td class="right">¥24,400</td></tr>
-<tr><td>東京迪士尼樂園 Disneyland</td><td>6/19</td><td>Klook</td><td>CHA801386</td><td>¥9,400×2</td><td>¥5,600</td><td class="right">¥24,400</td></tr>
-<tr><td>teamLab Planets 豐洲</td><td>6/20 15:30</td><td>KKday</td><td>KKDAY-20260517-626W</td><td colspan="2">大人×2 兒童×1</td><td class="right">已付</td></tr>
-<tr class="total"><td colspan="6">迪士尼票合計</td><td class="right">¥48,800<br>~AUD $460</td></tr>
+<div class="section">票務（已確認）Tickets Confirmed</div>
+<table id="t_tick_done">
+  <tr><th>項目</th><th>日期</th><th>人數</th><th>來源</th><th class="r">AUD</th><th class="r">JPY</th></tr>
+  <tr><td>東京迪士尼海洋 DisneySea<br><span style="font-size:11px;color:#888">Klook · EZQ795906</span></td><td>6/18</td><td>大人×2 兒童×1</td><td><span class="badge-done">✓ Klook</span></td><td class="r">$215.03</td><td class="jpy">¥24,400</td></tr>
+  <tr><td>東京迪士尼樂園 Disneyland<br><span style="font-size:11px;color:#888">Klook · CHA801386</span></td><td>6/19</td><td>大人×2 兒童×1</td><td><span class="badge-done">✓ Klook</span></td><td class="r">$215.03</td><td class="jpy">¥24,400</td></tr>
+  <tr><td>teamLab Planets 豐洲 15:30場<br><span style="font-size:11px;color:#888">KKday · KKDAY-20260517-626W</span></td><td>6/20</td><td>大人×2 兒童×1</td><td><span class="badge-done">✓ KKday</span></td><td class="r">$90.78</td><td class="jpy">¥10,301</td></tr>
+  <tr class="subtotal"><td colspan="4">已確認票務小計</td><td class="r">$520.84</td><td class="jpy">¥59,101</td></tr>
 </table>
 
-<div class="section">票務（待訂）</div>
-<table id="t3">
-<tr><th>項目</th><th>日期</th><th>購票方式</th><th>成人</th><th>兒童</th><th class="right">估計 JPY</th></tr>
-<tr><td>藤子・F・不二雄博物館</td><td>6/22</td><td>Lawson / fujiko-museum.com</td><td>¥1,000</td><td>¥700</td><td class="right">¥2,700</td></tr>
-<tr><td>SHIBUYA SKY</td><td>6/21</td><td>shibuya-scramble-square.com</td><td>¥2,000×2</td><td>¥1,200</td><td class="right">¥5,200</td></tr>
-<tr><td>東京晴空塔</td><td>6/15</td><td>官網 / Klook</td><td>¥2,100×2</td><td>¥950</td><td class="right">¥5,150</td></tr>
-<tr><td>Cappy Café</td><td>6/21</td><td>官網預約</td><td colspan="2">依菜單</td><td class="right">—</td></tr>
-<tr class="total"><td colspan="5">待訂票務小計</td><td class="right">~¥13,050<br>~AUD $124</td></tr>
+<div class="section">票務（待訂）Tickets Pending</div>
+<table id="t_tick_pend">
+  <tr><th>項目</th><th>日期</th><th>人數</th><th>購票方式</th><th class="r">AUD（估）</th><th class="r">JPY</th></tr>
+  <tr><td>SHIBUYA SKY</td><td>6/21</td><td>大人×2 兒童×1</td><td><span class="badge-pend">待訂</span> 官網</td><td class="r">~$45.83</td><td class="jpy">¥5,200</td></tr>
+  <tr><td>藤子・F・不二雄博物館</td><td>6/22</td><td>大人×2 兒童×1</td><td><span class="badge-pend">待訂</span> Lawson/官網</td><td class="r">~$23.79</td><td class="jpy">¥2,700</td></tr>
+  <tr><td>富士山箱根 Day Tour<br><span style="font-size:11px;color:#888">Klook 搜「富士山箱根一日遊 東京出發」</span></td><td>6/24或6/25</td><td>3人</td><td><span class="badge-pend">待訂</span> Klook</td><td class="r">~$237.95</td><td class="jpy">¥27,000</td></tr>
+  <tr><td>東京晴空塔 Tokyo Skytree</td><td>6/15</td><td>大人×2 兒童×1</td><td><span class="badge-pend">待訂</span> 官網/Klook</td><td class="r">~$45.39</td><td class="jpy">¥5,150</td></tr>
+  <tr><td>Cappy Café</td><td>6/21</td><td>3人</td><td><span class="badge-pend">待訂</span> 官網預約</td><td class="r">~$44.06</td><td class="jpy">¥5,000</td></tr>
+  <tr class="subtotal"><td colspan="4">待訂票務小計</td><td class="r">~$397.02</td><td class="jpy">¥45,050</td></tr>
 </table>
 
 <div class="section">交通 Transport（估算）</div>
-<table id="t4">
-<tr><th>項目</th><th>說明</th><th class="right">估計 AUD</th></tr>
-<tr><td>成田 N'EX × 2（去回）</td><td>¥3,070/人 × 2 × 2大 + 兒童優惠</td><td class="right">~$115</td></tr>
-<tr><td>Suica 儲值</td><td>一家三口整趟行程電車</td><td class="right">~$150</td></tr>
-<tr><td>迪士尼接駁（含）</td><td>ibis住客免費</td><td class="right">$0</td></tr>
-<tr><td>ゆりかもめ（台場）</td><td>新橋↔台場↔新豐洲</td><td class="right">~$15</td></tr>
-<tr class="total"><td colspan="2">交通小計</td><td class="right">~$280</td></tr>
+<table id="t_transport">
+  <tr><th>項目</th><th colspan="2">說明</th><th class="r">AUD（估）</th><th class="r">JPY（估）</th></tr>
+  <tr><td>成田特快 N'EX × 去回</td><td colspan="2">大人×2 兒童×1 來回</td><td class="r">~$158.63</td><td class="jpy">¥18,000</td></tr>
+  <tr><td>Suica 儲值（3人）</td><td colspan="2">整趟行程市區電車</td><td class="r">~$264.39</td><td class="jpy">¥30,000</td></tr>
+  <tr><td>其他（ゆりかもめ・巴士等）</td><td colspan="2">台場・豐洲・其他</td><td class="r">~$88.13</td><td class="jpy">¥10,000</td></tr>
+  <tr class="subtotal"><td colspan="3">交通小計</td><td class="r">~$511.15</td><td class="jpy">¥58,000</td></tr>
 </table>
 
-<div class="section">餐食估算 Food</div>
-<table id="t5">
-<tr><th>說明</th><th class="right">估計 AUD</th></tr>
-<tr><td>早餐（ibis 4晚含早餐，MONday / Mario公寓 便利商店）</td><td class="right">~$80</td></tr>
-<tr><td>午晚餐（一家三口 ~$80/天 × 13天，含外食）</td><td class="right">~$1,040</td></tr>
-<tr class="total"><td>餐食小計</td><td class="right">~$1,120</td></tr>
+<div class="section">餐食 Food（估算）</div>
+<table id="t_food">
+  <tr><th>項目</th><th colspan="2">說明</th><th class="r">AUD（估）</th><th class="r">JPY（估）</th></tr>
+  <tr><td>早餐</td><td colspan="2">ibis含早4天；其餘便利商店/自煮（Mario公寓有廚房）</td><td class="r">~$176.46</td><td class="jpy">¥20,000</td></tr>
+  <tr><td>午晚餐</td><td colspan="2">一家三口約¥5,000/天 × 13天</td><td class="r">~$572.64</td><td class="jpy">¥65,000</td></tr>
+  <tr class="subtotal"><td colspan="3">餐食小計</td><td class="r">~$749.10</td><td class="jpy">¥85,000</td></tr>
 </table>
 
-<div class="section">總計 Summary</div>
-<table id="t6">
-<tr><th>項目</th><th class="right">AUD</th></tr>
-<tr><td>住宿（不含MONday第一段）</td><td class="right">~$1,985+</td></tr>
-<tr><td>迪士尼票（已付）</td><td class="right">~$460</td></tr>
-<tr><td>teamLab（已付）</td><td class="right">已含</td></tr>
-<tr><td>待訂票務</td><td class="right">~$124</td></tr>
-<tr><td>交通</td><td class="right">~$280</td></tr>
-<tr><td>餐食</td><td class="right">~$1,120</td></tr>
-<tr><td>購物/伴手禮</td><td class="right">~$600</td></tr>
-<tr class="total"><td><strong>總計（不含機票 + MONday）</strong></td><td class="right"><strong>~AUD $4,569+</strong></td></tr>
+<div class="section">購物 Shopping（估算）</div>
+<table id="t_shopping">
+  <tr><th>項目</th><th class="r">AUD（估）</th><th class="r">JPY（估）</th></tr>
+  <tr><td>伴手禮・紀念品・個人消費 <span class="badge-est">估算</span></td><td class="r">~$528.77</td><td class="jpy">¥60,000</td></tr>
+  <tr class="subtotal"><td>購物小計</td><td class="r">~$528.77</td><td class="jpy">¥60,000</td></tr>
 </table>
 
-<p style="font-size:12px;color:#888;margin-top:16px">匯率參考：1 USD ≈ 1.42 AUD · 1 AUD ≈ ¥94（2026/05）</p>
+<div class="section">費用總計 Grand Total</div>
+<table id="t_total">
+  <tr><th>分類</th><th class="r">AUD</th><th class="r">JPY（參考）</th></tr>
+  <tr><td>住宿（全部已確認）</td><td class="r">$2,805.88</td><td class="jpy">¥318,383</td></tr>
+  <tr><td>票務（已確認）</td><td class="r">$520.84</td><td class="jpy">¥59,101</td></tr>
+  <tr><td>票務（待訂・估）</td><td class="r">~$397.02</td><td class="jpy">¥45,050</td></tr>
+  <tr><td>交通（估）</td><td class="r">~$511.15</td><td class="jpy">¥58,000</td></tr>
+  <tr><td>餐食（估）</td><td class="r">~$749.10</td><td class="jpy">¥85,000</td></tr>
+  <tr><td>購物（估）</td><td class="r">~$528.77</td><td class="jpy">¥60,000</td></tr>
+  <tr class="grand">
+    <td><strong>總計（不含機票）</strong></td>
+    <td class="r"><strong>~AUD $5,513</strong></td>
+    <td class="jpy">¥625,534</td>
+  </tr>
+</table>
+<tr class="note-row"><td colspan="3" style="font-size:11px;color:#aaa;padding:8px 0 0;">匯率：1 AUD = ¥113.47（Macquarie Mastercard mid-market，2026/05/17）· 估算項目僅供參考</td></tr>
 
 <script>
-function dl(){
-  const wb=XLSX.utils.book_new();
-  const tables=document.querySelectorAll('table');
-  const names=['住宿','已購票務','待訂票務','交通估算','餐食估算','費用總計'];
-  tables.forEach((t,i)=>{
-    const ws=XLSX.utils.table_to_sheet(t);
-    XLSX.utils.book_append_sheet(wb,ws,names[i]||'Sheet'+(i+1));
+function exportExcel(){
+  const wb = XLSX.utils.book_new();
+  const tables = [
+    {id:'t_accom',     name:'住宿'},
+    {id:'t_tick_done', name:'票務_已確認'},
+    {id:'t_tick_pend', name:'票務_待訂'},
+    {id:'t_transport', name:'交通'},
+    {id:'t_food',      name:'餐食'},
+    {id:'t_shopping',  name:'購物'},
+    {id:'t_total',     name:'費用總計'},
+  ];
+  tables.forEach(t => {
+    const el = document.getElementById(t.id);
+    if(el){
+      const ws = XLSX.utils.table_to_sheet(el);
+      ws['!cols'] = [{wch:32},{wch:14},{wch:12},{wch:14},{wch:12},{wch:14}];
+      XLSX.utils.book_append_sheet(wb, ws, t.name);
+    }
   });
-  XLSX.writeFile(wb,'東京旅遊費用2026.xlsx');
+  XLSX.writeFile(wb, '東京旅遊費用2026.xlsx');
 }
 </script>
 </body>
