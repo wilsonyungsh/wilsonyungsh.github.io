@@ -36,5 +36,4 @@ For 30DayMapChallenge see [here](https://github.com/wilsonyungsh/30DayMapChallen
 |:----:|:------|:------:|
 |BCC RMU Hotdesk Booking Query| Easier view, with last update for our team|[page](https://wilsonyungsh.github.io/interactive/team_calendar.html)|
 |BCC Lvl 8 Hotdesk Booking Query| Easier view, with last update|[page](https://wilsonyungsh.github.io/interactive/team_calendar_lv8.html)|
-|Family Travel Itinery| [Trip details](https://wilsonyungsh.github.io/interactive/travel/tokyo_travel_2026.html) 
-[E](https://wilsonyungsh.github.io/interactive/travel/tokyo_travel_expense_2026.html)|
+|Family Travel Itinery| 2026 Tokyo Trip itinery|[Trip details](https://wilsonyungsh.github.io/interactive/travel/tokyo_travel_2026.html) <br>[E](https://wilsonyungsh.github.io/interactive/travel/tokyo_travel_expense_2026.html)|
