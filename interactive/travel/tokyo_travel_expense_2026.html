@@ -2,143 +2,163 @@
 <html lang="zh-TW">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>東京旅遊費用明細 2026</title>
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>東京家庭旅遊 2026 — 支出明細</title>
 <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600;700&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600;700&family=DM+Serif+Display&display=swap");
+:root{--ink:#1a1917;--paper:#faf8f3;--muted:#6e6b64;--line:#e8e4da;}
 *{margin:0;padding:0;box-sizing:border-box;}
-body{font-family:"Noto Sans TC","PingFang TC",sans-serif;max-width:960px;margin:40px auto;padding:0 32px 60px;font-size:14px;color:#1a1917;background:#faf8f3;}
-h1{font-size:22px;font-weight:700;margin-bottom:4px;}
-.sub{color:#888;font-size:13px;margin-bottom:12px;}
-.rate-note{font-size:12px;background:#e8f0fe;border:1px solid #c5d8fc;border-radius:6px;padding:8px 14px;display:inline-block;color:#1a4db5;margin-bottom:20px;line-height:1.6;}
-.btn{display:inline-flex;align-items:center;gap:7px;background:#1d6f42;color:#fff;font-size:13px;font-weight:600;font-family:inherit;padding:8px 18px;border-radius:6px;border:none;cursor:pointer;margin-bottom:28px;}
-.btn:hover{background:#155534;}
-.section{font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#888;margin:28px 0 10px;padding-bottom:7px;border-bottom:1.5px solid #e8e4da;}
-table{width:100%;border-collapse:collapse;margin-bottom:6px;}
-th{background:#1a1917;color:#faf8f3;font-size:12px;padding:9px 14px;text-align:left;font-weight:600;}
-th.r{text-align:right;}
-td{padding:8px 14px;border-bottom:1px solid #e8e4da;font-size:13px;vertical-align:top;}
-td.r{text-align:right;font-variant-numeric:tabular-nums;}
-td.jpy{text-align:right;color:#666;font-size:12px;font-variant-numeric:tabular-nums;}
-tr:last-child td{border-bottom:none;}
-.subtotal td{font-weight:600;background:#f7f5f0;border-top:1.5px solid #c8c4bc;}
-.grand td{font-weight:700;background:#1a1917;color:#faf8f3;font-size:14px;padding:12px 14px;}
-.grand td.r{color:#4a9eff;}
-.grand td.jpy{color:#f0a500;font-size:13px;}
-.badge-done{display:inline-block;background:#e8f5ed;color:#1a5c38;font-size:10px;font-weight:700;padding:1px 6px;border-radius:3px;margin-left:5px;}
-.badge-pend{display:inline-block;background:#fff3cd;color:#856404;font-size:10px;font-weight:700;padding:1px 6px;border-radius:3px;margin-left:5px;}
-.badge-est{display:inline-block;background:#f0ede5;color:#888;font-size:10px;font-weight:600;padding:1px 6px;border-radius:3px;margin-left:5px;}
-.note-row td{font-size:11px;color:#aaa;padding:3px 14px 8px;border-bottom:none;background:transparent;}
+body{font-family:"Noto Sans TC","PingFang TC",sans-serif;background:var(--paper);color:var(--ink);font-size:15px;line-height:1.6;}
+.hero{background:var(--ink);color:#faf8f3;padding:36px 48px 28px;}
+.hero-eyebrow{font-size:11px;letter-spacing:3px;text-transform:uppercase;color:#aaa;margin-bottom:8px;}
+.hero h1{font-family:"DM Serif Display",serif;font-size:38px;font-weight:400;margin-bottom:10px;}
+.hero-meta{display:flex;gap:24px;flex-wrap:wrap;font-size:13px;color:#bbb;}
+.hero-meta strong{color:#faf8f3;}
+.rate-bar{background:#222;padding:10px 48px;font-size:12px;color:#888;border-bottom:1px solid #333;}
+.rate-bar strong{color:#4a9eff;}
+.wrapper{max-width:1100px;margin:0 auto;padding:28px 48px 60px;}
+.summary-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-bottom:28px;}
+.s-card{border-radius:10px;padding:14px 16px;}
+.s-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;}
+.s-val{font-size:22px;font-weight:700;margin-bottom:2px;}
+.s-sub{font-size:12px;opacity:.7;}
+.s-green{background:#e8f5ed;}.s-green .s-label{color:#1a5c38;}.s-green .s-val{color:#1a5c38;}
+.s-orange{background:#fff3cd;}.s-orange .s-label{color:#856404;}.s-orange .s-val{color:#856404;}
+.s-blue{background:#e8f0fe;}.s-blue .s-label{color:#1a4db5;}.s-blue .s-val{color:#1a4db5;}
+.s-muted{background:#f0ede5;}.s-muted .s-label{color:var(--muted);}.s-muted .s-val{color:var(--ink);}
+.s-total{background:var(--ink);}.s-total .s-label{color:#aaa;}.s-total .s-val{color:#faf8f3;}.s-total .s-sub{color:#888;}
+.dl-btn{display:inline-flex;align-items:center;gap:8px;background:#1d6f42;color:#fff;font-size:13px;font-weight:600;font-family:inherit;padding:9px 20px;border-radius:7px;border:none;cursor:pointer;margin-bottom:20px;}
+.dl-btn:hover{background:#155534;}
+.tbl-wrap{overflow-x:auto;}
+table{width:100%;border-collapse:collapse;font-size:13px;}
+th{background:var(--ink);color:#faf8f3;padding:10px 14px;text-align:left;font-size:12px;font-weight:600;}
+th.num{text-align:right;}
+td{padding:9px 14px;border-bottom:1px solid var(--line);vertical-align:top;}
+td.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap;}
+td.jpy{color:var(--muted);font-size:12px;}
+td.sm{font-size:12px;color:var(--muted);}
+.detail{font-size:11px;color:var(--muted);display:block;margin-top:2px;}
+tr.sec-hdr td{background:#f0ede5;font-weight:700;font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);padding:8px 14px;border-bottom:none;}
+tr.subtotal td{background:#f7f5f0;border-top:1.5px solid var(--line);}
+tr.grand-total td{background:var(--ink);color:#faf8f3;font-size:14px;border-top:2px solid #555;}
+tr.grand-total .jpy{color:#aaa;}
+.badge-paid{display:inline-block;background:#e8f5ed;color:#1a5c38;font-size:10px;font-weight:700;padding:2px 7px;border-radius:3px;}
+.badge-hotel{display:inline-block;background:#fff3cd;color:#856404;font-size:10px;font-weight:700;padding:2px 7px;border-radius:3px;}
+.badge-pend{display:inline-block;background:#e8f0fe;color:#1a4db5;font-size:10px;font-weight:700;padding:2px 7px;border-radius:3px;}
+.badge-walkin{display:inline-block;background:#f3e8fe;color:#5a1e9e;font-size:10px;font-weight:700;padding:2px 7px;border-radius:3px;}
+.footnote{font-size:12px;color:var(--muted);margin-top:16px;line-height:1.7;}
+@media(max-width:800px){.wrapper,.hero,.rate-bar{padding-left:16px;padding-right:16px;}.summary-grid{grid-template-columns:1fr 1fr;}}
 </style>
 </head>
 <body>
 
-<h1>東京家庭旅遊 2026 — 費用明細</h1>
-<div class="sub">2大人 + 1小孩（8歲）· 6/14–6/26 · 布里斯本出發 · 不含機票</div>
-<div class="rate-note">
-  💳 <strong>Macquarie Mastercard 匯率</strong>：1 AUD = ¥113.47（2026年5月17日 mid-market）<br>
-  Macquarie 使用 Mastercard 網絡匯率，接近市場中間價，無額外外匯手續費。<br>
-  實際扣款匯率以交易當日為準，建議留意旅遊期間匯率波動。
+<div class="hero">
+  <div class="hero-eyebrow">Budget · 支出明細</div>
+  <h1>東京家庭旅遊 2026 — 支出明細</h1>
+  <div class="hero-meta">
+    <span>2大人 + 1小孩（8歲）</span>
+    <span><strong>6/14–6/26</strong></span>
+    <span>不含機票</span>
+  </div>
 </div>
 
-<button class="btn" onclick="exportExcel()">
-  <svg width="15" height="15" viewBox="0 0 16 16" fill="none"><rect x="1" y="1" width="14" height="14" rx="2" fill="#155534"/><path d="M4 5l2.5 3L4 11h1.5l1.75-2.2L9 11h1.5L8 8l2.5-3H9L7.25 7.2 5.5 5H4z" fill="white"/></svg>
-  下載 Excel
+<div class="rate-bar">
+  💳 匯率基準：<strong>1 AUD = ¥113.47</strong>　Macquarie Mastercard mid-market（2026/05/17）　·　Macquarie Mastercard 接近市場中間價，無額外外匯手續費
+</div>
+
+<div class="wrapper">
+
+<div class="summary-grid">
+  <div class="s-card s-green">
+    <div class="s-label">已確認支出</div>
+    <div class="s-val">$2,264.93</div>
+    <div class="s-sub">¥257,002</div>
+  </div>
+  <div class="s-card s-orange">
+    <div class="s-label">到店付款</div>
+    <div class="s-val">$1,096.00</div>
+    <div class="s-sub">¥124,363</div>
+  </div>
+  <div class="s-card s-blue">
+    <div class="s-label">待訂票務（估）</div>
+    <div class="s-val">~$463.12</div>
+    <div class="s-sub">~¥52,550</div>
+  </div>
+  <div class="s-card s-muted">
+    <div class="s-label">交通+餐食+購物（估）</div>
+    <div class="s-val">~$2,024.49</div>
+    <div class="s-sub">~¥229,720</div>
+  </div>
+  <div class="s-card s-total">
+    <div class="s-label">總估計（不含機票）</div>
+    <div class="s-val">~$5,848.54</div>
+    <div class="s-sub">~¥663,634</div>
+  </div>
+</div>
+
+<button class="dl-btn" onclick="dlXlsx()">
+  ⬇ 下載 Excel
 </button>
 
-<div class="section">住宿 Accommodation</div>
-<table id="t_accom">
-  <tr><th>住宿</th><th>日期</th><th>晚</th><th>狀態</th><th class="r">AUD</th><th class="r">JPY</th></tr>
-  <tr><td>hotel MONday Premium Ueno<br><span style="font-size:11px;color:#888">確認碼 FCC858691 · 無早餐</span></td><td>6/14–6/17</td><td>3</td><td><span class="badge-done">✓</span></td><td class="r">$820.44</td><td class="jpy">¥93,095</td></tr>
-  <tr><td>ibis Styles Tokyo Bay（到店付）<br><span style="font-size:11px;color:#888">6/17 Standard Twin</span></td><td>6/17</td><td>1</td><td><span class="badge-done">✓</span> 含早</td><td class="r">$175.77</td><td class="jpy">¥19,945</td></tr>
-  <tr><td>ibis Styles Tokyo Bay<br><span style="font-size:11px;color:#888">6/18–20 Superior 3 Single Beds</span></td><td>6/18–20</td><td>3</td><td><span class="badge-done">✓ 已付</span> 含早</td><td class="r">$713.67</td><td class="jpy">¥80,980</td></tr>
-  <tr><td>Mario主題公寓 新宿御苑前<br><span style="font-size:11px;color:#888">確認碼 5930380389</span></td><td>6/21–6/26</td><td>6</td><td><span class="badge-done">✓ 已付</span></td><td class="r">$1,096.00</td><td class="jpy">¥124,363</td></tr>
-  <tr class="subtotal"><td colspan="4">住宿小計</td><td class="r">$2,805.88</td><td class="jpy">¥318,383</td></tr>
+<div class="tbl-wrap">
+<table id="budget-table">
+<thead><tr>
+  <th>項目</th><th>日期</th><th>確認碼</th><th>狀態</th>
+  <th class="num">AUD</th><th class="num">JPY</th>
+</tr></thead><tbody><tr class="sec-hdr"><td colspan="6">🏨 住宿 Accommodation</td></tr><tr><td><strong>hotel MONday Premium Ueno</strong><br><span class="detail">3晚 · Deluxe Family Room · 無早餐</span></td><td class="sm">6/14–6/17</td><td class="sm">FCC858691</td><td><span class="badge-paid">✓ 已付</span></td><td class="num">$820.44</td><td class="num jpy">¥93,095</td></tr>
+<tr><td><strong>ibis Styles Tokyo Bay</strong><br><span class="detail">6/17 Superior Room 3 Single Beds 1晚 · 含早餐</span></td><td class="sm">6/17</td><td class="sm">Accor</td><td><span class="badge-paid">✓ 已付</span></td><td class="num">$209.98</td><td class="num jpy">¥23,864</td></tr>
+<tr><td><strong>ibis Styles Tokyo Bay</strong><br><span class="detail">6/18–20 Superior 3 Beds 3晚 · 含早餐</span></td><td class="sm">6/18–6/20</td><td class="sm">Accor</td><td><span class="badge-paid">✓ 已付</span></td><td class="num">$713.67</td><td class="num jpy">¥80,980</td></tr>
+<tr><td><strong>Mario主題公寓 新宿御苑前</strong><br><span class="detail">6晚 · 整間獨享 · 廚房洗衣機 · Flexible方案</span></td><td class="sm">6/21–6/26</td><td class="sm">5930380389</td><td><span class="badge-hotel">到店付</span></td><td class="num">$1,096.00</td><td class="num jpy">¥124,363</td></tr><tr class="subtotal"><td colspan="4"><strong>住宿小計</strong></td><td class="num"><strong>$2,840.09</strong></td><td class="num jpy"><strong>¥322,265</strong></td></tr><tr class="sec-hdr"><td colspan="6">🎟 票務（已確認）Tickets Confirmed</td></tr><tr><td><strong>東京迪士尼海洋 DisneySea</strong><br><span class="detail">大人×2 兒童×1 · 1-Day Passport</span></td><td class="sm">6/18</td><td class="sm">EZQ795906</td><td><span class="badge-paid">✓ 已付</span></td><td class="num">$215.03</td><td class="num jpy">¥24,400</td></tr>
+<tr><td><strong>東京迪士尼樂園 Disneyland</strong><br><span class="detail">大人×2 兒童×1 · 1-Day Passport</span></td><td class="sm">6/19</td><td class="sm">CHA801386</td><td><span class="badge-paid">✓ 已付</span></td><td class="num">$215.03</td><td class="num jpy">¥24,400</td></tr>
+<tr><td><strong>teamLab Planets 豐洲 15:30場</strong><br><span class="detail">大人×2 兒童×1</span></td><td class="sm">6/20</td><td class="sm">KKDAY-20260517-626W</td><td><span class="badge-paid">✓ 已付</span></td><td class="num">$90.78</td><td class="num jpy">¥10,301</td></tr><tr class="subtotal"><td colspan="4"><strong>已確認票務小計</strong></td><td class="num"><strong>$520.84</strong></td><td class="num jpy"><strong>¥59,100</strong></td></tr><tr class="sec-hdr"><td colspan="6">🎟 票務（待訂/估算）Tickets Pending</td></tr><tr><td><strong>東京晴空塔 Tokyo Skytree</strong><br><span class="detail">大人×2（¥2,100）兒童×1（¥950）</span></td><td class="sm">6/15</td><td><span class="badge-pend">待訂</span></td><td class="num">~$45.39</td><td class="num jpy">~¥5,150</td></tr>
+<tr><td><strong>SHIBUYA SKY</strong><br><span class="detail">大人×2（¥2,000）兒童×1（¥1,200）</span></td><td class="sm">6/21</td><td><span class="badge-pend">待訂</span></td><td class="num">~$45.83</td><td class="num jpy">~¥5,200</td></tr>
+<tr><td><strong>藤子・F・不二雄博物館</strong><br><span class="detail">大人×2（¥1,000）兒童×1（¥700）</span></td><td class="sm">6/22</td><td><span class="badge-pend">待訂</span></td><td class="num">~$23.79</td><td class="num jpy">~¥2,700</td></tr>
+<tr><td><strong>100% Doraemon展</strong><br><span class="detail">大人×2（¥2,700）兒童×1（¥2,100）· 週末票</span></td><td class="sm">6/20</td><td><span class="badge-walkin">現場買</span></td><td class="num">~$66.10</td><td class="num jpy">~¥7,500</td></tr>
+<tr><td><strong>富士山箱根 Day Tour</strong><br><span class="detail">3人 · 估算</span></td><td class="sm">6/24or6/25</td><td><span class="badge-pend">待訂</span></td><td class="num">~$237.95</td><td class="num jpy">~¥27,000</td></tr>
+<tr><td><strong>Cappy Café 原宿</strong><br><span class="detail">3人 · 估算</span></td><td class="sm">6/21</td><td><span class="badge-pend">待訂</span></td><td class="num">~$44.06</td><td class="num jpy">~¥5,000</td></tr><tr class="subtotal"><td colspan="4"><strong>待訂票務小計</strong></td><td class="num"><strong>~$463.12</strong></td><td class="num jpy"><strong>~¥52,550</strong></td></tr><tr class="sec-hdr"><td colspan="6">🚆 交通 Transport（估算）</td></tr><tr><td><strong>成田特快 N'EX 去回</strong><br><span class="detail">大人×2（¥3,070×2）兒童×1（¥1,540×2）</span></td><td class="sm" colspan="3">去回合計</td><td class="num">~$116.51</td><td class="num jpy">~¥13,220</td></tr>
+<tr><td><strong>Suica 儲值（3人）</strong><br><span class="detail">整趟行程市區電車・巴士</span></td><td class="sm" colspan="3">估算</td><td class="num">~$264.39</td><td class="num jpy">~¥30,000</td></tr>
+<tr><td><strong>ゆりかもめ 台場往返</strong><br><span class="detail">台場・豐洲 往返</span></td><td class="sm" colspan="3">估算</td><td class="num">~$17.63</td><td class="num jpy">~¥2,000</td></tr>
+<tr><td><strong>其他交通</strong><br><span class="detail">巴士・計程車等</span></td><td class="sm" colspan="3">估算</td><td class="num">~$44.06</td><td class="num jpy">~¥5,000</td></tr><tr class="subtotal"><td colspan="4"><strong>交通小計</strong></td><td class="num"><strong>~$442.58</strong></td><td class="num jpy"><strong>~¥50,220</strong></td></tr><tr class="sec-hdr"><td colspan="6">🍜 餐食 Food（估算）</td></tr><tr><td><strong>早餐</strong><br><span class="detail">ibis含早4天；其餘便利商店/公寓自煮</span></td><td class="sm" colspan="3">估算</td><td class="num">~$176.26</td><td class="num jpy">~¥20,000</td></tr>
+<tr><td><strong>午餐</strong><br><span class="detail">一家三口約¥2,500/天×13天</span></td><td class="sm" colspan="3">估算</td><td class="num">~$286.42</td><td class="num jpy">~¥32,500</td></tr>
+<tr><td><strong>晚餐</strong><br><span class="detail">一家三口約¥4,000/天×13天（含特別晚餐）</span></td><td class="sm" colspan="3">估算</td><td class="num">~$458.27</td><td class="num jpy">~¥52,000</td></tr>
+<tr><td><strong>小食・飲料</strong><br><span class="detail">扭蛋・甜點・飲料</span></td><td class="sm" colspan="3">估算</td><td class="num">~$132.19</td><td class="num jpy">~¥15,000</td></tr><tr class="subtotal"><td colspan="4"><strong>餐食小計</strong></td><td class="num"><strong>~$1,053.14</strong></td><td class="num jpy"><strong>~¥119,500</strong></td></tr><tr class="sec-hdr"><td colspan="6">🛍 購物 Shopping（估算）</td></tr><tr><td><strong>伴手禮・紀念品</strong><br><span class="detail">秋葉原・伊勢丹・迪士尼商品等</span></td><td class="sm" colspan="3">估算</td><td class="num">~$352.52</td><td class="num jpy">~¥40,000</td></tr>
+<tr><td><strong>藥妝・日用品</strong><br><span class="detail">OS Drug・藥妝店</span></td><td class="sm" colspan="3">估算</td><td class="num">~$88.13</td><td class="num jpy">~¥10,000</td></tr>
+<tr><td><strong>文具・書籍</strong><br><span class="detail">Sekaido・Itoya・書店</span></td><td class="sm" colspan="3">估算</td><td class="num">~$88.13</td><td class="num jpy">~¥10,000</td></tr><tr class="subtotal"><td colspan="4"><strong>購物小計</strong></td><td class="num"><strong>~$528.77</strong></td><td class="num jpy"><strong>~¥60,000</strong></td></tr><tr class="grand-total"><td colspan="4"><strong>總計（不含機票）Grand Total</strong></td><td class="num"><strong>~$5,848.54</strong></td><td class="num jpy"><strong>~¥663,634</strong></td></tr></tbody>
 </table>
+</div>
 
-<div class="section">票務（已確認）Tickets Confirmed</div>
-<table id="t_tick_done">
-  <tr><th>項目</th><th>日期</th><th>人數</th><th>來源</th><th class="r">AUD</th><th class="r">JPY</th></tr>
-  <tr><td>東京迪士尼海洋 DisneySea<br><span style="font-size:11px;color:#888">Klook · EZQ795906</span></td><td>6/18</td><td>大人×2 兒童×1</td><td><span class="badge-done">✓ Klook</span></td><td class="r">$215.03</td><td class="jpy">¥24,400</td></tr>
-  <tr><td>東京迪士尼樂園 Disneyland<br><span style="font-size:11px;color:#888">Klook · CHA801386</span></td><td>6/19</td><td>大人×2 兒童×1</td><td><span class="badge-done">✓ Klook</span></td><td class="r">$215.03</td><td class="jpy">¥24,400</td></tr>
-  <tr><td>teamLab Planets 豐洲 15:30場<br><span style="font-size:11px;color:#888">KKday · KKDAY-20260517-626W</span></td><td>6/20</td><td>大人×2 兒童×1</td><td><span class="badge-done">✓ KKday</span></td><td class="r">$90.78</td><td class="jpy">¥10,301</td></tr>
-  <tr class="subtotal"><td colspan="4">已確認票務小計</td><td class="r">$520.84</td><td class="jpy">¥59,101</td></tr>
-</table>
-
-<div class="section">票務（待訂）Tickets Pending</div>
-<table id="t_tick_pend">
-  <tr><th>項目</th><th>日期</th><th>人數</th><th>購票方式</th><th class="r">AUD（估）</th><th class="r">JPY</th></tr>
-  <tr><td>SHIBUYA SKY</td><td>6/21</td><td>大人×2 兒童×1</td><td><span class="badge-pend">待訂</span> 官網</td><td class="r">~$45.83</td><td class="jpy">¥5,200</td></tr>
-  <tr><td>藤子・F・不二雄博物館</td><td>6/22</td><td>大人×2 兒童×1</td><td><span class="badge-pend">待訂</span> Lawson/官網</td><td class="r">~$23.79</td><td class="jpy">¥2,700</td></tr>
-  <tr><td>富士山箱根 Day Tour<br><span style="font-size:11px;color:#888">Klook 搜「富士山箱根一日遊 東京出發」</span></td><td>6/24或6/25</td><td>3人</td><td><span class="badge-pend">待訂</span> Klook</td><td class="r">~$237.95</td><td class="jpy">¥27,000</td></tr>
-  <tr><td>東京晴空塔 Tokyo Skytree</td><td>6/15</td><td>大人×2 兒童×1</td><td><span class="badge-pend">待訂</span> 官網/Klook</td><td class="r">~$45.39</td><td class="jpy">¥5,150</td></tr>
-  <tr><td>Cappy Café</td><td>6/21</td><td>3人</td><td><span class="badge-pend">待訂</span> 官網預約</td><td class="r">~$44.06</td><td class="jpy">¥5,000</td></tr>
-  <tr class="subtotal"><td colspan="4">待訂票務小計</td><td class="r">~$397.02</td><td class="jpy">¥45,050</td></tr>
-</table>
-
-<div class="section">交通 Transport（估算）</div>
-<table id="t_transport">
-  <tr><th>項目</th><th colspan="2">說明</th><th class="r">AUD（估）</th><th class="r">JPY（估）</th></tr>
-  <tr><td>成田特快 N'EX × 去回</td><td colspan="2">大人×2 兒童×1 來回</td><td class="r">~$158.63</td><td class="jpy">¥18,000</td></tr>
-  <tr><td>Suica 儲值（3人）</td><td colspan="2">整趟行程市區電車</td><td class="r">~$264.39</td><td class="jpy">¥30,000</td></tr>
-  <tr><td>其他（ゆりかもめ・巴士等）</td><td colspan="2">台場・豐洲・其他</td><td class="r">~$88.13</td><td class="jpy">¥10,000</td></tr>
-  <tr class="subtotal"><td colspan="3">交通小計</td><td class="r">~$511.15</td><td class="jpy">¥58,000</td></tr>
-</table>
-
-<div class="section">餐食 Food（估算）</div>
-<table id="t_food">
-  <tr><th>項目</th><th colspan="2">說明</th><th class="r">AUD（估）</th><th class="r">JPY（估）</th></tr>
-  <tr><td>早餐</td><td colspan="2">ibis含早4天；其餘便利商店/自煮（Mario公寓有廚房）</td><td class="r">~$176.46</td><td class="jpy">¥20,000</td></tr>
-  <tr><td>午晚餐</td><td colspan="2">一家三口約¥5,000/天 × 13天</td><td class="r">~$572.64</td><td class="jpy">¥65,000</td></tr>
-  <tr class="subtotal"><td colspan="3">餐食小計</td><td class="r">~$749.10</td><td class="jpy">¥85,000</td></tr>
-</table>
-
-<div class="section">購物 Shopping（估算）</div>
-<table id="t_shopping">
-  <tr><th>項目</th><th class="r">AUD（估）</th><th class="r">JPY（估）</th></tr>
-  <tr><td>伴手禮・紀念品・個人消費 <span class="badge-est">估算</span></td><td class="r">~$528.77</td><td class="jpy">¥60,000</td></tr>
-  <tr class="subtotal"><td>購物小計</td><td class="r">~$528.77</td><td class="jpy">¥60,000</td></tr>
-</table>
-
-<div class="section">費用總計 Grand Total</div>
-<table id="t_total">
-  <tr><th>分類</th><th class="r">AUD</th><th class="r">JPY（參考）</th></tr>
-  <tr><td>住宿（全部已確認）</td><td class="r">$2,805.88</td><td class="jpy">¥318,383</td></tr>
-  <tr><td>票務（已確認）</td><td class="r">$520.84</td><td class="jpy">¥59,101</td></tr>
-  <tr><td>票務（待訂・估）</td><td class="r">~$397.02</td><td class="jpy">¥45,050</td></tr>
-  <tr><td>交通（估）</td><td class="r">~$511.15</td><td class="jpy">¥58,000</td></tr>
-  <tr><td>餐食（估）</td><td class="r">~$749.10</td><td class="jpy">¥85,000</td></tr>
-  <tr><td>購物（估）</td><td class="r">~$528.77</td><td class="jpy">¥60,000</td></tr>
-  <tr class="grand">
-    <td><strong>總計（不含機票）</strong></td>
-    <td class="r"><strong>~AUD $5,513</strong></td>
-    <td class="jpy">¥625,534</td>
-  </tr>
-</table>
-<tr class="note-row"><td colspan="3" style="font-size:11px;color:#aaa;padding:8px 0 0;">匯率：1 AUD = ¥113.47（Macquarie Mastercard mid-market，2026/05/17）· 估算項目僅供參考</td></tr>
+<p class="footnote">
+  ※ 「~」前綴為估算金額，實際消費視情況而定。<br>
+  ※ 匯率：113.47（Macquarie Mastercard mid-market（2026/05/17）），旅遊期間匯率以實際交易日為準。<br>
+  ※ ibis Styles Tokyo Bay 6/17 Standard Twin（$175.77）為到店付款，其餘已付項目已確認。
+</p>
+</div>
 
 <script>
-function exportExcel(){
+function dlXlsx(){
   const wb = XLSX.utils.book_new();
-  const tables = [
-    {id:'t_accom',     name:'住宿'},
-    {id:'t_tick_done', name:'票務_已確認'},
-    {id:'t_tick_pend', name:'票務_待訂'},
-    {id:'t_transport', name:'交通'},
-    {id:'t_food',      name:'餐食'},
-    {id:'t_shopping',  name:'購物'},
-    {id:'t_total',     name:'費用總計'},
+  const ws = XLSX.utils.table_to_sheet(document.getElementById("budget-table"));
+  ws["!cols"] = [{wch:32},{wch:12},{wch:18},{wch:10},{wch:14},{wch:14}];
+  XLSX.utils.book_append_sheet(wb, ws, "支出明細");
+
+  // Summary sheet
+  const sum_data = [
+    ["分類","AUD","JPY"],
+    ["住宿（確認）","$2,840.09","¥322,265"],
+    ["票務（已確認）","$520.84","¥59,100"],
+    ["票務（待訂估）","~$463.12","~¥52,550"],
+    ["交通（估）","~$442.58","~¥50,220"],
+    ["餐食（估）","~$1,053.14","~¥119,500"],
+    ["購物（估）","~$528.77","~¥60,000"],
+    ["總計","~$5,848.54","~¥663,634"],
+    [""],
+    ["匯率","1 AUD = ¥113.47","Macquarie Mastercard mid-market（2026/05/17）"]
   ];
-  tables.forEach(t => {
-    const el = document.getElementById(t.id);
-    if(el){
-      const ws = XLSX.utils.table_to_sheet(el);
-      ws['!cols'] = [{wch:32},{wch:14},{wch:12},{wch:14},{wch:12},{wch:14}];
-      XLSX.utils.book_append_sheet(wb, ws, t.name);
-    }
-  });
-  XLSX.writeFile(wb, '東京旅遊費用2026.xlsx');
+  const ws2 = XLSX.utils.aoa_to_sheet(sum_data);
+  ws2["!cols"] = [{wch:20},{wch:14},{wch:16}];
+  XLSX.utils.book_append_sheet(wb, ws2, "摘要");
+  XLSX.writeFile(wb, "東京旅遊支出2026.xlsx");
 }
 </script>
 </body>
