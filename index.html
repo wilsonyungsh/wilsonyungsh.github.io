@@ -4,531 +4,322 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Wilson Yung — Spatial Data Scientist</title>
-  <meta name="description" content="Spatial data scientist and consultant specialising in transport data, urban modelling, and open-source spatial analytics. Based in Brisbane, Australia.">
+  <meta name="description" content="Spatial data scientist and consultant specialising in transport data, urban modelling, and open-source spatial analytics. Learning operational and domain knowledge on City scale 3D Modelling. Based in Brisbane, Australia.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
     :root {
-      --bg:        #f7f6f2;
-      --surface:   #ffffff;
-      --border:    rgba(0,0,0,0.08);
-      --border-md: rgba(0,0,0,0.13);
-      --text-1:    #1a1917;
-      --text-2:    #4a4845;
-      --text-3:    #8a8784;
-      --accent:    #2B5F8E;
-      --accent-lt: #e8f0f8;
-      --pivot:     #C4783A;
-      --pivot-lt:  #fdf0e6;
-      --mono:      'DM Mono', monospace;
-      --sans:      'DM Sans', system-ui, sans-serif;
-      --radius-sm: 6px;
-      --radius-md: 10px;
-      --radius-lg: 16px;
+      --bg:#f7f6f2;--surface:#ffffff;--border:rgba(0,0,0,0.08);--border-md:rgba(0,0,0,0.13);
+      --text-1:#1a1917;--text-2:#4a4845;--text-3:#8a8784;
+      --accent:#2B5F8E;--accent-lt:#e8f0f8;--pivot:#C4783A;--pivot-lt:#fdf0e6;
+      --mono:"DM Mono",monospace;--sans:"DM Sans",system-ui,sans-serif;
+      --radius-sm:6px;--radius-md:10px;--radius-lg:16px;
     }
-
     html { scroll-behavior: smooth; }
-
-    body {
-      font-family: var(--sans);
-      background: var(--bg);
-      color: var(--text-1);
-      font-size: 15px;
-      line-height: 1.6;
-      -webkit-font-smoothing: antialiased;
-    }
-
-    /* ── Layout ── */
-    .container { max-width: 900px; margin: 0 auto; padding: 0 24px; }
-
-    /* ── Nav ── */
-    nav {
-      position: sticky; top: 0; z-index: 100;
-      background: rgba(247,246,242,0.88);
-      backdrop-filter: blur(12px);
-      border-bottom: 1px solid var(--border);
-      padding: 14px 0;
-    }
-    nav .inner {
-      max-width: 900px; margin: 0 auto; padding: 0 24px;
-      display: flex; align-items: center; gap: 28px;
-    }
-    .nav-logo {
-      font-size: 15px; font-weight: 500; color: var(--text-1);
-      text-decoration: none; margin-right: auto; letter-spacing: -0.01em;
-    }
-    .nav-logo span { color: var(--text-3); font-weight: 300; }
-    nav a {
-      font-size: 13px; color: var(--text-3); text-decoration: none;
-      transition: color 0.15s;
-    }
-    nav a:hover { color: var(--text-1); }
-
-    /* ── Hero ── */
-    .hero { padding: 72px 0 56px; }
-    .hero-eyebrow {
-      font-family: var(--mono); font-size: 12px;
-      color: var(--text-3); letter-spacing: 0.04em;
-      margin-bottom: 16px;
-    }
-    .hero h1 {
-      font-size: clamp(32px, 5vw, 48px); font-weight: 300;
-      letter-spacing: -0.03em; line-height: 1.15;
-      color: var(--text-1); margin-bottom: 20px;
-    }
-    .hero h1 em { font-style: italic; color: var(--text-3); }
-    .hero-desc {
-      font-size: 16px; color: var(--text-2);
-      max-width: 560px; margin-bottom: 28px; line-height: 1.7;
-    }
-    .chip-row { display: flex; flex-wrap: wrap; gap: 8px; }
-    .chip {
-      font-family: var(--mono); font-size: 11px;
-      padding: 5px 11px; border-radius: 100px;
-      border: 1px solid var(--border-md);
-      color: var(--text-2); background: var(--surface);
-      white-space: nowrap;
-    }
-    .chip.accent { background: var(--accent-lt); border-color: #b8cfe4; color: var(--accent); }
-
-    /* ── Section base ── */
-    section { padding: 56px 0; border-top: 1px solid var(--border); }
-    .section-label {
-      font-family: var(--mono); font-size: 11px;
-      color: var(--text-3); letter-spacing: 0.06em;
-      text-transform: uppercase; margin-bottom: 24px;
-    }
-    h2 {
-      font-size: 24px; font-weight: 400; letter-spacing: -0.02em;
-      margin-bottom: 8px;
-    }
-    .section-intro {
-      font-size: 14px; color: var(--text-2);
-      margin-bottom: 28px; max-width: 600px;
-    }
-
-    /* ── Footprint map ── */
-    .map-embed {
-      width: 100%; height: 520px;
-      border: 1px solid var(--border);
-      border-radius: var(--radius-lg);
-      overflow: hidden;
-    }
-    .map-embed iframe {
-      width: 100%; height: 100%;
-      border: none; display: block;
-    }
-    .map-caption {
-      font-size: 12px; color: var(--text-3);
-      margin-top: 10px; font-family: var(--mono);
-    }
-
-    /* ── Career map placeholder (replaced by career_map.html iframe) ── */
-    .career-map-embed {
-      width: 100%; height: 420px;
-      border: 1px solid var(--border);
-      border-radius: var(--radius-lg);
-      overflow: hidden;
-      background: #eef2f6;
-    }
-    .career-map-embed iframe {
-      width: 100%; height: 100%;
-      border: none; display: block;
-    }
-
-    /* ── Domain cards ── */
-    .domain-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
-      gap: 12px;
-    }
-    .domain-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-md);
-      padding: 20px;
-      transition: border-color 0.15s, transform 0.15s;
-    }
-    .domain-card:hover {
-      border-color: var(--border-md);
-      transform: translateY(-2px);
-    }
-    .domain-icon {
-      font-size: 20px; margin-bottom: 12px;
-      display: block;
-    }
-    .domain-card h3 {
-      font-size: 14px; font-weight: 500;
-      margin-bottom: 6px; letter-spacing: -0.01em;
-    }
-    .domain-card p {
-      font-size: 12px; color: var(--text-3); line-height: 1.6;
-    }
-
-    /* ── Chapter cards ── */
-    .chapter-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 14px;
-      margin-bottom: 36px;
-    }
-    @media (max-width: 600px) { .chapter-grid { grid-template-columns: 1fr; } }
-    .chapter-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-md);
-      padding: 20px 22px;
-    }
-    .chapter-card.featured { border-color: #b8cfe4; }
-    .chapter-card.pivot-card { border-color: #e8c9a8; }
-    .chapter-badge {
-      display: inline-block; font-size: 10px; font-family: var(--mono);
-      padding: 3px 9px; border-radius: 100px;
-      margin-bottom: 10px;
-    }
-    .chapter-badge.current { background: var(--accent-lt); color: var(--accent); }
-    .chapter-badge.pivot   { background: var(--pivot-lt);  color: var(--pivot);  }
-    .chapter-card h3 {
-      font-size: 14px; font-weight: 500;
-      letter-spacing: -0.01em; margin-bottom: 3px;
-    }
-    .chapter-card .org {
-      font-size: 12px; color: var(--text-3); margin-bottom: 12px;
-    }
-    .tag-row { display: flex; gap: 6px; flex-wrap: wrap; }
-    .tag {
-      font-size: 10px; font-family: var(--mono);
-      padding: 3px 7px; border-radius: 4px;
-      background: var(--bg); color: var(--text-3);
-      border: 1px solid var(--border);
-    }
-
-    /* ── Stack evolution ── */
-    .stack-compare {
-      display: grid;
-      grid-template-columns: 1fr 40px 1fr;
-      gap: 0; align-items: start;
-    }
-    .stack-col-label {
-      font-family: var(--mono); font-size: 11px;
-      color: var(--text-3); letter-spacing: 0.04em;
-      margin-bottom: 10px;
-    }
-    .stack-col { display: flex; flex-direction: column; gap: 6px; }
-    .stack-item {
-      font-family: var(--mono); font-size: 12px;
-      padding: 8px 12px; border-radius: var(--radius-sm);
-      border: 1px solid var(--border);
-    }
-    .stack-item.old { background: #f5f4f0; color: var(--text-3); }
-    .stack-item.new { background: #edf4ee; color: #2d6b35; border-color: #c8dfc9; }
-    .stack-arrow-col {
-      display: flex; align-items: center; justify-content: center;
-      padding-top: 30px; color: var(--text-3); font-size: 20px;
-    }
-
-    /* ── Portfolio grid ── */
-    .portfolio-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-      gap: 14px;
-    }
-    .port-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-md);
-      overflow: hidden;
-      text-decoration: none; color: inherit;
-      transition: border-color 0.15s, transform 0.15s;
-      display: block;
-    }
-    .port-card:hover { border-color: var(--border-md); transform: translateY(-2px); }
-    .port-thumb {
-      height: 72px; background: var(--bg);
-      display: flex; align-items: center; justify-content: center;
-      font-size: 24px; border-bottom: 1px solid var(--border);
-    }
-    .port-info { padding: 12px 14px; }
-    .port-info h3 { font-size: 13px; font-weight: 500; margin-bottom: 3px; }
-    .port-info p  { font-size: 11px; color: var(--text-3); }
-    .port-card.see-all .port-thumb { font-size: 14px; color: var(--text-3); }
-
-    /* ── Footer ── */
-    footer {
-      border-top: 1px solid var(--border);
-      padding: 36px 0;
-    }
-    footer .inner {
-      max-width: 900px; margin: 0 auto; padding: 0 24px;
-      display: flex; justify-content: space-between; align-items: center;
-      flex-wrap: wrap; gap: 16px;
-    }
-    footer .name {
-      font-size: 14px; font-weight: 500; color: var(--text-1);
-    }
-    footer .name span { color: var(--text-3); font-weight: 300; }
-    footer .links { display: flex; gap: 20px; }
-    footer .links a {
-      font-size: 13px; color: var(--text-3);
-      text-decoration: none; transition: color 0.15s;
-    }
-    footer .links a:hover { color: var(--text-1); }
-
-    /* ── Divider ── */
-    .divider { border: none; border-top: 1px solid var(--border); margin: 32px 0; }
-
-    /* ── Responsive ── */
-    @media (max-width: 600px) {
-      .hero { padding: 48px 0 36px; }
-      .stack-compare { grid-template-columns: 1fr; }
-      .stack-arrow-col { display: none; }
-    }
+    body { font-family:var(--sans);background:var(--bg);color:var(--text-1);font-size:17px;line-height:1.7;-webkit-font-smoothing:antialiased; }
+    .container { max-width:900px;margin:0 auto;padding:0 24px; }
+    nav { position:sticky;top:0;z-index:100;background:rgba(247,246,242,0.88);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:14px 0; }
+    nav .inner { max-width:900px;margin:0 auto;padding:0 24px;display:flex;align-items:center;gap:28px; }
+    .nav-logo { font-size:15px;font-weight:500;color:var(--text-1);text-decoration:none;margin-right:auto;letter-spacing:-0.01em; }
+    .nav-logo span { color:var(--text-3);font-weight:300; }
+    nav a { font-size:14px;color:var(--text-3);text-decoration:none;transition:color 0.15s; }
+    nav a:hover { color:var(--text-1); }
+    .lang-toggle { font-family:var(--mono);font-size:11px;font-weight:500;padding:5px 12px;border-radius:100px;border:1.5px solid var(--accent);background:var(--accent-lt);color:var(--accent);cursor:pointer;transition:all 0.2s;white-space:nowrap;flex-shrink:0;letter-spacing:0.03em; }
+    .lang-toggle:hover { background:var(--accent);color:#ffffff;border-color:var(--accent); }
+    .hero { padding:72px 0 56px; }
+    .hero-eyebrow { font-family:var(--mono);font-size:12px;color:var(--text-3);letter-spacing:0.04em;margin-bottom:16px; }
+    .hero h1 { font-size:clamp(32px,5vw,48px);font-weight:300;letter-spacing:-0.03em;line-height:1.15;color:var(--text-1);margin-bottom:20px; }
+    .hero h1 em { font-style:italic;color:var(--text-3); }
+    .hero-desc { font-size:18px;color:var(--text-2);max-width:560px;margin-bottom:28px;line-height:1.75; }
+    .chip-row { display:flex;flex-wrap:wrap;gap:8px; }
+    .chip { font-family:var(--mono);font-size:11px;padding:5px 11px;border-radius:100px;border:1px solid var(--border-md);color:var(--text-2);background:var(--surface);white-space:nowrap; }
+    .chip.accent { background:var(--accent-lt);border-color:#b8cfe4;color:var(--accent); }
+    section { padding:56px 0;border-top:1px solid var(--border); }
+    .section-label { font-family:var(--mono);font-size:12px;color:var(--text-3);letter-spacing:0.06em;text-transform:uppercase;margin-bottom:24px; }
+    .map-embed { width:100%;height:520px;border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden; }
+    .map-embed iframe { width:100%;height:100%;border:none;display:block; }
+    .map-caption { font-size:13px;color:var(--text-3);margin-top:10px;font-family:var(--mono); }
+    .career-map-embed { width:100%;height:420px;border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;background:#eef2f6; }
+    .career-map-embed iframe { width:100%;height:100%;border:none;display:block; }
+    .domain-grid { display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px; }
+    .domain-card { background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md);padding:20px;transition:border-color 0.15s,transform 0.15s; }
+    .domain-card:hover { border-color:var(--border-md);transform:translateY(-2px); }
+    .domain-icon { font-size:20px;margin-bottom:12px;display:block; }
+    .domain-card h3 { font-size:16px;font-weight:500;margin-bottom:6px;letter-spacing:-0.01em; }
+    .domain-card p { font-size:14px;color:var(--text-3);line-height:1.6; }
+    .chapter-grid { display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:36px; }
+    @media(max-width:600px){.chapter-grid{grid-template-columns:1fr;}}
+    .chapter-card { background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md);padding:20px 22px; }
+    .chapter-card.featured { border-color:#b8cfe4; }
+    .chapter-card.pivot-card { border-color:#e8c9a8; }
+    .chapter-badge { display:inline-block;font-size:11px;font-family:var(--mono);padding:3px 9px;border-radius:100px;margin-bottom:10px; }
+    .chapter-badge.current { background:var(--accent-lt);color:var(--accent); }
+    .chapter-badge.pivot { background:var(--pivot-lt);color:var(--pivot); }
+    .chapter-card h3 { font-size:16px;font-weight:500;letter-spacing:-0.01em;margin-bottom:3px; }
+    .chapter-card .org { font-size:14px;color:var(--text-3);margin-bottom:12px; }
+    .tag-row { display:flex;gap:6px;flex-wrap:wrap; }
+    .tag { font-size:11px;font-family:var(--mono);padding:3px 7px;border-radius:4px;background:var(--bg);color:var(--text-3);border:1px solid var(--border); }
+    .stack-compare { display:grid;grid-template-columns:1fr 40px 1fr;gap:0;align-items:start; }
+    .stack-col-label { font-family:var(--mono);font-size:11px;color:var(--text-3);letter-spacing:0.04em;margin-bottom:10px; }
+    .stack-col { display:flex;flex-direction:column;gap:6px; }
+    .stack-item { font-family:var(--mono);font-size:13px;padding:8px 12px;border-radius:var(--radius-sm);border:1px solid var(--border); }
+    .stack-item.old { background:#f5f4f0;color:var(--text-3); }
+    .stack-item.new { background:#edf4ee;color:#2d6b35;border-color:#c8dfc9; }
+    .stack-arrow-col { display:flex;align-items:center;justify-content:center;padding-top:30px;color:var(--text-3);font-size:20px; }
+    .portfolio-grid { display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px; }
+    .port-card { background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md);overflow:hidden;text-decoration:none;color:inherit;transition:border-color 0.15s,transform 0.15s;display:block; }
+    .port-card:hover { border-color:var(--border-md);transform:translateY(-2px); }
+    .port-thumb { height:72px;background:var(--bg);display:flex;align-items:center;justify-content:center;font-size:24px;border-bottom:1px solid var(--border); }
+    .port-info { padding:12px 14px; }
+    .port-info h3 { font-size:15px;font-weight:500;margin-bottom:3px; }
+    .port-info p { font-size:13px;color:var(--text-3); }
+    .port-card.see-all .port-thumb { font-size:14px;color:var(--text-3); }
+    footer { border-top:1px solid var(--border);padding:36px 0; }
+    footer .inner { max-width:900px;margin:0 auto;padding:0 24px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px; }
+    footer .name { font-size:16px;font-weight:500;color:var(--text-1); }
+    footer .name span { color:var(--text-3);font-weight:300; }
+    footer .links { display:flex;gap:20px; }
+    footer .links a { font-size:15px;color:var(--text-3);text-decoration:none;transition:color 0.15s; }
+    footer .links a:hover { color:var(--text-1); }
+    .divider { border:none;border-top:1px solid var(--border);margin:32px 0; }
+    @media(max-width:600px){.hero{padding:48px 0 36px;}.stack-compare{grid-template-columns:1fr;}.stack-arrow-col{display:none;}}
   </style>
 </head>
 <body>
 
-  <!-- Navigation -->
   <nav>
     <div class="inner">
       <a class="nav-logo" href="#top">Wilson Yung <span>雍士賢</span></a>
-      <a href="#expertise">Expertise</a>
-      <a href="#career">Career</a>
-      <a href="#portfolio">Portfolio</a>
-      <a href="#contact">Contact</a>
+      <a href="#expertise" data-i18n data-en="Expertise" data-zh="專業領域">Expertise</a>
+      <a href="#career"    data-i18n data-en="Career" data-zh="工作歷程">Career</a>
+      <a href="#portfolio" data-i18n data-en="Portfolio" data-zh="作品集">Portfolio</a>
+      <a href="#contact"   data-i18n data-en="Contact" data-zh="聯絡">Contact</a>
+      <button class="lang-toggle" id="langToggle" aria-label="切換為繁體中文">繁中</button>
     </div>
   </nav>
 
-  <!-- Hero -->
   <div class="container">
-    <section class="hero" id="top" style="border:none; padding-bottom: 48px;">
-      <p class="hero-eyebrow">Spatial Data Scientist · Brisbane, Australia</p>
-      <h1>Cities, Data,<br><em>Movement.</em></h1>
-      <p class="hero-desc">
-        End-to-end consulting across spatial analytics, transport data, urban growth modelling,
-        and open-source data engineering. Over a decade bridging GIS, mobility data, and
-        modern cloud-native pipelines across government and industry.
-      </p>
+    <section class="hero" id="top" style="border:none;padding-bottom:48px;">
+      <p class="hero-eyebrow" data-i18n data-en="Spatial Data Scientist · Brisbane, Australia" data-zh="空間資料科學家 · 澳洲布里斯本">Spatial Data Scientist · Brisbane, Australia</p>
+      <h1>
+        <span data-i18n data-en="Cities, Data," data-zh="都市、資料，">Cities, Data,</span><br>
+        <em data-i18n data-en="Movement." data-zh="與流動的人群。">Movement.</em>
+      </h1>
+      <p class="hero-desc" data-i18n data-en="End-to-end consulting across spatial analytics, transport data, urban growth modelling, and open-source data engineering. Over a decade bridging GIS, mobility data, and modern cloud-native pipelines across government and industry." data-zh="透過空間分析、運輸資料、城市模擬與開源資料工程。 將散落於城市中的資訊串連成故事，從地圖看見人群移動的軌跡，從資料理解城市演變的脈絡。 十餘年來持續在政府、研究與產業之間搭建橋梁，讓資料成為理解城市的一種語言，以自身遷移經驗努力實踐。">End-to-end consulting across spatial analytics, transport data, urban growth modelling, and open-source data engineering. Over a decade bridging GIS, mobility data, and modern cloud-native pipelines across government and industry.</p>
       <div class="chip-row">
         <span class="chip accent">R · Python · SQL</span>
         <span class="chip accent">PostGIS · QGIS</span>
         <span class="chip accent">Apache Spark · Sedona</span>
-        <span class="chip">Spatial analytics</span>
-        <span class="chip">GTFS · Transport data</span>
-        <span class="chip">Urban growth modelling</span>
-        <span class="chip">Open data</span>
+        <span class="chip" data-i18n data-en="Spatial analytics" data-zh="空間分析">Spatial analytics</span>
+        <span class="chip" data-i18n data-en="GTFS · Transport data" data-zh="GTFS · 大眾運輸資料">GTFS · Transport data</span>
+        <span class="chip" data-i18n data-en="Urban growth modelling" data-zh="都市成長預測建模">Urban growth modelling</span>
+        <span class="chip" data-i18n data-en="Open data" data-zh="開源資料">Open data</span>
       </div>
     </section>
   </div>
 
-  <!-- Footprint Map (Google Timeline 2013–2025) -->
   <div class="container">
-    <section id="footprint" style="padding-top:0; border:none;">
-      <p class="section-label">My footprint 2013–2025</p>
+    <section id="footprint" style="padding-top:0;border:none;">
+      <p class="section-label" data-i18n data-en="My footprint 2013–2025" data-zh="我的足跡 2013–2025">My footprint 2013–2025</p>
       <div class="map-embed">
-        <iframe
-          src="https://wilsonyungsh.github.io/interactive/30DayMapChallenge2025/Map4_Mydata_2013-2025.html"
-          title="Wilson Yung — personal movement footprint 2013 to 2025"
-          loading="lazy"
-          allow="fullscreen">
-        </iframe>
+        <iframe src="https://wilsonyungsh.github.io/interactive/30DayMapChallenge2025/Map4_Mydata_2013-2025.html" title="Wilson Yung personal movement footprint" loading="lazy" allow="fullscreen"></iframe>
       </div>
-      <p class="map-caption">↑ Built from Google Timeline data · 30 Day Map Challenge 2025 Day 4 · R + Mapdeck</p>
+      <p class="map-caption" data-i18n data-en="↑ Built from Google Timeline data · 30 Day Map Challenge 2025 Day 4 · R + Mapdeck" data-zh="↑ 以 Google 時間軸資料製作 · 30天地圖挑戰 2025 第4天 · R + Mapdeck">↑ Built from Google Timeline data · 30 Day Map Challenge 2025 Day 4 · R + Mapdeck</p>
     </section>
   </div>
 
-  <!-- Expertise -->
   <div class="container">
     <section id="expertise">
-      <p class="section-label">What I do</p>
+      <p class="section-label" data-i18n data-en="What I do" data-zh="我所專注的領域">What I do</p>
       <div class="domain-grid">
+
         <div class="domain-card">
           <span class="domain-icon">🗺</span>
-          <h3>Spatial analytics</h3>
-          <p>GIS workflows, raster analysis, land suitability modelling, PostGIS, R/Python spatial pipelines.</p>
+          <h3 data-i18n data-en="Spatial analytics" data-zh="空間分析">Spatial analytics</h3>
+          <p data-i18n data-en="GIS workflows, raster analysis, land suitability modelling, PostGIS, R/Python spatial pipelines." data-zh="運用 GIS、遙測與空間模型，從土地、環境到城市活動，發掘隱藏於地理位置背後的規律與關聯。">GIS workflows, raster analysis, land suitability modelling, PostGIS, R/Python spatial pipelines.</p>
         </div>
         <div class="domain-card">
           <span class="domain-icon">🚌</span>
-          <h3>Transport data</h3>
-          <p>GTFS processing, trip planning data, public transport analytics, mobility insights at scale.</p>
+          <h3 data-i18n data-en="Transport data" data-zh="大眾運輸資料">Transport data</h3>
+          <p data-i18n data-en="GTFS processing, trip planning data, public transport analytics, mobility insights at scale." data-zh="從 GTFS 到大樣本電信移動資料，描繪城市中的流動樣貌，理解人們如何穿梭於日常生活與都市空間之間。">GTFS processing, trip planning data, public transport analytics, mobility insights at scale.</p>
         </div>
         <div class="domain-card">
           <span class="domain-icon">🏙</span>
-          <h3>Urban modelling</h3>
-          <p>Urban growth modelling (BrisUrban), 3D city visualisation, land use and activity datasets.</p>
+          <h3 data-i18n data-en="Urban modelling" data-zh="城市建模">Urban modelling</h3>
+          <p data-i18n data-en="Urban growth modelling (BrisUrban), 3D city visualisation, land use and activity datasets." data-zh="都市成長預測（BrisUrban)、土地使用分析與三維城市視覺化，探索城市未來可能的樣貌。">Urban growth modelling (BrisUrban), 3D city visualisation, land use and activity datasets.</p>
         </div>
         <div class="domain-card">
           <span class="domain-icon">⚙️</span>
-          <h3>Data engineering</h3>
-          <p>Cloud pipelines, Apache Spark/Sedona, R/Python packages, large-scale geospatial data processing.</p>
+          <h3 data-i18n data-en="Data engineering" data-zh="資料工程">Data engineering</h3>
+          <p data-i18n data-en="Cloud pipelines, Apache Spark/Sedona, R/Python packages, large-scale geospatial data processing." data-zh="打造穩定且可重現的資料流程，讓龐大的空間資料得以被有效整合、分析與應用。。">Cloud pipelines, Apache Spark/Sedona, R/Python packages, large-scale geospatial data processing.</p>
         </div>
       </div>
     </section>
   </div>
 
-  <!-- Career -->
   <div class="container">
     <section id="career">
-      <p class="section-label">Career chapters</p>
-
+      <p class="section-label" data-i18n data-en="Career chapters" data-zh="職涯篇章">Career chapters</p>
       <div class="chapter-grid">
+
         <div class="chapter-card featured">
-          <span class="chapter-badge current">Current · 2025–present</span>
-          <h3>Team Lead, Research and Modelling Unit</h3>
-          <p class="org">Brisbane City Council · City Plan and Design</p>
+          <span class="chapter-badge current" data-i18n data-en="Current · 2025–present" data-zh="現職 · 2025–至今">Current · 2025–present</span>
+          <h3 data-i18n data-en="Team Lead, Research and Modelling Unit" data-zh="研究與建模部門主管">Team Lead, Research and Modelling Unit</h3>
+          <p class="org" data-i18n data-en="Brisbane City Council · City Plan and Design" data-zh="布里斯本市政府 · 城市規劃與設計處">Brisbane City Council · City Plan and Design</p>
           <div class="tag-row">
-            <span class="tag">BrisUrban</span>
-            <span class="tag">Virtual Brisbane</span>
-            <span class="tag">Land Use Activity Datasets</span>
-            <span class="tag">Development Activity Datasets</span>
-            <span class="tag">Team of 10</span>
+            <span class="tag" data-i18n data-en="BrisUrban" data-zh="BrisUrban">BrisUrban</span>
+            <span class="tag" data-i18n data-en="Virtual Brisbane" data-zh="Virtual Brisbane">Virtual Brisbane</span>
+            <span class="tag" data-i18n data-en="Land Use Activity Datasets" data-zh="土地使用活動資料集">Land Use Activity Datasets</span>
+            <span class="tag" data-i18n data-en="Development Activity Datasets" data-zh="開發活動資料集">Development Activity Datasets</span>
+            <span class="tag" data-i18n data-en="Team of 10" data-zh="10人團隊">Team of 10</span>
           </div>
         </div>
         <div class="chapter-card pivot-card">
-          <span class="chapter-badge pivot">Pivot chapter · 2019–2024</span>
-          <h3>Principal Data Science Consultant</h3>
-          <p class="org">DSpark (Optus) · Macquarie Park, Sydney</p>
+          <span class="chapter-badge pivot" data-i18n data-en="Pivot chapter · 2019–2024" data-zh="轉型關鍵 · 2019–2024">Pivot chapter · 2019–2024</span>
+          <h3 data-i18n data-en="Principal Data Science Consultant" data-zh="首席資料科學顧問">Principal Data Science Consultant</h3>
+          <p class="org" data-i18n data-en="DSpark (Optus) · Macquarie Park, Sydney" data-zh="DSpark（Optus）· 雪梨 Macquarie Park">DSpark (Optus) · Macquarie Park, Sydney</p>
           <div class="tag-row">
-            <span class="tag">Telco Mobility Data (Mobile Network Operator Data)</span>
-            <span class="tag">GTFS</span>
-            <span class="tag">Apache Sedona</span>
-            <span class="tag">Client management</span>
-            <span class="tag">State agencies</span>
+            <span class="tag" data-i18n data-en="Telco Mobility Data (MNO Data)" data-zh="電信移動數據（MNO）">Telco Mobility Data (MNO Data)</span>
+            <span class="tag" data-i18n data-en="GTFS" data-zh="GTFS">GTFS</span>
+            <span class="tag" data-i18n data-en="Apache Sedona" data-zh="Apache Sedona">Apache Sedona</span>
+            <span class="tag" data-i18n data-en="Client management" data-zh="客戶管理">Client management</span>
+            <span class="tag" data-i18n data-en="State agencies" data-zh="州政府機構">State agencies</span>
           </div>
         </div>
       </div>
-
-      <!-- Stack evolution -->
       <hr class="divider">
-      <p class="section-label" style="margin-bottom:20px;">Stack evolution — the open-source pivot</p>
+      <p class="section-label" style="margin-bottom:20px;" data-i18n data-en="Stack evolution — the open-source pivot" data-zh="技術演進：從單機 GIS 到開源資料科學">Stack evolution — the open-source pivot</p>
       <div class="stack-compare">
         <div>
-          <p class="stack-col-label">Before (2013–2018)</p>
+          <p class="stack-col-label" data-i18n data-en="Before (2013–2018)" data-zh="轉型前 (2013–2018)">Before (2013–2018)</p>
           <div class="stack-col">
-            <div class="stack-item old">ESRI ArcGIS / MapInfo / QGIS DB Manager</div>
-            <div class="stack-item old">Windows</div>
-            <div class="stack-item old">Proprietary data formats</div>
-            <div class="stack-item old">Desktop GIS workflows</div>
-            <div class="stack-item old">Point-and-click analysis</div>
+            <div class="stack-item old" data-i18n data-en="ESRI ArcGIS / MapInfo / QGIS DB Manager" data-zh="ESRI ArcGIS / MapInfo / QGIS DB Manager">ESRI ArcGIS / MapInfo / QGIS DB Manager</div>
+            <div class="stack-item old" data-i18n data-en="Windows" data-zh="Windows 系統">Windows</div>
+            <div class="stack-item old" data-i18n data-en="Proprietary data formats" data-zh="封閉資料格式">Proprietary data formats</div>
+            <div class="stack-item old" data-i18n data-en="Desktop GIS workflows" data-zh="桌面 GIS 工作流程">Desktop GIS workflows</div>
+            <div class="stack-item old" data-i18n data-en="Point-and-click analysis" data-zh="點擊式操作分析">Point-and-click analysis</div>
           </div>
         </div>
         <div class="stack-arrow-col">→</div>
         <div>
-          <p class="stack-col-label">After (2019–present)</p>
+          <p class="stack-col-label" data-i18n data-en="After (2019–present)" data-zh="轉型後 (2019–至今)">After (2019–present)</p>
           <div class="stack-col">
-            <div class="stack-item new">R · Python · SQL</div>
-            <div class="stack-item new">macOS · Cloud (AWS / Azure)</div>
-            <div class="stack-item new">PostGIS · QGIS · OpenStreetMap</div>
-            <div class="stack-item new">Apache Spark · Scala · Sedona</div>
-            <div class="stack-item new">Reproducible pipelines · Open data</div>
+            <div class="stack-item new" data-i18n data-en="R · Python · SQL" data-zh="R · Python · SQL">R · Python · SQL</div>
+            <div class="stack-item new" data-i18n data-en="macOS · Cloud (AWS / Azure)" data-zh="macOS · 雲端（AWS / Azure）">macOS · Cloud (AWS / Azure)</div>
+            <div class="stack-item new" data-i18n data-en="PostGIS · QGIS · OpenStreetMap" data-zh="PostGIS · QGIS · OpenStreetMap">PostGIS · QGIS · OpenStreetMap</div>
+            <div class="stack-item new" data-i18n data-en="Apache Spark · Scala · Sedona" data-zh="Apache Spark · Scala · Sedona">Apache Spark · Scala · Sedona</div>
+            <div class="stack-item new" data-i18n data-en="Reproducible pipelines · Open data" data-zh="可重現資料流程 · 開源資料">Reproducible pipelines · Open data</div>
           </div>
         </div>
       </div>
-
-      <!-- Career location map -->
       <hr class="divider">
-      <p class="section-label" style="margin-bottom:12px;">Career locations</p>
+      <p class="section-label" style="margin-bottom:12px;" data-i18n data-en="Career locations" data-zh="工作地點">Career locations</p>
       <div class="career-map-embed">
-        <iframe
-          src="career_map.html"
-          title="Wilson Yung career locations — Tainan · New Taipei · Sydney · Brisbane"
-          loading="lazy"
-          allow="fullscreen">
-        </iframe>
+        <iframe src="career_map.html" title="Wilson Yung career locations" loading="lazy" allow="fullscreen"></iframe>
       </div>
     </section>
   </div>
 
-  <!-- Portfolio -->
   <div class="container">
     <section id="portfolio">
-      <p class="section-label">Selected work</p>
+      <p class="section-label" data-i18n data-en="Selected work" data-zh="精選作品">Selected work</p>
       <div class="portfolio-grid">
 
         <a class="port-card" href="https://wilsonyungsh.github.io/interactive/30DayMapChallenge2025/Map4_Mydata_2013-2025.html" target="_blank" rel="noopener">
           <div class="port-thumb">🗺</div>
           <div class="port-info">
-            <h3>My footprint 2013–2025</h3>
+            <h3 data-i18n data-en="My footprint 2013–2025" data-zh="我的足跡 2013–2025">My footprint 2013–2025</h3>
             <p>Google Timeline · R + Mapdeck</p>
           </div>
         </a>
-
         <a class="port-card" href="https://wilsonyungsh.github.io/interactive/Map29.html" target="_blank" rel="noopener">
           <div class="port-thumb">🏙</div>
           <div class="port-info">
-            <h3>Greater Taipei building heights</h3>
+            <h3 data-i18n data-en="Greater Taipei building heights" data-zh="大台北建築高度圖">Greater Taipei building heights</h3>
             <p>Overture Maps · R + Mapdeck</p>
           </div>
         </a>
-
         <a class="port-card" href="https://wilsonyungsh.github.io/interactive/map18_seq_bus_service_density.html" target="_blank" rel="noopener">
           <div class="port-thumb">🚌</div>
           <div class="port-info">
-            <h3>SEQ bus service density</h3>
+            <h3 data-i18n data-en="SEQ bus service density" data-zh="昆士蘭東南區公車服務密度">SEQ bus service density</h3>
             <p>3D · R + deck.gl</p>
           </div>
         </a>
-
         <a class="port-card" href="https://wilsonyungsh.github.io/interactive/Map4_Brisbane_Dwelling.html" target="_blank" rel="noopener">
           <div class="port-thumb">🔷</div>
           <div class="port-info">
-            <h3>Brisbane dwelling hexagon map</h3>
+            <h3 data-i18n data-en="Brisbane dwelling hexagon map" data-zh="布里斯本住宅六角格地圖">Brisbane dwelling hexagon map</h3>
             <p>R + MapGL</p>
           </div>
         </a>
-
         <a class="port-card" href="https://wilsonyungsh.github.io/interactive/map12_brisbane_lu_map.html" target="_blank" rel="noopener">
           <div class="port-thumb">🏘</div>
           <div class="port-info">
-            <h3>Greater Brisbane land use change</h3>
-            <p>Time &amp; Space · R + MapGL</p>
+            <h3 data-i18n data-en="Greater Brisbane land use change" data-zh="大布里斯本土地使用變化">Greater Brisbane land use change</h3>
+            <p data-i18n data-en="Time &amp; Space · R + MapGL" data-zh="時間與空間 · R + MapGL">Time &amp; Space · R + MapGL</p>
           </div>
         </a>
-
         <a class="port-card" href="https://huggingface.co/spaces/wilsonyung/bne_pt_service_explorer" target="_blank" rel="noopener">
           <div class="port-thumb">📊</div>
           <div class="port-info">
-            <h3>PT Service Explorer</h3>
-            <p>R Shiny dashboard · Brisbane GTFS on Hugging Face</p>
+            <h3 data-i18n data-en="PT Service Explorer" data-zh="公共運輸服務探索器">PT Service Explorer</h3>
+            <p data-i18n data-en="R Shiny dashboard · Brisbane GTFS on Hugging Face" data-zh="R Shiny 儀表板 · 布里斯本 GTFS · Hugging Face">R Shiny dashboard · Brisbane GTFS on Hugging Face</p>
           </div>
         </a>
         <a class="port-card" href="https://wilsonyungsh.github.io/interactive/bus431_capacity.html" target="_blank" rel="noopener">
           <div class="port-thumb">📈</div>
           <div class="port-info">
-            <h3>Bus route accumulative patronage</h3>
-            <p>Stop-level boarding analysis · R + MapGL</p>
+            <h3 data-i18n data-en="Bus route accumulative patronage" data-zh="公車路線累積乘客分析">Bus route accumulative patronage</h3>
+            <p data-i18n data-en="Stop-level boarding analysis · R + MapGL" data-zh="站點累積上車乘人數分析 · R + MapGL">Stop-level boarding analysis · R + MapGL</p>
           </div>
-       </a>
+        </a>
         <a class="port-card see-all" href="https://wilsonyungsh.github.io/map_list.html" target="_blank" rel="noopener">
-          <div class="port-thumb">View all maps →</div>
+          <div class="port-thumb" data-i18n data-en="View all maps →" data-zh="瀏覽所有地圖作品 →">View all maps →</div>
           <div class="port-info">
-            <h3>Full portfolio</h3>
+            <h3 data-i18n data-en="Full portfolio" data-zh="完整作品集">Full portfolio</h3>
             <p>wilsonyungsh.github.io</p>
           </div>
         </a>
-
       </div>
     </section>
   </div>
 
-  <!-- Contact / Footer -->
   <footer id="contact">
     <div class="inner">
       <div>
         <p class="name">Wilson Shih-Hsien Yung <span>雍士賢</span></p>
-        <p style="font-size:12px;color:var(--text-3);margin-top:3px;">
-          Open to spatial, transport, and data consulting engagements.
-        </p>
+        <p style="font-size:12px;color:var(--text-3);margin-top:3px;" data-i18n data-en="Open to spatial, transport, and data consulting engagements." data-zh="歡迎交流空間分析、運輸資料、都市成長預測與資料工程相關合作。讓資料不只是數字，也成為理解城市的一扇窗。">Open to spatial, transport, and data consulting engagements.</p>
       </div>
       <div class="links">
         <a href="mailto:wilson0313@gmail.com">Email</a>
         <a href="https://www.linkedin.com/in/wilson-yung" target="_blank" rel="noopener">LinkedIn</a>
-        <a href="https://wilsonyungsh.github.io/map_list.html" target="_blank" rel="noopener">Portfolio</a>
+        <a href="https://wilsonyungsh.github.io/map_list.html" target="_blank" rel="noopener" data-i18n data-en="Portfolio" data-zh="作品集">Portfolio</a>
       </div>
     </div>
   </footer>
+
+  <script>
+    var currentLang = localStorage.getItem("wy_lang") || "en";
+    function applyLang(lang) {
+      currentLang = lang;
+      localStorage.setItem("wy_lang", lang);
+      document.documentElement.lang = lang === "zh" ? "zh-TW" : "en";
+      document.querySelectorAll("[data-i18n]").forEach(function(el) {
+        var text = el.getAttribute("data-" + lang);
+        if (text) el.textContent = text;
+      });
+      var btn = document.getElementById("langToggle");
+      btn.textContent = lang === "zh" ? "EN" : "繁中";
+      btn.setAttribute("aria-label", lang === "zh" ? "Switch to English" : "切換為繁體中文");
+    }
+    document.getElementById("langToggle").addEventListener("click", function() {
+      applyLang(currentLang === "en" ? "zh" : "en");
+    });
+    applyLang(currentLang);
+  </script>
 
 </body>
 </html>
