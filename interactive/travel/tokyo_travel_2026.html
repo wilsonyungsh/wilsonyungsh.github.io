@@ -33,6 +33,7 @@ body{font-family:"Noto Sans TC","PingFang TC",sans-serif;background:var(--paper)
 .accom-name{font-size:14px;font-weight:700;color:var(--ink);margin-bottom:3px;line-height:1.4;}
 .accom-dates{font-size:12px;color:var(--muted);margin-bottom:3px;}
 .accom-note{font-size:11px;color:var(--muted);line-height:1.5;}
+.accom-times{font-size:12px;color:#185fa5;font-weight:600;margin-bottom:3px;}
 .badge-ok{display:inline-block;background:#e8f5ed;color:#1a5c38;font-size:10px;font-weight:700;padding:2px 8px;border-radius:3px;margin-bottom:6px;}
 .badge-check{display:inline-block;background:#fff3cd;color:#856404;font-size:10px;font-weight:700;padding:2px 8px;border-radius:3px;margin-bottom:6px;}
 .todo-box{background:#fde8e8;border:1.5px solid #e24b4a;border-radius:10px;padding:14px 18px;margin:16px 64px 0;}
@@ -160,9 +161,9 @@ body{font-family:"Noto Sans TC","PingFang TC",sans-serif;background:var(--paper)
 
 <div class="flights-bar"><div class="flt"><div class="flt-info"><div class="flt-badge">去程 · 6/14（日）</div><div class="flt-num">QF 61</div><div class="flt-route">BNE → NRT · 約10h15m</div></div><div class="flt-times"><div class="flt-dep">10:35</div><div class="flt-arr">↓ 18:50</div></div></div><div class="flt"><div class="flt-info"><div class="flt-badge">回程 · 6/26（五）</div><div class="flt-num">QF 62</div><div class="flt-route">NRT → BNE · 約9h00m</div></div><div class="flt-times"><div class="flt-dep">21:45</div><div class="flt-arr">↓ 07:45+1</div></div></div></div>
 
-<div class="accom-bar"><div class="accom-seg"><div class="badge-ok">✓ 已確認</div><div class="accom-phase">上野御徒町曼迪高級飯店</div><div class="accom-name">hotel MONday Premium Ueno</div><div class="accom-dates">6/14 入住 → 6/17 退房</div><div class="accom-note">Deluxe Family Room · 無早餐 · Klook已付 · ✅ 入住 15:00 / 退房 10:00<br>確認碼：FCC858691 · +81 03-5816-8681</div></div>
-<div class="accom-seg"><div class="badge-ok">✓ 已確認</div><div class="accom-phase">ibis 舞濱</div><div class="accom-name">ibis Styles Tokyo Bay</div><div class="accom-dates">6/17 入住 → 6/21 退房</div><div class="accom-note">6/17–21 · 4晚 · Superior 3 Single Beds · 含早餐（兒童另付¥1,100/天）· ✅ 入住 14:00 / 退房 11:00<br>確認碼：Accor已確認</div></div>
-<div class="accom-seg"><div class="badge-ok">✓ 已確認</div><div class="accom-phase">新宿区四谷四丁目28-6 502号室</div><div class="accom-name">Mario主題公寓 新宿御苑前</div><div class="accom-dates">6/21 入住 → 6/26 退房</div><div class="accom-note">整間獨享 · 廚房洗衣機 · 密碼鎖 · Flexible方案 · 御苑前駅450m · ✅ 彈性入住 / 退房 11:00<br>確認碼：5930380389 · +81 90-9103-0024</div></div></div>
+<div class="accom-bar"><div class="accom-seg"><div class="badge-ok">✓ 已確認</div><div class="accom-phase">上野御徒町曼迪高級飯店</div><div class="accom-name">hotel MONday Premium Ueno</div><div class="accom-dates">6/14 入住 → 6/17 退房</div><div class="accom-times">⏰ 入住 15:00 · 退房 10:00</div><div class="accom-note">Deluxe Family Room · 無早餐 · Klook已付 · ✅ 入住 15:00 / 退房 10:00<br>確認碼：FCC858691 · +81 03-5816-8681</div></div>
+<div class="accom-seg"><div class="badge-ok">✓ 已確認</div><div class="accom-phase">ibis 舞濱</div><div class="accom-name">ibis Styles Tokyo Bay</div><div class="accom-dates">6/17 入住 → 6/21 退房</div><div class="accom-times">⏰ 入住 14:00 · 退房 11:00</div><div class="accom-note">6/17–21 · 4晚 · Superior 3 Single Beds · 含早餐（兒童另付¥1,100/天）· ✅ 入住 14:00 / 退房 11:00<br>確認碼：Accor已確認</div></div>
+<div class="accom-seg"><div class="badge-ok">✓ 已確認</div><div class="accom-phase">新宿区四谷四丁目28-6 502号室</div><div class="accom-name">Mario主題公寓 新宿御苑前</div><div class="accom-dates">6/21 入住 → 6/26 退房</div><div class="accom-times">⏰ 入住 彈性 · 退房 11:00</div><div class="accom-note">整間獨享 · 廚房洗衣機 · 密碼鎖 · Flexible方案 · 御苑前駅450m · ✅ 彈性入住 / 退房 11:00<br>確認碼：5930380389 · +81 90-9103-0024</div></div></div>
 
 <div class="todo-box">
   <div class="todo-title">📋 待辦</div>
@@ -281,7 +282,7 @@ function buildTimeline(){
   const all=Object.values(DAYS);
   all.forEach((day,i)=>{
     const s=document.createElement("div");s.className="tl-stop";
-    const t=(day.title || "").replace(/\\p{Extended_Pictographic}/gu,"").split(/[—·+]/)[0].trim().slice(0,5);
+    const t=(day.title||"").replace(/[^ -~　-鿿＀-￯]/g,"").split(/[-+]/)[0].trim().slice(0,5);
     s.innerHTML=`<div class="tl-dot" style="background:${day.color}"></div><div class="tl-lbl">${day.date}<br>${t}</div>`;
     s.addEventListener("click",()=>openCard(day.date));tl.appendChild(s);
     if(i<all.length-1){const l=document.createElement("div");l.className="tl-line";const nc=all[i+1].color;l.style.background=day.color===nc?day.color:`linear-gradient(90deg,${day.color},${nc})`;tl.appendChild(l);}
