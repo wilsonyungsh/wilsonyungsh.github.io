@@ -21,6 +21,7 @@
 |-|Dwelling Proportion by Motor Vehicle Ownership|R + Mapgl|[MV ownership 1 or no cars:](interactive/Dwelling_prop_by_mv_ownership/1orNoMV_dwellings.html)<br>[MV ownership 2 cars](interactive/Dwelling_prop_by_mv_ownership/2_vehicles_dwelling_prop_over_30pr.html)<br>[MV ownership 3+ cars](interactive/Dwelling_prop_by_mv_ownership/3_or_more_vehicles_dwelling_prop_over_15pr.html)|
 |-|Maps with Felicity|R + MapGL|[interactive map](interactive/explore.html)|
 |-|Fly through example | R + MapGL |[flying map](interactive/apcs.html)
+|-|Dual Frontage Map|R + MapGL |[interactive map](interactive/dual_frontage.html)
 
 For 30DayMapChallenge see [here](https://github.com/wilsonyungsh/30DayMapChallenge2025)
 
