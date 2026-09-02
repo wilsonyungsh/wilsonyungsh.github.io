@@ -7,14 +7,14 @@
   <meta name="description" content="Full portfolio of interactive maps, dashboards, and tools by Wilson Yung, spatial data scientist.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&family=DM+Mono:wght@400;500&family=LXGW+WenKai+TC:wght@300;400;700&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
       --bg:#f7f6f2;--surface:#ffffff;--border:rgba(0,0,0,0.08);--border-md:rgba(0,0,0,0.13);
       --text-1:#1a1917;--text-2:#4a4845;--text-3:#8a8784;
       --accent:#2B5F8E;--accent-lt:#e8f0f8;--pivot:#C4783A;--pivot-lt:#fdf0e6;
-      --mono:"DM Mono",monospace;--sans:"DM Sans",system-ui,sans-serif;
+      --mono:"DM Mono","LXGW WenKai TC",monospace;--sans:"DM Sans","LXGW WenKai TC",system-ui,sans-serif;
       --radius-sm:6px;--radius-md:10px;--radius-lg:16px;
     }
     html { scroll-behavior: smooth; }
@@ -26,6 +26,8 @@
     .nav-logo span { color:var(--text-3);font-weight:300; }
     nav a.back { font-size:14px;color:var(--text-3);text-decoration:none;transition:color 0.15s;display:flex;align-items:center;gap:6px; }
     nav a.back:hover { color:var(--text-1); }
+    .lang-toggle { font-family:var(--mono);font-size:11px;font-weight:500;padding:5px 12px;border-radius:100px;border:1.5px solid var(--accent);background:var(--accent-lt);color:var(--accent);cursor:pointer;transition:all 0.2s;white-space:nowrap;flex-shrink:0;letter-spacing:0.03em; }
+    .lang-toggle:hover { background:var(--accent);color:#ffffff;border-color:var(--accent); }
     .hero { padding:56px 0 40px; }
     .hero-eyebrow { font-family:var(--mono);font-size:12px;color:var(--text-3);letter-spacing:0.04em;margin-bottom:16px; }
     .hero h1 { font-size:clamp(28px,4.5vw,42px);font-weight:300;letter-spacing:-0.03em;line-height:1.2;color:var(--text-1);margin-bottom:14px; }
@@ -65,79 +67,80 @@
   <nav>
     <div class="inner">
       <a class="nav-logo" href="index.html">Wilson Yung <span>雍士賢</span></a>
-      <a class="back" href="index.html">← Home</a>
+      <a class="back" href="index.html" data-i18n data-en="← Home" data-zh="← 首頁">← Home</a>
+      <button class="lang-toggle" id="langToggle" aria-label="切換為繁體中文">繁中</button>
     </div>
   </nav>
 
   <div class="container">
     <section class="hero" style="border:none;padding-bottom:24px;">
-      <p class="hero-eyebrow">Full portfolio</p>
-      <h1>Interactive maps, dashboards &amp; tools.</h1>
-      <p class="hero-desc">A complete list of interactive maps, Shiny dashboards, and small tools built with R and the open-source spatial stack — including entries from the 2024 and 2025 30 Day Map Challenges.</p>
+      <p class="hero-eyebrow" data-i18n data-en="Full portfolio" data-zh="完整作品集">Full portfolio</p>
+      <h1 data-i18n data-en="Interactive maps, dashboards &amp; tools." data-zh="互動地圖、儀表板與工具。">Interactive maps, dashboards &amp; tools.</h1>
+      <p class="hero-desc" data-i18n data-en="A complete list of interactive maps, Shiny dashboards, and small tools built with R and the open-source spatial stack — including entries from the 2024 and 2025 30 Day Map Challenges." data-zh="完整的互動地圖、Shiny 儀表板與小工具清單，皆以 R 與開源空間分析工具打造， 包含 2024 與 2025 年 30 天地圖挑戰（30 Day Map Challenge）的作品。">A complete list of interactive maps, Shiny dashboards, and small tools built with R and the open-source spatial stack — including entries from the 2024 and 2025 30 Day Map Challenges.</p>
     </section>
   </div>
 
   <div class="container">
     <section>
       <div class="section-head">
-        <p class="section-label">2024 Map Challenge</p>
-        <p class="section-count">8 maps</p>
+        <p class="section-label" data-i18n data-en="2024 Map Challenge" data-zh="2024 地圖挑戰">2024 Map Challenge</p>
+        <p class="section-count" data-i18n data-en="8 maps" data-zh="8 個作品">8 maps</p>
       </div>
       <div class="map-grid">
         <div class="map-card">
           <div class="map-card-top"><span class="map-badge">Day 4</span><span class="map-tool">R + MapGL</span></div>
-          <p class="map-title">Hexagon — Brisbane Dwelling Hexagon Map</p>
+          <p class="map-title" data-i18n data-en="Hexagon — Brisbane Dwelling Hexagon Map" data-zh="六角格 — 布里斯本住宅六角格地圖">Hexagon — Brisbane Dwelling Hexagon Map</p>
           <div class="map-links">
-            <a href="https://wilsonyungsh.github.io/interactive/Map4_Brisbane_Dwelling.html" target="_blank" rel="noopener">View map <span class="arrow">→</span></a>
+            <a href="https://wilsonyungsh.github.io/interactive/Map4_Brisbane_Dwelling.html" target="_blank" rel="noopener"><span data-i18n data-en="View map" data-zh="查看地圖">View map</span> <span class="arrow">→</span></a>
           </div>
         </div>
         <div class="map-card">
           <div class="map-card-top"><span class="map-badge">Day 5</span><span class="map-tool">R + Mapdeck</span></div>
-          <p class="map-title">Journey — Brisbane My First Cycle Journey</p>
+          <p class="map-title" data-i18n data-en="Journey — Brisbane My First Cycle Journey" data-zh="旅程 — 布里斯本我的第一次單車旅程">Journey — Brisbane My First Cycle Journey</p>
           <div class="map-links">
-            <a href="https://wilsonyungsh.github.io/interactive/Map5_Brisbane_cycle_journey.html" target="_blank" rel="noopener">View map <span class="arrow">→</span></a>
+            <a href="https://wilsonyungsh.github.io/interactive/Map5_Brisbane_cycle_journey.html" target="_blank" rel="noopener"><span data-i18n data-en="View map" data-zh="查看地圖">View map</span> <span class="arrow">→</span></a>
           </div>
         </div>
         <div class="map-card">
           <div class="map-card-top"><span class="map-badge">Day 11</span><span class="map-tool">R + Mapgl</span></div>
-          <p class="map-title">Arctic — Arctic Summit Boundary Ice Map</p>
+          <p class="map-title" data-i18n data-en="Arctic — Arctic Summit Boundary Ice Map" data-zh="北極 — 北極海冰邊界地圖">Arctic — Arctic Summit Boundary Ice Map</p>
           <div class="map-links">
-            <a href="https://wilsonyungsh.github.io/interactive/Map11_artic_ice_boundary.html" target="_blank" rel="noopener">View map <span class="arrow">→</span></a>
+            <a href="https://wilsonyungsh.github.io/interactive/Map11_artic_ice_boundary.html" target="_blank" rel="noopener"><span data-i18n data-en="View map" data-zh="查看地圖">View map</span> <span class="arrow">→</span></a>
           </div>
         </div>
         <div class="map-card">
           <div class="map-card-top"><span class="map-badge">Day 12</span><span class="map-tool">R + MapGL</span></div>
-          <p class="map-title">Time &amp; Space — Greater Brisbane Land Use Change Map</p>
+          <p class="map-title" data-i18n data-en="Time &amp; Space — Greater Brisbane Land Use Change Map" data-zh="時間與空間 — 大布里斯本土地使用變遷地圖">Time &amp; Space — Greater Brisbane Land Use Change Map</p>
           <div class="map-links">
-            <a href="https://wilsonyungsh.github.io/interactive/map12_brisbane_lu_map.html" target="_blank" rel="noopener">View map <span class="arrow">→</span></a>
+            <a href="https://wilsonyungsh.github.io/interactive/map12_brisbane_lu_map.html" target="_blank" rel="noopener"><span data-i18n data-en="View map" data-zh="查看地圖">View map</span> <span class="arrow">→</span></a>
           </div>
         </div>
         <div class="map-card">
           <div class="map-card-top"><span class="map-badge">Day 15</span><span class="map-tool">R + Mapdeck</span></div>
-          <p class="map-title">My Data — My Fieldtrip Traces</p>
+          <p class="map-title" data-i18n data-en="My Data — My Fieldtrip Traces" data-zh="我的資料 — 田野調查足跡">My Data — My Fieldtrip Traces</p>
           <div class="map-links">
-            <a href="https://wilsonyungsh.github.io/interactive/Map15_fieldtrips.html" target="_blank" rel="noopener">View map <span class="arrow">→</span></a>
+            <a href="https://wilsonyungsh.github.io/interactive/Map15_fieldtrips.html" target="_blank" rel="noopener"><span data-i18n data-en="View map" data-zh="查看地圖">View map</span> <span class="arrow">→</span></a>
           </div>
         </div>
         <div class="map-card">
           <div class="map-card-top"><span class="map-badge">Day 18</span><span class="map-tool">R + Deck.gl</span></div>
-          <p class="map-title">3D — South East Queensland Bus Service Density</p>
+          <p class="map-title" data-i18n data-en="3D — South East Queensland Bus Service Density" data-zh="3D — 昆士蘭東南區公車服務密度">3D — South East Queensland Bus Service Density</p>
           <div class="map-links">
-            <a href="https://wilsonyungsh.github.io/interactive/map18_seq_bus_service_density.html" target="_blank" rel="noopener">View map <span class="arrow">→</span></a>
+            <a href="https://wilsonyungsh.github.io/interactive/map18_seq_bus_service_density.html" target="_blank" rel="noopener"><span data-i18n data-en="View map" data-zh="查看地圖">View map</span> <span class="arrow">→</span></a>
           </div>
         </div>
         <div class="map-card">
           <div class="map-card-top"><span class="map-badge">Day 24</span><span class="map-tool">R + Mapgl</span></div>
-          <p class="map-title">Only Circular Shape — Brisbane Toilet Map</p>
+          <p class="map-title" data-i18n data-en="Only Circular Shape — Brisbane Toilet Map" data-zh="只用圓形 — 布里斯本公廁地圖">Only Circular Shape — Brisbane Toilet Map</p>
           <div class="map-links">
-            <a href="https://wilsonyungsh.github.io/interactive/Map24_brisbane_toilets.html" target="_blank" rel="noopener">View map <span class="arrow">→</span></a>
+            <a href="https://wilsonyungsh.github.io/interactive/Map24_brisbane_toilets.html" target="_blank" rel="noopener"><span data-i18n data-en="View map" data-zh="查看地圖">View map</span> <span class="arrow">→</span></a>
           </div>
         </div>
         <div class="map-card">
           <div class="map-card-top"><span class="map-badge">Day 29</span><span class="map-tool">R + Mapdeck</span></div>
-          <p class="map-title">Overture Maps — Greater Taipei Building Height</p>
+          <p class="map-title" data-i18n data-en="Overture Maps — Greater Taipei Building Height" data-zh="Overture Maps — 大台北建築高度圖">Overture Maps — Greater Taipei Building Height</p>
           <div class="map-links">
-            <a href="https://wilsonyungsh.github.io/interactive/Map29.html" target="_blank" rel="noopener">View map <span class="arrow">→</span></a>
+            <a href="https://wilsonyungsh.github.io/interactive/Map29.html" target="_blank" rel="noopener"><span data-i18n data-en="View map" data-zh="查看地圖">View map</span> <span class="arrow">→</span></a>
           </div>
         </div>
       </div>
@@ -147,92 +150,92 @@
   <div class="container">
     <section>
       <div class="section-head">
-        <p class="section-label">2025 Map Challenge</p>
-        <p class="section-count">3 maps</p>
+        <p class="section-label" data-i18n data-en="2025 Map Challenge" data-zh="2025 地圖挑戰">2025 Map Challenge</p>
+        <p class="section-count" data-i18n data-en="3 maps" data-zh="3 個作品">3 maps</p>
       </div>
       <div class="map-grid">
         <div class="map-card">
           <div class="map-card-top"><span class="map-badge">Day 1</span><span class="map-tool">R + duckdb + MapGL</span></div>
-          <p class="map-title">Overture Map — Ipswich Suburb Address Count Map</p>
+          <p class="map-title" data-i18n data-en="Overture Map — Ipswich Suburb Address Count Map" data-zh="Overture Map — Ipswich 郊區地址數量地圖">Overture Map — Ipswich Suburb Address Count Map</p>
           <div class="map-links">
-            <a href="https://wilsonyungsh.github.io/interactive/30DayMapChallenge2025/map1_ipswich_address_map.html" target="_blank" rel="noopener">View map <span class="arrow">→</span></a>
+            <a href="https://wilsonyungsh.github.io/interactive/30DayMapChallenge2025/map1_ipswich_address_map.html" target="_blank" rel="noopener"><span data-i18n data-en="View map" data-zh="查看地圖">View map</span> <span class="arrow">→</span></a>
           </div>
         </div>
         <div class="map-card">
           <div class="map-card-top"><span class="map-badge">Day 3</span><span class="map-tool">R + duckdb + MapGL</span></div>
-          <p class="map-title">Overture Map — South East Queensland Address Density Map</p>
+          <p class="map-title" data-i18n data-en="Overture Map — South East Queensland Address Density Map" data-zh="Overture Map — 昆士蘭東南區地址密度地圖">Overture Map — South East Queensland Address Density Map</p>
           <div class="map-links">
-            <a href="https://wilsonyungsh.github.io/interactive/30DayMapChallenge2025/map3_address_density_map.html" target="_blank" rel="noopener">View map <span class="arrow">→</span></a>
+            <a href="https://wilsonyungsh.github.io/interactive/30DayMapChallenge2025/map3_address_density_map.html" target="_blank" rel="noopener"><span data-i18n data-en="View map" data-zh="查看地圖">View map</span> <span class="arrow">→</span></a>
           </div>
         </div>
         <div class="map-card">
           <div class="map-card-top"><span class="map-badge">Day 4</span><span class="map-tool">R + Mapdeck</span></div>
-          <p class="map-title">My Data — My Footprint 2013–2025 (Google Timeline)</p>
+          <p class="map-title" data-i18n data-en="My Data — My Footprint 2013–2025 (Google Timeline)" data-zh="我的資料 — 我的足跡 2013–2025（Google 時間軸）">My Data — My Footprint 2013–2025 (Google Timeline)</p>
           <div class="map-links">
-            <a href="https://wilsonyungsh.github.io/interactive/30DayMapChallenge2025/Map4_Mydata_2013-2025.html" target="_blank" rel="noopener">View map <span class="arrow">→</span></a>
+            <a href="https://wilsonyungsh.github.io/interactive/30DayMapChallenge2025/Map4_Mydata_2013-2025.html" target="_blank" rel="noopener"><span data-i18n data-en="View map" data-zh="查看地圖">View map</span> <span class="arrow">→</span></a>
           </div>
         </div>
       </div>
-      <p class="note">For the full 30 Day Map Challenge repo, see <a href="https://github.com/wilsonyungsh/30DayMapChallenge2025" target="_blank" rel="noopener">github.com/wilsonyungsh/30DayMapChallenge2025</a>.</p>
+      <p class="note" data-i18n data-en="For the full 30 Day Map Challenge repo, see <a href='https://github.com/wilsonyungsh/30DayMapChallenge2025' target='_blank' rel='noopener'>github.com/wilsonyungsh/30DayMapChallenge2025</a>." data-zh="完整的 30 天地圖挑戰原始碼請見 <a href='https://github.com/wilsonyungsh/30DayMapChallenge2025' target='_blank' rel='noopener'>github.com/wilsonyungsh/30DayMapChallenge2025</a>。">For the full 30 Day Map Challenge repo, see <a href='https://github.com/wilsonyungsh/30DayMapChallenge2025' target='_blank' rel='noopener'>github.com/wilsonyungsh/30DayMapChallenge2025</a>.</p>
     </section>
   </div>
 
   <div class="container">
     <section>
       <div class="section-head">
-        <p class="section-label">Other projects</p>
-        <p class="section-count">7 maps</p>
+        <p class="section-label" data-i18n data-en="Other projects" data-zh="其他專案">Other projects</p>
+        <p class="section-count" data-i18n data-en="7 maps" data-zh="7 個作品">7 maps</p>
       </div>
       <div class="map-grid">
         <div class="map-card">
           <div class="map-card-top"><span class="map-tool">R + Mapdeck</span></div>
-          <p class="map-title">Bus Route Cumulative Passenger Count — Brisbane Bus Route 431</p>
+          <p class="map-title" data-i18n data-en="Bus Route Cumulative Passenger Count — Brisbane Bus Route 431" data-zh="公車路線累積乘客人數 — 布里斯本 431 公車路線">Bus Route Cumulative Passenger Count — Brisbane Bus Route 431</p>
           <div class="map-links">
-            <a href="https://wilsonyungsh.github.io/interactive/bus431_capacity.html" target="_blank" rel="noopener">View map <span class="arrow">→</span></a>
+            <a href="https://wilsonyungsh.github.io/interactive/bus431_capacity.html" target="_blank" rel="noopener"><span data-i18n data-en="View map" data-zh="查看地圖">View map</span> <span class="arrow">→</span></a>
           </div>
         </div>
         <div class="map-card">
           <div class="map-card-top"><span class="map-tool">R + MapGL</span></div>
-          <p class="map-title">2025 June PT Usage by Time Bucket and Trip Direction</p>
+          <p class="map-title" data-i18n data-en="2025 June PT Usage by Time Bucket and Trip Direction" data-zh="2025年6月大眾運輸依時段與方向使用量">2025 June PT Usage by Time Bucket and Trip Direction</p>
           <div class="map-links">
-            <a href="https://wilsonyungsh.github.io/interactive/Commuting_trips.html" target="_blank" rel="noopener">View map <span class="arrow">→</span></a>
+            <a href="https://wilsonyungsh.github.io/interactive/Commuting_trips.html" target="_blank" rel="noopener"><span data-i18n data-en="View map" data-zh="查看地圖">View map</span> <span class="arrow">→</span></a>
           </div>
         </div>
         <div class="map-card">
           <div class="map-card-top"><span class="map-tool">R + Mapgl</span></div>
-          <p class="map-title">Dwelling Proportion by Motor Vehicle Ownership</p>
+          <p class="map-title" data-i18n data-en="Dwelling Proportion by Motor Vehicle Ownership" data-zh="依汽車持有數量劃分的住宅比例">Dwelling Proportion by Motor Vehicle Ownership</p>
           <div class="map-links">
-            <a href="interactive/Dwelling_prop_by_mv_ownership/1orNoMV_dwellings.html" target="_blank" rel="noopener">1 or no cars <span class="arrow">→</span></a>
-            <a href="interactive/Dwelling_prop_by_mv_ownership/2_vehicles_dwelling_prop_over_30pr.html" target="_blank" rel="noopener">2 cars <span class="arrow">→</span></a>
-            <a href="interactive/Dwelling_prop_by_mv_ownership/3_or_more_vehicles_dwelling_prop_over_15pr.html" target="_blank" rel="noopener">3+ cars <span class="arrow">→</span></a>
+            <a href="interactive/Dwelling_prop_by_mv_ownership/1orNoMV_dwellings.html" target="_blank" rel="noopener"><span data-i18n data-en="1 or no cars" data-zh="0–1 輛車">1 or no cars</span> <span class="arrow">→</span></a>
+            <a href="interactive/Dwelling_prop_by_mv_ownership/2_vehicles_dwelling_prop_over_30pr.html" target="_blank" rel="noopener"><span data-i18n data-en="2 cars" data-zh="2 輛車">2 cars</span> <span class="arrow">→</span></a>
+            <a href="interactive/Dwelling_prop_by_mv_ownership/3_or_more_vehicles_dwelling_prop_over_15pr.html" target="_blank" rel="noopener"><span data-i18n data-en="3+ cars" data-zh="3 輛以上">3+ cars</span> <span class="arrow">→</span></a>
           </div>
         </div>
         <div class="map-card">
           <div class="map-card-top"><span class="map-tool">R + MapGL</span></div>
-          <p class="map-title">Maps with Felicity</p>
+          <p class="map-title" data-i18n data-en="Maps with Felicity" data-zh="與 Felicity 合作的地圖">Maps with Felicity</p>
           <div class="map-links">
-            <a href="interactive/explore.html" target="_blank" rel="noopener">View map <span class="arrow">→</span></a>
+            <a href="interactive/explore.html" target="_blank" rel="noopener"><span data-i18n data-en="View map" data-zh="查看地圖">View map</span> <span class="arrow">→</span></a>
           </div>
         </div>
         <div class="map-card">
           <div class="map-card-top"><span class="map-tool">R + MapGL</span></div>
-          <p class="map-title">Fly-through Example</p>
+          <p class="map-title" data-i18n data-en="Fly-through Example" data-zh="飛行穿越範例">Fly-through Example</p>
           <div class="map-links">
-            <a href="interactive/apcs.html" target="_blank" rel="noopener">View map <span class="arrow">→</span></a>
+            <a href="interactive/apcs.html" target="_blank" rel="noopener"><span data-i18n data-en="View map" data-zh="查看地圖">View map</span> <span class="arrow">→</span></a>
           </div>
         </div>
         <div class="map-card">
           <div class="map-card-top"><span class="map-tool">R + MapGL</span></div>
-          <p class="map-title">Dual Frontage Map</p>
+          <p class="map-title" data-i18n data-en="Dual Frontage Map" data-zh="雙面臨路地圖">Dual Frontage Map</p>
           <div class="map-links">
-            <a href="interactive/dual_frontage.html" target="_blank" rel="noopener">View map <span class="arrow">→</span></a>
+            <a href="interactive/dual_frontage.html" target="_blank" rel="noopener"><span data-i18n data-en="View map" data-zh="查看地圖">View map</span> <span class="arrow">→</span></a>
           </div>
         </div>
         <div class="map-card">
           <div class="map-card-top"><span class="map-tool">R + gganimate</span></div>
-          <p class="map-title">Time Lapse Rent Animation — House &amp; Flat, Brisbane</p>
+          <p class="map-title" data-i18n data-en="Time Lapse Rent Animation — House &amp; Flat, Brisbane" data-zh="租金縮時動畫 — 布里斯本獨棟與公寓">Time Lapse Rent Animation — House &amp; Flat, Brisbane</p>
           <div class="map-links">
-            <a href="interactive/plots/House_Flat_brisbane_rent_animation.gif" target="_blank" rel="noopener">View animation <span class="arrow">→</span></a>
+            <a href="interactive/plots/House_Flat_brisbane_rent_animation.gif" target="_blank" rel="noopener"><span data-i18n data-en="View animation" data-zh="查看動畫">View animation</span> <span class="arrow">→</span></a>
           </div>
         </div>
       </div>
@@ -242,15 +245,15 @@
   <div class="container">
     <section>
       <div class="section-head">
-        <p class="section-label">Shiny dashboards</p>
+        <p class="section-label" data-i18n data-en="Shiny dashboards" data-zh="Shiny 儀表板">Shiny dashboards</p>
       </div>
       <div class="map-grid">
         <div class="map-card">
-          <p class="map-title">PT Service Explorer</p>
-          <p style="font-size:13px;color:var(--text-2);line-height:1.6;">Explore stop service-level trends (max headway, service counts), route geometry, switchable layers, and a frequency slider with auto-zoom to route or stops.</p>
+          <p class="map-title" data-i18n data-en="PT Service Explorer" data-zh="公共運輸服務探索器">PT Service Explorer</p>
+          <p data-i18n data-en="Explore stop service-level trends (max headway, service counts), route geometry, switchable layers, and a frequency slider with auto-zoom to route or stops." data-zh="探索站點服務趨勢（最大班距、服務班次數）、路線幾何、可切換圖層，並可用班距篩選滑桿自動縮放至路線或站點。" style="font-size:13px;color:var(--text-2);line-height:1.6;">Explore stop service-level trends (max headway, service counts), route geometry, switchable layers, and a frequency slider with auto-zoom to route or stops.</p>
           <div class="map-links">
-            <a href="https://wilsonyung.shinyapps.io/BNE_PT_Service_explorer/" target="_blank" rel="noopener">Dashboard <span class="arrow">→</span></a>
-            <a href="https://huggingface.co/spaces/wilsonyung/bne_pt_service_explorer" target="_blank" rel="noopener">HF dashboard <span class="arrow">→</span></a>
+            <a href="https://wilsonyung.shinyapps.io/BNE_PT_Service_explorer/" target="_blank" rel="noopener"><span data-i18n data-en="Dashboard" data-zh="儀表板">Dashboard</span> <span class="arrow">→</span></a>
+            <a href="https://huggingface.co/spaces/wilsonyung/bne_pt_service_explorer" target="_blank" rel="noopener"><span data-i18n data-en="HF dashboard" data-zh="HF 儀表板">HF dashboard</span> <span class="arrow">→</span></a>
           </div>
         </div>
       </div>
@@ -260,22 +263,22 @@
   <div class="container">
     <section>
       <div class="section-head">
-        <p class="section-label">Pilot tools</p>
-        <p class="section-count">2 maps</p>
+        <p class="section-label" data-i18n data-en="Pilot tools" data-zh="小工具試作">Pilot tools</p>
+        <p class="section-count" data-i18n data-en="2 maps" data-zh="2 個作品">2 maps</p>
       </div>
       <div class="map-grid">
         <div class="map-card">
-          <p class="map-title">BCC RMU Hotdesk Booking Query</p>
-          <p style="font-size:13px;color:var(--text-2);line-height:1.6;">Easier view, with last update, for our team.</p>
+          <p class="map-title" data-i18n data-en="BCC RMU Hotdesk Booking Query" data-zh="BCC RMU 彈性座位預約查詢">BCC RMU Hotdesk Booking Query</p>
+          <p data-i18n data-en="Easier view, with last update, for our team." data-zh="提供團隊更簡便的檢視方式，並顯示最後更新時間。" style="font-size:13px;color:var(--text-2);line-height:1.6;">Easier view, with last update, for our team.</p>
           <div class="map-links">
-            <a href="https://wilsonyungsh.github.io/interactive/team_calendar.html" target="_blank" rel="noopener">Open tool <span class="arrow">→</span></a>
+            <a href="https://wilsonyungsh.github.io/interactive/team_calendar.html" target="_blank" rel="noopener"><span data-i18n data-en="Open tool" data-zh="開啟工具">Open tool</span> <span class="arrow">→</span></a>
           </div>
         </div>
         <div class="map-card">
-          <p class="map-title">BCC Lvl 8 Hotdesk Booking Query</p>
-          <p style="font-size:13px;color:var(--text-2);line-height:1.6;">Easier view, with last update.</p>
+          <p class="map-title" data-i18n data-en="BCC Lvl 8 Hotdesk Booking Query" data-zh="BCC 8樓彈性座位預約查詢">BCC Lvl 8 Hotdesk Booking Query</p>
+          <p data-i18n data-en="Easier view, with last update." data-zh="提供更簡便的檢視方式，並顯示最後更新時間。" style="font-size:13px;color:var(--text-2);line-height:1.6;">Easier view, with last update.</p>
           <div class="map-links">
-            <a href="https://wilsonyungsh.github.io/interactive/team_calendar_lv8.html" target="_blank" rel="noopener">Open tool <span class="arrow">→</span></a>
+            <a href="https://wilsonyungsh.github.io/interactive/team_calendar_lv8.html" target="_blank" rel="noopener"><span data-i18n data-en="Open tool" data-zh="開啟工具">Open tool</span> <span class="arrow">→</span></a>
           </div>
         </div>
       </div>
@@ -286,12 +289,12 @@
     <div class="inner">
       <div>
         <p class="name">Wilson Shih-Hsien Yung <span>雍士賢</span></p>
-        <p style="font-size:12px;color:var(--text-3);margin-top:3px;">Open to spatial, transport, and data consulting engagements.</p>
+        <p style="font-size:12px;color:var(--text-3);margin-top:3px;" data-i18n data-en="Open to spatial, transport, and data consulting engagements." data-zh="歡迎交流空間分析、運輸資料、都市成長預測與資料工程相關合作。讓資料不只是數字，也成為理解城市的一扇窗。">Open to spatial, transport, and data consulting engagements.</p>
       </div>
       <div class="links">
         <a href="mailto:wilson0313@gmail.com">Email</a>
         <a href="https://www.linkedin.com/in/wilson-yung" target="_blank" rel="noopener">LinkedIn</a>
-        <a href="index.html">Home</a>
+        <a href="index.html" data-i18n data-en="Home" data-zh="首頁">Home</a>
       </div>
     </div>
 
@@ -300,6 +303,26 @@
         src="https://api.visitorbadge.io/api/visitors?path=https%3A%2F%2Fwilsonyungsh.github.io%2Fmap_list.html&label=Visitors&labelColor=%23f7f6f2&countColor=%232B5F8E&style=flat-square">
     </div>
   </footer>
+
+  <script>
+    var currentLang = localStorage.getItem("wy_lang") || "en";
+    function applyLang(lang) {
+      currentLang = lang;
+      localStorage.setItem("wy_lang", lang);
+      document.documentElement.lang = lang === "zh" ? "zh-TW" : "en";
+      document.querySelectorAll("[data-i18n]").forEach(function(el) {
+        var text = el.getAttribute("data-" + lang);
+        if (text) el.innerHTML = text;
+      });
+      var btn = document.getElementById("langToggle");
+      btn.textContent = lang === "zh" ? "EN" : "繁中";
+      btn.setAttribute("aria-label", lang === "zh" ? "Switch to English" : "切換為繁體中文");
+    }
+    document.getElementById("langToggle").addEventListener("click", function() {
+      applyLang(currentLang === "en" ? "zh" : "en");
+    });
+    applyLang(currentLang);
+  </script>
 
 </body>
 </html>

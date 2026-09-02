@@ -7,14 +7,14 @@
   <meta name="description" content="Spatial data scientist and consultant specialising in transport data, urban modelling, and open-source spatial analytics. Learning operational and domain knowledge on City scale 3D Modelling. Based in Brisbane, Australia.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&family=DM+Mono:wght@400;500&family=LXGW+WenKai+TC:wght@300;400;700&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
       --bg:#f7f6f2;--surface:#ffffff;--border:rgba(0,0,0,0.08);--border-md:rgba(0,0,0,0.13);
       --text-1:#1a1917;--text-2:#4a4845;--text-3:#8a8784;
       --accent:#2B5F8E;--accent-lt:#e8f0f8;--pivot:#C4783A;--pivot-lt:#fdf0e6;
-      --mono:"DM Mono",monospace;--sans:"DM Sans",system-ui,sans-serif;
+      --mono:"DM Mono","LXGW WenKai TC",monospace;--sans:"DM Sans","LXGW WenKai TC",system-ui,sans-serif;
       --radius-sm:6px;--radius-md:10px;--radius-lg:16px;
     }
     html { scroll-behavior: smooth; }
@@ -315,7 +315,7 @@
       document.documentElement.lang = lang === "zh" ? "zh-TW" : "en";
       document.querySelectorAll("[data-i18n]").forEach(function(el) {
         var text = el.getAttribute("data-" + lang);
-        if (text) el.textContent = text;
+        if (text) el.innerHTML = text;
       });
       var btn = document.getElementById("langToggle");
       btn.textContent = lang === "zh" ? "EN" : "繁中";

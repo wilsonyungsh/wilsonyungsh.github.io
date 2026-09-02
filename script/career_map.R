@@ -59,17 +59,17 @@ locations <- data.frame(
     "Macquarie Park, Sydney → Brisbane",
     "Brisbane CBD"
   ),
-  chapter  = c(
-    "Education",
-    "Early career",
-    "Academia",
-    "Fieldwork",
-    "Planning",
-    "GIS industry",
-    "GIS industry",
-    "Transport",
-    "Mobility data pivot",
-    "Current"
+  industry = c(
+    "Education & Academia",          # NCKU
+    "Water Resources",               # Tamkang — water resource policy & management
+    "Education & Academia",          # UTS
+    "Data & Fieldwork Services",     # Appen
+    "Urban & Land Use Planning",     # SGS
+    "Commercial Map Production",     # TomTom — not "GIS industry", they make commercial maps
+    "Water Resources",               # Sydney Water
+    "Transport & Mobility Data",     # Transport for NSW
+    "Transport & Mobility Data",     # DSpark (Optus) — telco mobility data
+    "Urban & Land Use Planning"      # Brisbane City Council
   ),
   lng      = c(
     120.21577501445299,   # NCKU Tainan (corrected)
@@ -103,21 +103,19 @@ locations <- data.frame(
   stringsAsFactors = FALSE
 )
 
-# Chapter colour palette (hex) — warm for pivots, neutral for others
-chapter_colours <- c(
-  "Education"          = "#638B9E",
-  "Early career"       = "#7A9E87",
-  "Academia"           = "#8E7DB5",
-  "Fieldwork"          = "#B5925A",
-  "Planning"           = "#6B9E9E",
-  "GIS industry"       = "#5A7FA8",
-  "Transport"          = "#4A8C6F",
-  "Mobility data pivot" = "#C4783A",  # amber — the pivot moment
-  "Current"            = "#2D6FA3"   # strong blue — present day
+# Industry colour palette (hex) — one colour per industry sector, kept to a
+# small set so the legend stays readable.
+industry_colours <- c(
+  "Education & Academia"      = "#638B9E",
+  "Water Resources"           = "#2E9CB0",
+  "Data & Fieldwork Services" = "#B5925A",
+  "Urban & Land Use Planning" = "#8E7DB5",
+  "Commercial Map Production" = "#5A7FA8",
+  "Transport & Mobility Data" = "#4A8C6F"
 )
 
 locations <- locations |>
-  mutate(colour = chapter_colours[chapter])
+  mutate(colour = industry_colours[industry])
 
 # ── Logo URLs ─────────────────────────────────────────────────────────────────
 # Simple Icons CDN (white on transparent — good on dark basemap) for known brands.
@@ -159,7 +157,7 @@ locations <- locations |>
     "background:#1e1e24;border-radius:8px;padding:12px 14px;'>",
     "<div style='font-size:10px;font-weight:600;text-transform:uppercase;",
     "letter-spacing:0.06em;color:", colour, ";margin-bottom:5px;'>",
-    chapter, " · ", period, "</div>",
+    industry, " · ", period, "</div>",
     "<div style='font-size:14px;font-weight:600;color:#f0f0f0;margin-bottom:2px;'>",
     org, "</div>",
     "<div style='font-size:12px;color:#aaa;margin-bottom:4px;'>", role, "</div>",
@@ -263,17 +261,17 @@ legend_html <- paste0(
   "border-radius:8px; padding:10px 14px; font-family:system-ui,sans-serif;",
   "font-size:11px; line-height:1.9; box-shadow:0 2px 12px rgba(0,0,0,0.4);'>",
   "<div style='font-weight:600; font-size:12px; margin-bottom:6px; color:#e0e0e0;'>",
-  "Career chapters</div>",
+  "Industry</div>",
   paste(
-    mapply(function(ch, col) {
+    mapply(function(ind, col) {
       paste0(
         "<div style='display:flex;align-items:center;gap:7px;'>",
         "<span style='width:9px;height:9px;border-radius:50%;flex-shrink:0;",
         "background:", col, ";display:inline-block;'></span>",
-        "<span style='color:#aaa'>", ch, "</span></div>"
+        "<span style='color:#aaa'>", ind, "</span></div>"
       )
     },
-    names(chapter_colours), chapter_colours
+    names(industry_colours), industry_colours
     ),
     collapse = ""
   ),

@@ -70,7 +70,7 @@ port_card <- function(p) {
 
 map_links_html <- function(links) {
   paste(lapply(links, function(l) {
-    paste0('<a href="', l$url, '" target="_blank" rel="noopener">', l$label, ' <span class="arrow">→</span></a>')
+    paste0('<a href="', l$url, '" target="_blank" rel="noopener"><span ', i18n(l$label_en, l$label_zh), ">", l$label_en, '</span> <span class="arrow">→</span></a>')
   }), collapse = "\n            ")
 }
 
@@ -84,11 +84,11 @@ map_card <- function(item) {
       "</div>"
     )
   }
-  desc <- if (!is.null(item$desc)) paste0('\n          <p style="font-size:13px;color:var(--text-2);line-height:1.6;">', item$desc, "</p>") else ""
+  desc <- if (!is.null(item$desc_en)) paste0('\n          <p ', i18n(item$desc_en, item$desc_zh), ' style="font-size:13px;color:var(--text-2);line-height:1.6;">', item$desc_en, "</p>") else ""
   paste0(
     '\n        <div class="map-card">',
     if (!is.null(top)) top else "",
-    '\n          <p class="map-title">', item$title, "</p>",
+    '\n          <p class="map-title" ', i18n(item$title_en, item$title_zh), ">", item$title_en, "</p>",
     desc,
     '\n          <div class="map-links">\n            ', map_links_html(item$links),
     "\n          </div>",
@@ -98,13 +98,16 @@ map_card <- function(item) {
 
 map_section <- function(sec) {
   cards_html <- paste(lapply(sec$items, map_card), collapse = "")
-  note_html <- if (!is.null(sec$note)) paste0('\n      <p class="note">', sec$note, "</p>") else ""
+  note_html <- if (!is.null(sec$note_en)) paste0('\n      <p class="note" ', i18n(sec$note_en, sec$note_zh), ">", sec$note_en, "</p>") else ""
+  count_html <- if (length(sec$items) > 1) {
+    paste0('\n        <p class="section-count" ', i18n(paste0(length(sec$items), " maps"), paste0(length(sec$items), " 個作品")), ">", length(sec$items), " maps</p>")
+  } else ""
   paste0(
     '\n  <div class="container">',
     '\n    <section>',
     '\n      <div class="section-head">',
-    '\n        <p class="section-label">', sec$label, "</p>",
-    if (length(sec$items) > 1) paste0('\n        <p class="section-count">', length(sec$items), " maps</p>") else "",
+    '\n        <p class="section-label" ', i18n(sec$label_en, sec$label_zh), ">", sec$label_en, "</p>",
+    count_html,
     "\n      </div>",
     '\n      <div class="map-grid">',
     cards_html,
@@ -144,7 +147,7 @@ css <- '    *, *::before, *::after { box-sizing: border-box; margin: 0; padding:
       --bg:#f7f6f2;--surface:#ffffff;--border:rgba(0,0,0,0.08);--border-md:rgba(0,0,0,0.13);
       --text-1:#1a1917;--text-2:#4a4845;--text-3:#8a8784;
       --accent:#2B5F8E;--accent-lt:#e8f0f8;--pivot:#C4783A;--pivot-lt:#fdf0e6;
-      --mono:"DM Mono",monospace;--sans:"DM Sans",system-ui,sans-serif;
+      --mono:"DM Mono","LXGW WenKai TC",monospace;--sans:"DM Sans","LXGW WenKai TC",system-ui,sans-serif;
       --radius-sm:6px;--radius-md:10px;--radius-lg:16px;
     }
     html { scroll-behavior: smooth; }
@@ -228,7 +231,7 @@ lines <- c(
   paste0('  <meta name="description" content="', c_$meta$description_en, '">'),
   '  <link rel="preconnect" href="https://fonts.googleapis.com">',
   '  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>',
-  '  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">',
+  '  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&family=DM+Mono:wght@400;500&family=LXGW+WenKai+TC:wght@300;400;700&display=swap" rel="stylesheet">',
   "  <style>",
   css,
   "  </style>",
@@ -350,7 +353,7 @@ lines <- c(
   '      document.documentElement.lang = lang === "zh" ? "zh-TW" : "en";',
   '      document.querySelectorAll("[data-i18n]").forEach(function(el) {',
   '        var text = el.getAttribute("data-" + lang);',
-  "        if (text) el.textContent = text;",
+  "        if (text) el.innerHTML = text;",
   "      });",
   '      var btn = document.getElementById("langToggle");',
   '      btn.textContent = lang === "zh" ? "EN" : "\u7e41\u4e2d";',
@@ -378,7 +381,7 @@ css_map <- '    *, *::before, *::after { box-sizing: border-box; margin: 0; padd
       --bg:#f7f6f2;--surface:#ffffff;--border:rgba(0,0,0,0.08);--border-md:rgba(0,0,0,0.13);
       --text-1:#1a1917;--text-2:#4a4845;--text-3:#8a8784;
       --accent:#2B5F8E;--accent-lt:#e8f0f8;--pivot:#C4783A;--pivot-lt:#fdf0e6;
-      --mono:"DM Mono",monospace;--sans:"DM Sans",system-ui,sans-serif;
+      --mono:"DM Mono","LXGW WenKai TC",monospace;--sans:"DM Sans","LXGW WenKai TC",system-ui,sans-serif;
       --radius-sm:6px;--radius-md:10px;--radius-lg:16px;
     }
     html { scroll-behavior: smooth; }
@@ -390,6 +393,8 @@ css_map <- '    *, *::before, *::after { box-sizing: border-box; margin: 0; padd
     .nav-logo span { color:var(--text-3);font-weight:300; }
     nav a.back { font-size:14px;color:var(--text-3);text-decoration:none;transition:color 0.15s;display:flex;align-items:center;gap:6px; }
     nav a.back:hover { color:var(--text-1); }
+    .lang-toggle { font-family:var(--mono);font-size:11px;font-weight:500;padding:5px 12px;border-radius:100px;border:1.5px solid var(--accent);background:var(--accent-lt);color:var(--accent);cursor:pointer;transition:all 0.2s;white-space:nowrap;flex-shrink:0;letter-spacing:0.03em; }
+    .lang-toggle:hover { background:var(--accent);color:#ffffff;border-color:var(--accent); }
     .hero { padding:56px 0 40px; }
     .hero-eyebrow { font-family:var(--mono);font-size:12px;color:var(--text-3);letter-spacing:0.04em;margin-bottom:16px; }
     .hero h1 { font-size:clamp(28px,4.5vw,42px);font-weight:300;letter-spacing:-0.03em;line-height:1.2;color:var(--text-1);margin-bottom:14px; }
@@ -435,7 +440,7 @@ lines2 <- c(
   paste0('  <meta name="description" content="', ml$meta_description, '">'),
   '  <link rel="preconnect" href="https://fonts.googleapis.com">',
   '  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>',
-  '  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">',
+  '  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&family=DM+Mono:wght@400;500&family=LXGW+WenKai+TC:wght@300;400;700&display=swap" rel="stylesheet">',
   "  <style>",
   css_map,
   "  </style>",
@@ -445,15 +450,16 @@ lines2 <- c(
   "  <nav>",
   '    <div class="inner">',
   '      <a class="nav-logo" href="index.html">Wilson Yung <span>\u96cd\u58eb\u8ce2</span></a>',
-  '      <a class="back" href="index.html">\u2190 Home</a>',
+  paste0('      <a class="back" href="index.html" ', i18n(ml$nav_home_en, ml$nav_home_zh), ">", ml$nav_home_en, "</a>"),
+  '      <button class="lang-toggle" id="langToggle" aria-label="\u5207\u63db\u70ba\u7e41\u9ad4\u4e2d\u6587">\u7e41\u4e2d</button>',
   "    </div>",
   "  </nav>",
   "",
   '  <div class="container">',
   '    <section class="hero" style="border:none;padding-bottom:24px;">',
-  paste0('      <p class="hero-eyebrow">', ml$hero_eyebrow, "</p>"),
-  paste0("      <h1>", ml$hero_title, "</h1>"),
-  paste0('      <p class="hero-desc">', ml$hero_desc, "</p>"),
+  paste0('      <p class="hero-eyebrow" ', i18n(ml$hero_eyebrow_en, ml$hero_eyebrow_zh), ">", ml$hero_eyebrow_en, "</p>"),
+  paste0("      <h1 ", i18n(ml$hero_title_en, ml$hero_title_zh), ">", ml$hero_title_en, "</h1>"),
+  paste0('      <p class="hero-desc" ', i18n(ml$hero_desc_en, ml$hero_desc_zh), ">", ml$hero_desc_en, "</p>"),
   "    </section>",
   "  </div>",
   map_sections_html,
@@ -462,16 +468,36 @@ lines2 <- c(
   '    <div class="inner">',
   "      <div>",
   '        <p class="name">Wilson Shih-Hsien Yung <span>\u96cd\u58eb\u8ce2</span></p>',
-  paste0('        <p style="font-size:12px;color:var(--text-3);margin-top:3px;">', ftr$tagline_en, "</p>"),
+  paste0('        <p style="font-size:12px;color:var(--text-3);margin-top:3px;" ', i18n(ftr$tagline_en, ftr$tagline_zh), ">", ftr$tagline_en, "</p>"),
   "      </div>",
   '      <div class="links">',
   paste0('        <a href="mailto:', ftr$email, '">Email</a>'),
   paste0('        <a href="', ftr$linkedin, '" target="_blank" rel="noopener">LinkedIn</a>'),
-  '        <a href="index.html">Home</a>',
+  paste0('        <a href="index.html" ', i18n(ml$footer_home_en, ml$footer_home_zh), ">", ml$footer_home_en, "</a>"),
   "      </div>",
   "    </div>",
   visitor_badge("map_list.html"),
   "  </footer>",
+  "",
+  "  <script>",
+  '    var currentLang = localStorage.getItem("wy_lang") || "en";',
+  "    function applyLang(lang) {",
+  "      currentLang = lang;",
+  '      localStorage.setItem("wy_lang", lang);',
+  '      document.documentElement.lang = lang === "zh" ? "zh-TW" : "en";',
+  '      document.querySelectorAll("[data-i18n]").forEach(function(el) {',
+  '        var text = el.getAttribute("data-" + lang);',
+  "        if (text) el.innerHTML = text;",
+  "      });",
+  '      var btn = document.getElementById("langToggle");',
+  '      btn.textContent = lang === "zh" ? "EN" : "\u7e41\u4e2d";',
+  '      btn.setAttribute("aria-label", lang === "zh" ? "Switch to English" : "\u5207\u63db\u70ba\u7e41\u9ad4\u4e2d\u6587");',
+  "    }",
+  '    document.getElementById("langToggle").addEventListener("click", function() {',
+  '      applyLang(currentLang === "en" ? "zh" : "en");',
+  "    });",
+  "    applyLang(currentLang);",
+  "  </script>",
   "",
   "</body>",
   "</html>"

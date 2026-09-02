@@ -21,18 +21,20 @@ Personal website，純靜態 GitHub Pages（沒有後端）。
 
 ### 1. 新增一筆作品到「完整作品集」(map_list.html)
 
-編輯 `script/content.R`，找到 `content$map_list$sections`，在對應分類的 `items` 裡加一筆：
+`map_list.html` 現在也有 EN/ZH 切換（跟首頁一樣），所以標題、說明、連結文字都要中英文一起填。編輯 `script/content.R`，找到 `content$map_list$sections`，在對應分類的 `items` 裡加一筆：
 
 ```r
-list(tool="R + MapGL", title="新地圖標題",
-     links=list(list(label="View map", url="https://wilsonyungsh.github.io/interactive/xxx.html")))
+list(tool="R + MapGL", title_en="New map title", title_zh="新地圖標題",
+     links=list(list(label_en="View map", label_zh="查看地圖", url="https://wilsonyungsh.github.io/interactive/xxx.html")))
 ```
 
-- `badge`：選填，例如 `"Day 4"`（挑戰系列用）
-- `tool`：選填，用的技術
-- `desc`：選填，簡短說明（Shiny/工具類常用）
-- `links`：必填，可以放多個（例如一組資料分好幾張圖）
-- 全新分類：在 `sections` 直接加一整個 `list(label="分類名稱", items=list(...))`
+- `badge`：選填，例如 `"Day 4"`（挑戰系列用，中英通用不用分語言）
+- `tool`：選填，用的技術（中英通用）
+- `title_en` / `title_zh`：必填
+- `desc_en` / `desc_zh`：選填，簡短說明（Shiny/工具類常用）
+- `links`：必填，可以放多個（例如一組資料分好幾張圖），每個要有 `label_en` / `label_zh`
+- 全新分類：在 `sections` 直接加一整個 `list(label_en="...", label_zh="...", items=list(...))`
+- 如果分類要加說明文字（像「2025 Map Challenge」下面那行連結原始碼的 `note_en`/`note_zh`），裡面若有 `<a href="...">` 這種 HTML，記得用單引號寫屬性（`href='...'`），不要用雙引號，不然會跟外層的 `data-en="..."` 屬性衝突把字串截斷。
 
 ### 2. 把作品加進首頁「精選集」(index.html #portfolio)
 
@@ -65,7 +67,18 @@ Rscript script/build.R
 
 ### 5. 更新工作地點地圖 (career_map.html)
 
-改 `script/career_map.R` 裡的 `locations` 資料，然後在 R 裡重新 source/render 這個腳本（它會呼叫 `htmlwidgets::saveWidget` 之類的輸出到 `career_map.html`）。這個跟 `build.R` 的流程是分開的。
+改 `script/career_map.R` 裡的 `locations` 資料，然後跑：
+
+```bash
+Rscript script/career_map.R
+```
+
+會直接輸出 `career_map.html`。這個跟 `build.R` 的流程是分開的（不用改完 career_map.R 又跑 build.R，也不用反過來）。
+
+需要系統裝了 **pandoc**（`htmlwidgets::saveWidget(selfcontained = TRUE)` 需要它來打包成單一 HTML 檔），沒裝的話 `brew install pandoc`。
+
+- **分類（legend）**：地圖上的分類是「產業別」，不是年資/職涯階段。改 `locations$industry`（每個地點一個分類）和 `industry_colours`（分類 → 顏色，同時也是圖例的內容和順序）。想加新分類就在 `industry_colours` 加一行，並讓對應地點的 `industry` 用一樣的名稱。**盡量維持在 5–7 類以內**，太多的話圖例會很擠。
+- **Marker 就是各公司 logo**：地圖上每個點用的是該機構的 logo（`logo_url`／`logo_key` 兩欄，優先用 Google favicon service，知名品牌用 [Simple Icons](https://simpleicons.org) 的白色版本），不是預設的地圖大頭針。加新地點時記得也要補這兩欄，不然那個點會沒有 logo（只剩底下的顏色圓點）。
 
 ### 6. 加一張新的互動地圖本體
 
@@ -74,3 +87,14 @@ Rscript script/build.R
 ## 訪客計數器
 
 頁尾的 Visitors 徽章是外部服務（visitorbadge.io）的圖片，靠 `path` 參數（網址）計數，不需要維護、不需要註冊。`build.R` 裡的 `visitor_badge()` 函式會自動加到兩個頁面的頁尾，改版面時不用擔心會漏掉。
+
+## 中文字型
+
+英文用 DM Sans / DM Mono（Google Fonts），這兩個字型沒有中文字符。中文（以及任何西文字型顯示不出來的字）會自動 fallback 到 **LXGW WenKai TC（霞鶩文楷）**，在 `build.R` 的 `--sans` / `--mono` CSS 變數裡設定：
+
+```css
+--mono:"DM Mono","LXGW WenKai TC",monospace;
+--sans:"DM Sans","LXGW WenKai TC",system-ui,sans-serif;
+```
+
+這個字型只有 300 / 400 / 700 三個字重（`<link>` 標籤裡 `LXGW+WenKai+TC:wght@300;400;700`），如果之後想換掉，記得兩個地方都要改：`<link href="https://fonts.googleapis.com/css2?...">` 的 `family=` 參數，以及上面這兩行 CSS 變數（`css` 和 `css_map` 兩個變數都要改，分別對應首頁和作品集頁）。
