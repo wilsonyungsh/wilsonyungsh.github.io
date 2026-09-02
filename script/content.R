@@ -11,7 +11,7 @@ content <- list(
     title_en = "Wilson Yung — Spatial Data Scientist",
     title_zh = "雍士賢 — 以資料閱讀城市，以空間描繪移動",
     description_en = "Spatial data scientist and consultant specialising in transport data, urban modelling, and open-source spatial analytics. Learning operational and domain knowledge on City scale 3D Modelling. Based in Brisbane, Australia.",
-    description_zh = "空間資料科學家，專注於公共運輸資料分析、城市成長模擬與開源空間分析。長年穿梭於資料與城市之間，透過模型、地圖與程式碼，探索人們如何生活、移動與塑造城市。現居澳洲布里斯本。"
+    description_zh = "空間資料科學家，專注於大眾運輸資料分析、都市成長模擬與開源空間分析。長年穿梭於資料與城市之間，透過模型、地圖與程式碼，探索人們如何生活、移動與形塑城市。現居澳洲布里斯本。"
   ),
 
   # ── Nav ───────────────────────────────────────────────────────────────────
@@ -38,9 +38,9 @@ content <- list(
       "modern cloud-native pipelines across government and industry."
     ),
     desc_zh = paste(
-      "透過空間分析、運輸資料、城市模擬與開源資料工程。",
-      "將散落於城市中的資訊串連成故事，從地圖看見人群移動的軌跡，從資料理解城市演變的脈絡。",
-      "十餘年來持續在政府、研究與產業之間搭建橋梁，讓資料成為理解城市的一種語言，以自身遷移經驗努力實踐。"
+      "透過空間分析、運輸資料、都市模擬與開源資料工程。",
+      "將散落於城市中的資訊串連成故事，從地圖撇見人群移動的軌跡，以資料角度出發進而理解城市演變的脈絡。",
+      "十餘年來持續在政府、研究與產業之間搭建橋梁，讓資料成為理解都市的一種語彙，以自身旅居經驗努力實踐。"
     ),
 
     # Chips — 技術標籤（左側 accent 色）
@@ -63,26 +63,26 @@ content <- list(
   # ── Expertise / domain cards ──────────────────────────────────────────────
   expertise = list(
     label_en = "What I do",
-    label_zh = "我所專注的領域",
+    label_zh = "領域專長",
 
     domains = list(
       list(
         icon = "🗺",
         title_en = "Spatial analytics",      title_zh = "空間分析",
         desc_en  = "GIS workflows, raster analysis, land suitability modelling, PostGIS, R/Python spatial pipelines.",
-        desc_zh  = "運用 GIS、遙測與空間模型，從土地、環境到城市活動，發掘隱藏於地理位置背後的規律與關聯。"
+        desc_zh  = "運用 GIS、遙測與空間模型，從土地、環境到城市活動，發掘隱藏於地理位置背後的關聯與看不見的手。"
       ),
       list(
         icon = "🚌",
         title_en = "Transport data",         title_zh = "大眾運輸資料",
         desc_en  = "GTFS processing, trip planning data, public transport analytics, mobility insights at scale.",
-        desc_zh  = "從 GTFS 到大樣本電信移動資料，描繪城市中的流動樣貌，理解人們如何穿梭於日常生活與都市空間之間。"
+        desc_zh  = "從 GTFS 到大樣本電信信令資料，描繪城市中的流動樣貌，理解人們如何翩翩穿梭於日常生活與都市空間。"
       ),
       list(
         icon = "🏙",
         title_en = "Urban modelling",        title_zh = "城市建模",
         desc_en  = "Urban growth modelling (BrisUrban), 3D city visualisation, land use and activity datasets.",
-        desc_zh  = "都市成長預測（BrisUrban)、土地使用分析與三維城市視覺化，探索城市未來可能的樣貌。"
+        desc_zh  = "都市成長預測（BrisUrban)、土地使用分析與3D城市視覺化，探索城市未來可能的樣貌。"
       ),
       list(
         icon = "⚙️",
@@ -105,7 +105,7 @@ content <- list(
         title_en     = "Team Lead, Research and Modelling Unit",
         title_zh     = "研究與建模部門主管",
         org_en       = "Brisbane City Council · City Plan and Design",
-        org_zh       = "布里斯本市政府 · 城市規劃與設計處",
+        org_zh       = "布里斯本市政府 · 都市規劃與設計處",
         badge_class  = "current",
         tags_en      = c("BrisUrban", "Virtual Brisbane", "Land Use Activity Datasets",
           "Development Activity Datasets", "Team of 10"),
@@ -123,7 +123,7 @@ content <- list(
         tags_en      = c("Telco Mobility Data (MNO Data)", "GTFS", "Apache Sedona",
           "Client management", "State agencies"),
         tags_zh      = c("電信移動數據（MNO）", "GTFS", "Apache Sedona",
-          "客戶管理", "州政府機構")
+          "客戶管理", "州政府")
       )
     ),
 
@@ -173,7 +173,7 @@ content <- list(
   # ── Portfolio ─────────────────────────────────────────────────────────────
   portfolio = list(
     label_en = "Selected work",
-    label_zh = "精選作品",
+    label_zh = "精選集",
 
     cards = list(
       list(
@@ -202,7 +202,7 @@ content <- list(
       ),
       list(
         icon     = "🏘",
-        title_en = "Greater Brisbane land use change", title_zh = "大布里斯本土地使用變化",
+        title_en = "Greater Brisbane land use change", title_zh = "大布里斯本土地使用變遷",
         desc_en  = "Time &amp; Space · R + MapGL",    desc_zh  = "時間與空間 · R + MapGL",
         url      = "https://wilsonyungsh.github.io/interactive/map12_brisbane_lu_map.html"
       ),
@@ -225,7 +225,7 @@ content <- list(
     see_all_en  = "View all maps →",
     see_all_zh  = "瀏覽所有地圖作品 →",
     see_all_label_en = "Full portfolio",
-    see_all_label_zh = "完整作品集",
+    see_all_label_zh = "完整作品集錦",
     see_all_url = "https://wilsonyungsh.github.io/map_list.html"
   ),
 
