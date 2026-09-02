@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Portfolio — Wilson Yung</title>
+  <meta name="description" content="Full portfolio of interactive maps, dashboards, and tools by Wilson Yung, spatial data scientist.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg:#f7f6f2;--surface:#ffffff;--border:rgba(0,0,0,0.08);--border-md:rgba(0,0,0,0.13);
+      --text-1:#1a1917;--text-2:#4a4845;--text-3:#8a8784;
+      --accent:#2B5F8E;--accent-lt:#e8f0f8;--pivot:#C4783A;--pivot-lt:#fdf0e6;
+      --mono:"DM Mono",monospace;--sans:"DM Sans",system-ui,sans-serif;
+      --radius-sm:6px;--radius-md:10px;--radius-lg:16px;
+    }
+    html { scroll-behavior: smooth; }
+    body { font-family:var(--sans);background:var(--bg);color:var(--text-1);font-size:17px;line-height:1.7;-webkit-font-smoothing:antialiased; }
+    .container { max-width:960px;margin:0 auto;padding:0 24px; }
+    nav { position:sticky;top:0;z-index:100;background:rgba(247,246,242,0.88);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:14px 0; }
+    nav .inner { max-width:960px;margin:0 auto;padding:0 24px;display:flex;align-items:center;gap:28px; }
+    .nav-logo { font-size:15px;font-weight:500;color:var(--text-1);text-decoration:none;margin-right:auto;letter-spacing:-0.01em; }
+    .nav-logo span { color:var(--text-3);font-weight:300; }
+    nav a.back { font-size:14px;color:var(--text-3);text-decoration:none;transition:color 0.15s;display:flex;align-items:center;gap:6px; }
+    nav a.back:hover { color:var(--text-1); }
+    .hero { padding:56px 0 40px; }
+    .hero-eyebrow { font-family:var(--mono);font-size:12px;color:var(--text-3);letter-spacing:0.04em;margin-bottom:16px; }
+    .hero h1 { font-size:clamp(28px,4.5vw,42px);font-weight:300;letter-spacing:-0.03em;line-height:1.2;color:var(--text-1);margin-bottom:14px; }
+    .hero-desc { font-size:16px;color:var(--text-2);max-width:600px; }
+    section { padding:44px 0;border-top:1px solid var(--border); }
+    .section-head { display:flex;align-items:baseline;justify-content:space-between;gap:16px;margin-bottom:20px;flex-wrap:wrap; }
+    .section-label { font-family:var(--mono);font-size:12px;color:var(--text-3);letter-spacing:0.06em;text-transform:uppercase; }
+    .section-count { font-family:var(--mono);font-size:12px;color:var(--text-3); }
+    .map-grid { display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px; }
+    .map-card { background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md);padding:16px 18px;display:flex;flex-direction:column;gap:8px;transition:border-color 0.15s,transform 0.15s; }
+    .map-card:hover { border-color:var(--border-md);transform:translateY(-2px); }
+    .map-card-top { display:flex;align-items:center;justify-content:space-between;gap:8px; }
+    .map-badge { font-family:var(--mono);font-size:11px;padding:3px 9px;border-radius:100px;background:var(--accent-lt);color:var(--accent);white-space:nowrap; }
+    .map-tool { font-family:var(--mono);font-size:11px;color:var(--text-3);white-space:nowrap; }
+    .map-title { font-size:15px;font-weight:500;letter-spacing:-0.01em;color:var(--text-1);line-height:1.4; }
+    .map-links { display:flex;flex-direction:column;gap:4px;margin-top:2px; }
+    .map-links a { font-size:13px;color:var(--accent);text-decoration:none;display:inline-flex;align-items:center;gap:4px; }
+    .map-links a:hover { text-decoration:underline; }
+    .map-links a .arrow { transition:transform 0.15s; }
+    .map-links a:hover .arrow { transform:translateX(2px); }
+    .note { font-size:14px;color:var(--text-3);margin-top:20px; }
+    .note a { color:var(--accent);text-decoration:none; }
+    .note a:hover { text-decoration:underline; }
+    footer { border-top:1px solid var(--border);padding:36px 0; }
+    footer .inner { max-width:960px;margin:0 auto;padding:0 24px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px; }
+    footer .name { font-size:16px;font-weight:500;color:var(--text-1); }
+    footer .name span { color:var(--text-3);font-weight:300; }
+    footer .links { display:flex;gap:20px; }
+    footer .links a { font-size:15px;color:var(--text-3);text-decoration:none;transition:color 0.15s; }
+    footer .links a:hover { color:var(--text-1); }
+    .visitor-badge { display:block;margin-top:14px;opacity:0.7;height:20px; }
+    @media(max-width:600px){ .hero{padding:40px 0 32px;} .map-grid{grid-template-columns:1fr;} }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <div class="inner">
+      <a class="nav-logo" href="index.html">Wilson Yung <span>雍士賢</span></a>
+      <a class="back" href="index.html">← Home</a>
+    </div>
+  </nav>
+
+  <div class="container">
+    <section class="hero" style="border:none;padding-bottom:24px;">
+      <p class="hero-eyebrow">Full portfolio</p>
+      <h1>Interactive maps, dashboards &amp; tools.</h1>
+      <p class="hero-desc">A complete list of interactive maps, Shiny dashboards, and small tools built with R and the open-source spatial stack — including entries from the 2024 and 2025 30 Day Map Challenges.</p>
+    </section>
+  </div>
+
+  <div class="container">
+    <section>
+      <div class="section-head">
+        <p class="section-label">2024 Map Challenge</p>
+        <p class="section-count">8 maps</p>
+      </div>
+      <div class="map-grid">
+        <div class="map-card">
+          <div class="map-card-top"><span class="map-badge">Day 4</span><span class="map-tool">R + MapGL</span></div>
+          <p class="map-title">Hexagon — Brisbane Dwelling Hexagon Map</p>
+          <div class="map-links">
+            <a href="https://wilsonyungsh.github.io/interactive/Map4_Brisbane_Dwelling.html" target="_blank" rel="noopener">View map <span class="arrow">→</span></a>
+          </div>
+        </div>
+        <div class="map-card">
+          <div class="map-card-top"><span class="map-badge">Day 5</span><span class="map-tool">R + Mapdeck</span></div>
+          <p class="map-title">Journey — Brisbane My First Cycle Journey</p>
+          <div class="map-links">
+            <a href="https://wilsonyungsh.github.io/interactive/Map5_Brisbane_cycle_journey.html" target="_blank" rel="noopener">View map <span class="arrow">→</span></a>
+          </div>
+        </div>
+        <div class="map-card">
+          <div class="map-card-top"><span class="map-badge">Day 11</span><span class="map-tool">R + Mapgl</span></div>
+          <p class="map-title">Arctic — Arctic Summit Boundary Ice Map</p>
+          <div class="map-links">
+            <a href="https://wilsonyungsh.github.io/interactive/Map11_artic_ice_boundary.html" target="_blank" rel="noopener">View map <span class="arrow">→</span></a>
+          </div>
+        </div>
+        <div class="map-card">
+          <div class="map-card-top"><span class="map-badge">Day 12</span><span class="map-tool">R + MapGL</span></div>
+          <p class="map-title">Time &amp; Space — Greater Brisbane Land Use Change Map</p>
+          <div class="map-links">
+            <a href="https://wilsonyungsh.github.io/interactive/map12_brisbane_lu_map.html" target="_blank" rel="noopener">View map <span class="arrow">→</span></a>
+          </div>
+        </div>
+        <div class="map-card">
+          <div class="map-card-top"><span class="map-badge">Day 15</span><span class="map-tool">R + Mapdeck</span></div>
+          <p class="map-title">My Data — My Fieldtrip Traces</p>
+          <div class="map-links">
+            <a href="https://wilsonyungsh.github.io/interactive/Map15_fieldtrips.html" target="_blank" rel="noopener">View map <span class="arrow">→</span></a>
+          </div>
+        </div>
+        <div class="map-card">
+          <div class="map-card-top"><span class="map-badge">Day 18</span><span class="map-tool">R + Deck.gl</span></div>
+          <p class="map-title">3D — South East Queensland Bus Service Density</p>
+          <div class="map-links">
+            <a href="https://wilsonyungsh.github.io/interactive/map18_seq_bus_service_density.html" target="_blank" rel="noopener">View map <span class="arrow">→</span></a>
+          </div>
+        </div>
+        <div class="map-card">
+          <div class="map-card-top"><span class="map-badge">Day 24</span><span class="map-tool">R + Mapgl</span></div>
+          <p class="map-title">Only Circular Shape — Brisbane Toilet Map</p>
+          <div class="map-links">
+            <a href="https://wilsonyungsh.github.io/interactive/Map24_brisbane_toilets.html" target="_blank" rel="noopener">View map <span class="arrow">→</span></a>
+          </div>
+        </div>
+        <div class="map-card">
+          <div class="map-card-top"><span class="map-badge">Day 29</span><span class="map-tool">R + Mapdeck</span></div>
+          <p class="map-title">Overture Maps — Greater Taipei Building Height</p>
+          <div class="map-links">
+            <a href="https://wilsonyungsh.github.io/interactive/Map29.html" target="_blank" rel="noopener">View map <span class="arrow">→</span></a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <div class="container">
+    <section>
+      <div class="section-head">
+        <p class="section-label">2025 Map Challenge</p>
+        <p class="section-count">3 maps</p>
+      </div>
+      <div class="map-grid">
+        <div class="map-card">
+          <div class="map-card-top"><span class="map-badge">Day 1</span><span class="map-tool">R + duckdb + MapGL</span></div>
+          <p class="map-title">Overture Map — Ipswich Suburb Address Count Map</p>
+          <div class="map-links">
+            <a href="https://wilsonyungsh.github.io/interactive/30DayMapChallenge2025/map1_ipswich_address_map.html" target="_blank" rel="noopener">View map <span class="arrow">→</span></a>
+          </div>
+        </div>
+        <div class="map-card">
+          <div class="map-card-top"><span class="map-badge">Day 3</span><span class="map-tool">R + duckdb + MapGL</span></div>
+          <p class="map-title">Overture Map — South East Queensland Address Density Map</p>
+          <div class="map-links">
+            <a href="https://wilsonyungsh.github.io/interactive/30DayMapChallenge2025/map3_address_density_map.html" target="_blank" rel="noopener">View map <span class="arrow">→</span></a>
+          </div>
+        </div>
+        <div class="map-card">
+          <div class="map-card-top"><span class="map-badge">Day 4</span><span class="map-tool">R + Mapdeck</span></div>
+          <p class="map-title">My Data — My Footprint 2013–2025 (Google Timeline)</p>
+          <div class="map-links">
+            <a href="https://wilsonyungsh.github.io/interactive/30DayMapChallenge2025/Map4_Mydata_2013-2025.html" target="_blank" rel="noopener">View map <span class="arrow">→</span></a>
+          </div>
+        </div>
+      </div>
+      <p class="note">For the full 30 Day Map Challenge repo, see <a href="https://github.com/wilsonyungsh/30DayMapChallenge2025" target="_blank" rel="noopener">github.com/wilsonyungsh/30DayMapChallenge2025</a>.</p>
+    </section>
+  </div>
+
+  <div class="container">
+    <section>
+      <div class="section-head">
+        <p class="section-label">Other projects</p>
+        <p class="section-count">7 maps</p>
+      </div>
+      <div class="map-grid">
+        <div class="map-card">
+          <div class="map-card-top"><span class="map-tool">R + Mapdeck</span></div>
+          <p class="map-title">Bus Route Cumulative Passenger Count — Brisbane Bus Route 431</p>
+          <div class="map-links">
+            <a href="https://wilsonyungsh.github.io/interactive/bus431_capacity.html" target="_blank" rel="noopener">View map <span class="arrow">→</span></a>
+          </div>
+        </div>
+        <div class="map-card">
+          <div class="map-card-top"><span class="map-tool">R + MapGL</span></div>
+          <p class="map-title">2025 June PT Usage by Time Bucket and Trip Direction</p>
+          <div class="map-links">
+            <a href="https://wilsonyungsh.github.io/interactive/Commuting_trips.html" target="_blank" rel="noopener">View map <span class="arrow">→</span></a>
+          </div>
+        </div>
+        <div class="map-card">
+          <div class="map-card-top"><span class="map-tool">R + Mapgl</span></div>
+          <p class="map-title">Dwelling Proportion by Motor Vehicle Ownership</p>
+          <div class="map-links">
+            <a href="interactive/Dwelling_prop_by_mv_ownership/1orNoMV_dwellings.html" target="_blank" rel="noopener">1 or no cars <span class="arrow">→</span></a>
+            <a href="interactive/Dwelling_prop_by_mv_ownership/2_vehicles_dwelling_prop_over_30pr.html" target="_blank" rel="noopener">2 cars <span class="arrow">→</span></a>
+            <a href="interactive/Dwelling_prop_by_mv_ownership/3_or_more_vehicles_dwelling_prop_over_15pr.html" target="_blank" rel="noopener">3+ cars <span class="arrow">→</span></a>
+          </div>
+        </div>
+        <div class="map-card">
+          <div class="map-card-top"><span class="map-tool">R + MapGL</span></div>
+          <p class="map-title">Maps with Felicity</p>
+          <div class="map-links">
+            <a href="interactive/explore.html" target="_blank" rel="noopener">View map <span class="arrow">→</span></a>
+          </div>
+        </div>
+        <div class="map-card">
+          <div class="map-card-top"><span class="map-tool">R + MapGL</span></div>
+          <p class="map-title">Fly-through Example</p>
+          <div class="map-links">
+            <a href="interactive/apcs.html" target="_blank" rel="noopener">View map <span class="arrow">→</span></a>
+          </div>
+        </div>
+        <div class="map-card">
+          <div class="map-card-top"><span class="map-tool">R + MapGL</span></div>
+          <p class="map-title">Dual Frontage Map</p>
+          <div class="map-links">
+            <a href="interactive/dual_frontage.html" target="_blank" rel="noopener">View map <span class="arrow">→</span></a>
+          </div>
+        </div>
+        <div class="map-card">
+          <div class="map-card-top"><span class="map-tool">R + gganimate</span></div>
+          <p class="map-title">Time Lapse Rent Animation — House &amp; Flat, Brisbane</p>
+          <div class="map-links">
+            <a href="interactive/plots/House_Flat_brisbane_rent_animation.gif" target="_blank" rel="noopener">View animation <span class="arrow">→</span></a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <div class="container">
+    <section>
+      <div class="section-head">
+        <p class="section-label">Shiny dashboards</p>
+      </div>
+      <div class="map-grid">
+        <div class="map-card">
+          <p class="map-title">PT Service Explorer</p>
+          <p style="font-size:13px;color:var(--text-2);line-height:1.6;">Explore stop service-level trends (max headway, service counts), route geometry, switchable layers, and a frequency slider with auto-zoom to route or stops.</p>
+          <div class="map-links">
+            <a href="https://wilsonyung.shinyapps.io/BNE_PT_Service_explorer/" target="_blank" rel="noopener">Dashboard <span class="arrow">→</span></a>
+            <a href="https://huggingface.co/spaces/wilsonyung/bne_pt_service_explorer" target="_blank" rel="noopener">HF dashboard <span class="arrow">→</span></a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <div class="container">
+    <section>
+      <div class="section-head">
+        <p class="section-label">Pilot tools</p>
+        <p class="section-count">2 maps</p>
+      </div>
+      <div class="map-grid">
+        <div class="map-card">
+          <p class="map-title">BCC RMU Hotdesk Booking Query</p>
+          <p style="font-size:13px;color:var(--text-2);line-height:1.6;">Easier view, with last update, for our team.</p>
+          <div class="map-links">
+            <a href="https://wilsonyungsh.github.io/interactive/team_calendar.html" target="_blank" rel="noopener">Open tool <span class="arrow">→</span></a>
+          </div>
+        </div>
+        <div class="map-card">
+          <p class="map-title">BCC Lvl 8 Hotdesk Booking Query</p>
+          <p style="font-size:13px;color:var(--text-2);line-height:1.6;">Easier view, with last update.</p>
+          <div class="map-links">
+            <a href="https://wilsonyungsh.github.io/interactive/team_calendar_lv8.html" target="_blank" rel="noopener">Open tool <span class="arrow">→</span></a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <footer>
+    <div class="inner">
+      <div>
+        <p class="name">Wilson Shih-Hsien Yung <span>雍士賢</span></p>
+        <p style="font-size:12px;color:var(--text-3);margin-top:3px;">Open to spatial, transport, and data consulting engagements.</p>
+      </div>
+      <div class="links">
+        <a href="mailto:wilson0313@gmail.com">Email</a>
+        <a href="https://www.linkedin.com/in/wilson-yung" target="_blank" rel="noopener">LinkedIn</a>
+        <a href="index.html">Home</a>
+      </div>
+    </div>
+
+    <div class="inner" style="padding-top:0;">
+      <img class="visitor-badge" alt="Visitor count" loading="lazy"
+        src="https://api.visitorbadge.io/api/visitors?path=https%3A%2F%2Fwilsonyungsh.github.io%2Fmap_list.html&label=Visitors&labelColor=%23f7f6f2&countColor=%232B5F8E&style=flat-square">
+    </div>
+  </footer>
+
+</body>
+</html>

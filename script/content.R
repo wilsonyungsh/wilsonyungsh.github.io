@@ -229,6 +229,107 @@ content <- list(
     see_all_url = "https://wilsonyungsh.github.io/map_list.html"
   ),
 
+  # ── Full portfolio page (map_list.html) ──────────────────────────────────
+  # 新增作品：在對應 section 的 items 裡加一筆 list(...) 即可。
+  # badge  = 選填，例如 "Day 4"（挑戰系列用）
+  # tool   = 選填，用的工具/技術
+  # desc   = 選填，簡短說明（Shiny/工具類用）
+  # links  = 必填，一個或多個 list(label=, url=)
+  map_list = list(
+    meta_title       = "Portfolio — Wilson Yung",
+    meta_description = "Full portfolio of interactive maps, dashboards, and tools by Wilson Yung, spatial data scientist.",
+    hero_eyebrow = "Full portfolio",
+    hero_title   = "Interactive maps, dashboards &amp; tools.",
+    hero_desc    = paste(
+      "A complete list of interactive maps, Shiny dashboards, and small tools built with R and the",
+      "open-source spatial stack — including entries from the 2024 and 2025 30 Day Map Challenges."
+    ),
+
+    sections = list(
+
+      list(
+        label = "2024 Map Challenge",
+        items = list(
+          list(badge="Day 4",  tool="R + MapGL",       title="Hexagon — Brisbane Dwelling Hexagon Map",
+               links=list(list(label="View map", url="https://wilsonyungsh.github.io/interactive/Map4_Brisbane_Dwelling.html"))),
+          list(badge="Day 5",  tool="R + Mapdeck",     title="Journey — Brisbane My First Cycle Journey",
+               links=list(list(label="View map", url="https://wilsonyungsh.github.io/interactive/Map5_Brisbane_cycle_journey.html"))),
+          list(badge="Day 11", tool="R + Mapgl",       title="Arctic — Arctic Summit Boundary Ice Map",
+               links=list(list(label="View map", url="https://wilsonyungsh.github.io/interactive/Map11_artic_ice_boundary.html"))),
+          list(badge="Day 12", tool="R + MapGL",       title="Time &amp; Space — Greater Brisbane Land Use Change Map",
+               links=list(list(label="View map", url="https://wilsonyungsh.github.io/interactive/map12_brisbane_lu_map.html"))),
+          list(badge="Day 15", tool="R + Mapdeck",     title="My Data — My Fieldtrip Traces",
+               links=list(list(label="View map", url="https://wilsonyungsh.github.io/interactive/Map15_fieldtrips.html"))),
+          list(badge="Day 18", tool="R + Deck.gl",     title="3D — South East Queensland Bus Service Density",
+               links=list(list(label="View map", url="https://wilsonyungsh.github.io/interactive/map18_seq_bus_service_density.html"))),
+          list(badge="Day 24", tool="R + Mapgl",       title="Only Circular Shape — Brisbane Toilet Map",
+               links=list(list(label="View map", url="https://wilsonyungsh.github.io/interactive/Map24_brisbane_toilets.html"))),
+          list(badge="Day 29", tool="R + Mapdeck",     title="Overture Maps — Greater Taipei Building Height",
+               links=list(list(label="View map", url="https://wilsonyungsh.github.io/interactive/Map29.html")))
+        )
+      ),
+
+      list(
+        label = "2025 Map Challenge",
+        note = 'For the full 30 Day Map Challenge repo, see <a href="https://github.com/wilsonyungsh/30DayMapChallenge2025" target="_blank" rel="noopener">github.com/wilsonyungsh/30DayMapChallenge2025</a>.',
+        items = list(
+          list(badge="Day 1", tool="R + duckdb + MapGL", title="Overture Map — Ipswich Suburb Address Count Map",
+               links=list(list(label="View map", url="https://wilsonyungsh.github.io/interactive/30DayMapChallenge2025/map1_ipswich_address_map.html"))),
+          list(badge="Day 3", tool="R + duckdb + MapGL", title="Overture Map — South East Queensland Address Density Map",
+               links=list(list(label="View map", url="https://wilsonyungsh.github.io/interactive/30DayMapChallenge2025/map3_address_density_map.html"))),
+          list(badge="Day 4", tool="R + Mapdeck",        title="My Data — My Footprint 2013–2025 (Google Timeline)",
+               links=list(list(label="View map", url="https://wilsonyungsh.github.io/interactive/30DayMapChallenge2025/Map4_Mydata_2013-2025.html")))
+        )
+      ),
+
+      list(
+        label = "Other projects",
+        items = list(
+          list(tool="R + Mapdeck", title="Bus Route Cumulative Passenger Count — Brisbane Bus Route 431",
+               links=list(list(label="View map", url="https://wilsonyungsh.github.io/interactive/bus431_capacity.html"))),
+          list(tool="R + MapGL",   title="2025 June PT Usage by Time Bucket and Trip Direction",
+               links=list(list(label="View map", url="https://wilsonyungsh.github.io/interactive/Commuting_trips.html"))),
+          list(tool="R + Mapgl",   title="Dwelling Proportion by Motor Vehicle Ownership",
+               links=list(
+                 list(label="1 or no cars", url="interactive/Dwelling_prop_by_mv_ownership/1orNoMV_dwellings.html"),
+                 list(label="2 cars",       url="interactive/Dwelling_prop_by_mv_ownership/2_vehicles_dwelling_prop_over_30pr.html"),
+                 list(label="3+ cars",      url="interactive/Dwelling_prop_by_mv_ownership/3_or_more_vehicles_dwelling_prop_over_15pr.html")
+               )),
+          list(tool="R + MapGL", title="Maps with Felicity",
+               links=list(list(label="View map", url="interactive/explore.html"))),
+          list(tool="R + MapGL", title="Fly-through Example",
+               links=list(list(label="View map", url="interactive/apcs.html"))),
+          list(tool="R + MapGL", title="Dual Frontage Map",
+               links=list(list(label="View map", url="interactive/dual_frontage.html"))),
+          list(tool="R + gganimate", title="Time Lapse Rent Animation — House &amp; Flat, Brisbane",
+               links=list(list(label="View animation", url="interactive/plots/House_Flat_brisbane_rent_animation.gif")))
+        )
+      ),
+
+      list(
+        label = "Shiny dashboards",
+        items = list(
+          list(title="PT Service Explorer",
+               desc="Explore stop service-level trends (max headway, service counts), route geometry, switchable layers, and a frequency slider with auto-zoom to route or stops.",
+               links=list(
+                 list(label="Dashboard",    url="https://wilsonyung.shinyapps.io/BNE_PT_Service_explorer/"),
+                 list(label="HF dashboard", url="https://huggingface.co/spaces/wilsonyung/bne_pt_service_explorer")
+               ))
+        )
+      ),
+
+      list(
+        label = "Pilot tools",
+        items = list(
+          list(title="BCC RMU Hotdesk Booking Query", desc="Easier view, with last update, for our team.",
+               links=list(list(label="Open tool", url="https://wilsonyungsh.github.io/interactive/team_calendar.html"))),
+          list(title="BCC Lvl 8 Hotdesk Booking Query", desc="Easier view, with last update.",
+               links=list(list(label="Open tool", url="https://wilsonyungsh.github.io/interactive/team_calendar_lv8.html")))
+        )
+      )
+    )
+  ),
+
   # ── Footer / contact ──────────────────────────────────────────────────────
   footer = list(
     tagline_en   = "Open to spatial, transport, and data consulting engagements.",

@@ -43,6 +43,16 @@ stack_items <- function(items_en, items_zh, cls) {
   }, items_en, items_zh), collapse = "\n            ")
 }
 
+visitor_badge <- function(path) {
+  paste0(
+    '\n    <div class="inner" style="padding-top:0;">',
+    '\n      <img class="visitor-badge" alt="Visitor count" loading="lazy"',
+    '\n        src="https://api.visitorbadge.io/api/visitors?path=https%3A%2F%2Fwilsonyungsh.github.io%2F', path,
+    '&label=Visitors&labelColor=%23f7f6f2&countColor=%232B5F8E&style=flat-square">',
+    "\n    </div>"
+  )
+}
+
 port_card <- function(p) {
   has_bilingual <- !is.null(p$desc_en)
   desc_attr <- if (has_bilingual) paste0(" ", i18n(p$desc_en, p$desc_zh)) else ""
@@ -55,6 +65,53 @@ port_card <- function(p) {
     "\n            <p", desc_attr, ">", desc_text, "</p>",
     "\n          </div>",
     "\n        </a>"
+  )
+}
+
+map_links_html <- function(links) {
+  paste(lapply(links, function(l) {
+    paste0('<a href="', l$url, '" target="_blank" rel="noopener">', l$label, ' <span class="arrow">→</span></a>')
+  }), collapse = "\n            ")
+}
+
+map_card <- function(item) {
+  top <- NULL
+  if (!is.null(item$badge) || !is.null(item$tool)) {
+    top <- paste0(
+      '\n          <div class="map-card-top">',
+      if (!is.null(item$badge)) paste0('<span class="map-badge">', item$badge, "</span>") else "",
+      if (!is.null(item$tool))  paste0('<span class="map-tool">', item$tool, "</span>")   else "",
+      "</div>"
+    )
+  }
+  desc <- if (!is.null(item$desc)) paste0('\n          <p style="font-size:13px;color:var(--text-2);line-height:1.6;">', item$desc, "</p>") else ""
+  paste0(
+    '\n        <div class="map-card">',
+    if (!is.null(top)) top else "",
+    '\n          <p class="map-title">', item$title, "</p>",
+    desc,
+    '\n          <div class="map-links">\n            ', map_links_html(item$links),
+    "\n          </div>",
+    "\n        </div>"
+  )
+}
+
+map_section <- function(sec) {
+  cards_html <- paste(lapply(sec$items, map_card), collapse = "")
+  note_html <- if (!is.null(sec$note)) paste0('\n      <p class="note">', sec$note, "</p>") else ""
+  paste0(
+    '\n  <div class="container">',
+    '\n    <section>',
+    '\n      <div class="section-head">',
+    '\n        <p class="section-label">', sec$label, "</p>",
+    if (length(sec$items) > 1) paste0('\n        <p class="section-count">', length(sec$items), " maps</p>") else "",
+    "\n      </div>",
+    '\n      <div class="map-grid">',
+    cards_html,
+    "\n      </div>",
+    note_html,
+    "\n    </section>",
+    "\n  </div>"
   )
 }
 
@@ -156,6 +213,7 @@ css <- '    *, *::before, *::after { box-sizing: border-box; margin: 0; padding:
     footer .links { display:flex;gap:20px; }
     footer .links a { font-size:15px;color:var(--text-3);text-decoration:none;transition:color 0.15s; }
     footer .links a:hover { color:var(--text-1); }
+    .visitor-badge { display:block;margin-top:14px;opacity:0.7;height:20px; }
     .divider { border:none;border-top:1px solid var(--border);margin:32px 0; }
     @media(max-width:600px){.hero{padding:48px 0 36px;}.stack-compare{grid-template-columns:1fr;}.stack-arrow-col{display:none;}}'
 
@@ -281,6 +339,7 @@ lines <- c(
   paste0('        <a href="', ftr$portfolio_url, '" target="_blank" rel="noopener" ', i18n(ftr$portfolio_en, ftr$portfolio_zh), ">", ftr$portfolio_en, "</a>"),
   "      </div>",
   "    </div>",
+  visitor_badge(""),
   "  </footer>",
   "",
   "  <script>",
@@ -309,3 +368,114 @@ lines <- c(
 
 writeLines(lines, "index.html", useBytes = TRUE)
 message("\u2713 index.html \u5df2\u7522\u751f")
+
+# \u2500\u2500 map_list.html\uff08\u5b8c\u6574\u4f5c\u54c1\u96c6\uff09\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500
+
+ml <- c_$map_list
+
+css_map <- '    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg:#f7f6f2;--surface:#ffffff;--border:rgba(0,0,0,0.08);--border-md:rgba(0,0,0,0.13);
+      --text-1:#1a1917;--text-2:#4a4845;--text-3:#8a8784;
+      --accent:#2B5F8E;--accent-lt:#e8f0f8;--pivot:#C4783A;--pivot-lt:#fdf0e6;
+      --mono:"DM Mono",monospace;--sans:"DM Sans",system-ui,sans-serif;
+      --radius-sm:6px;--radius-md:10px;--radius-lg:16px;
+    }
+    html { scroll-behavior: smooth; }
+    body { font-family:var(--sans);background:var(--bg);color:var(--text-1);font-size:17px;line-height:1.7;-webkit-font-smoothing:antialiased; }
+    .container { max-width:960px;margin:0 auto;padding:0 24px; }
+    nav { position:sticky;top:0;z-index:100;background:rgba(247,246,242,0.88);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:14px 0; }
+    nav .inner { max-width:960px;margin:0 auto;padding:0 24px;display:flex;align-items:center;gap:28px; }
+    .nav-logo { font-size:15px;font-weight:500;color:var(--text-1);text-decoration:none;margin-right:auto;letter-spacing:-0.01em; }
+    .nav-logo span { color:var(--text-3);font-weight:300; }
+    nav a.back { font-size:14px;color:var(--text-3);text-decoration:none;transition:color 0.15s;display:flex;align-items:center;gap:6px; }
+    nav a.back:hover { color:var(--text-1); }
+    .hero { padding:56px 0 40px; }
+    .hero-eyebrow { font-family:var(--mono);font-size:12px;color:var(--text-3);letter-spacing:0.04em;margin-bottom:16px; }
+    .hero h1 { font-size:clamp(28px,4.5vw,42px);font-weight:300;letter-spacing:-0.03em;line-height:1.2;color:var(--text-1);margin-bottom:14px; }
+    .hero-desc { font-size:16px;color:var(--text-2);max-width:600px; }
+    section { padding:44px 0;border-top:1px solid var(--border); }
+    .section-head { display:flex;align-items:baseline;justify-content:space-between;gap:16px;margin-bottom:20px;flex-wrap:wrap; }
+    .section-label { font-family:var(--mono);font-size:12px;color:var(--text-3);letter-spacing:0.06em;text-transform:uppercase; }
+    .section-count { font-family:var(--mono);font-size:12px;color:var(--text-3); }
+    .map-grid { display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px; }
+    .map-card { background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md);padding:16px 18px;display:flex;flex-direction:column;gap:8px;transition:border-color 0.15s,transform 0.15s; }
+    .map-card:hover { border-color:var(--border-md);transform:translateY(-2px); }
+    .map-card-top { display:flex;align-items:center;justify-content:space-between;gap:8px; }
+    .map-badge { font-family:var(--mono);font-size:11px;padding:3px 9px;border-radius:100px;background:var(--accent-lt);color:var(--accent);white-space:nowrap; }
+    .map-tool { font-family:var(--mono);font-size:11px;color:var(--text-3);white-space:nowrap; }
+    .map-title { font-size:15px;font-weight:500;letter-spacing:-0.01em;color:var(--text-1);line-height:1.4; }
+    .map-links { display:flex;flex-direction:column;gap:4px;margin-top:2px; }
+    .map-links a { font-size:13px;color:var(--accent);text-decoration:none;display:inline-flex;align-items:center;gap:4px; }
+    .map-links a:hover { text-decoration:underline; }
+    .map-links a .arrow { transition:transform 0.15s; }
+    .map-links a:hover .arrow { transform:translateX(2px); }
+    .note { font-size:14px;color:var(--text-3);margin-top:20px; }
+    .note a { color:var(--accent);text-decoration:none; }
+    .note a:hover { text-decoration:underline; }
+    footer { border-top:1px solid var(--border);padding:36px 0; }
+    footer .inner { max-width:960px;margin:0 auto;padding:0 24px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px; }
+    footer .name { font-size:16px;font-weight:500;color:var(--text-1); }
+    footer .name span { color:var(--text-3);font-weight:300; }
+    footer .links { display:flex;gap:20px; }
+    footer .links a { font-size:15px;color:var(--text-3);text-decoration:none;transition:color 0.15s; }
+    footer .links a:hover { color:var(--text-1); }
+    .visitor-badge { display:block;margin-top:14px;opacity:0.7;height:20px; }
+    @media(max-width:600px){ .hero{padding:40px 0 32px;} .map-grid{grid-template-columns:1fr;} }'
+
+map_sections_html <- paste(lapply(ml$sections, map_section), collapse = "\n")
+
+lines2 <- c(
+  "<!DOCTYPE html>",
+  '<html lang="en">',
+  "<head>",
+  '  <meta charset="utf-8">',
+  '  <meta name="viewport" content="width=device-width, initial-scale=1">',
+  paste0("  <title>", ml$meta_title, "</title>"),
+  paste0('  <meta name="description" content="', ml$meta_description, '">'),
+  '  <link rel="preconnect" href="https://fonts.googleapis.com">',
+  '  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>',
+  '  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">',
+  "  <style>",
+  css_map,
+  "  </style>",
+  "</head>",
+  "<body>",
+  "",
+  "  <nav>",
+  '    <div class="inner">',
+  '      <a class="nav-logo" href="index.html">Wilson Yung <span>\u96cd\u58eb\u8ce2</span></a>',
+  '      <a class="back" href="index.html">\u2190 Home</a>',
+  "    </div>",
+  "  </nav>",
+  "",
+  '  <div class="container">',
+  '    <section class="hero" style="border:none;padding-bottom:24px;">',
+  paste0('      <p class="hero-eyebrow">', ml$hero_eyebrow, "</p>"),
+  paste0("      <h1>", ml$hero_title, "</h1>"),
+  paste0('      <p class="hero-desc">', ml$hero_desc, "</p>"),
+  "    </section>",
+  "  </div>",
+  map_sections_html,
+  "",
+  "  <footer>",
+  '    <div class="inner">',
+  "      <div>",
+  '        <p class="name">Wilson Shih-Hsien Yung <span>\u96cd\u58eb\u8ce2</span></p>',
+  paste0('        <p style="font-size:12px;color:var(--text-3);margin-top:3px;">', ftr$tagline_en, "</p>"),
+  "      </div>",
+  '      <div class="links">',
+  paste0('        <a href="mailto:', ftr$email, '">Email</a>'),
+  paste0('        <a href="', ftr$linkedin, '" target="_blank" rel="noopener">LinkedIn</a>'),
+  '        <a href="index.html">Home</a>',
+  "      </div>",
+  "    </div>",
+  visitor_badge("map_list.html"),
+  "  </footer>",
+  "",
+  "</body>",
+  "</html>"
+)
+
+writeLines(lines2, "map_list.html", useBytes = TRUE)
+message("\u2713 map_list.html \u5df2\u7522\u751f")
