@@ -82,7 +82,7 @@ Rscript script/career_map.R
 
 ### 6. 加一張新的互動地圖本體
 
-新地圖的 R script 輸出到 `interactive/`（可另外開子資料夾歸類，參考 `30DayMapChallenge2025/`），確定网址能打開後，再照第 1、2 點把它加進作品清單。
+新地圖的 R script 輸出到 `interactive/`（可另外開子資料夾歸類，參考 `30DayMapChallenge2025/`），確定網址能打開後，再照第 1、2 點把它加進作品清單。
 
 ## 訪客計數器
 
