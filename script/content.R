@@ -314,7 +314,9 @@ content <- list(
           list(tool="R + MapGL", title_en="Dual Frontage Map", title_zh="雙面臨路地圖",
                links=list(list(label_en="View map", label_zh="查看地圖", url="interactive/dual_frontage.html"))),
           list(tool="R + gganimate", title_en="Time Lapse Rent Animation — House &amp; Flat, Brisbane", title_zh="租金縮時動畫 — 布里斯本獨棟與公寓",
-               links=list(list(label_en="View animation", label_zh="查看動畫", url="interactive/plots/House_Flat_brisbane_rent_animation.gif")))
+               links=list(list(label_en="View animation", label_zh="查看動畫", url="interactive/plots/House_Flat_brisbane_rent_animation.gif"))),
+          list(tool="R + Quarto", title_en="Brisbane Rental Trend Exploration", title_zh="布里斯本租房市場分析探索",
+               links=list(list(label_en="View Analysis", label_zh="查看分析", url="interactive/brisbane_rental_trend.html")))               
         )
       ),
 
