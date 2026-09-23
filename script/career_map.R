@@ -72,8 +72,8 @@ locations <- data.frame(
     "Urban & Land Use Planning"      # Brisbane City Council
   ),
   lng      = c(
-    120.21577501445299,   # NCKU Tainan (corrected)
-    121.4628,             # Tamkang New Taipei
+    120.2156431519289,    # NCKU — 都計系館 (Dept. of Urban Planning building)
+    121.44592677983286,   # Tamkang New Taipei
     151.2002,             # UTS Sydney
     151.1803,             # Chatswood (Appen)
     151.20936716143243,   # SGSEP Sydney CBD (corrected)
@@ -81,11 +81,11 @@ locations <- data.frame(
     151.0338,             # Sydney Water Potts Hill
     151.20629833027127,   # TfNSW Sydney CBD (corrected)
     153.0111418034162,    # DSpark Brisbane (corrected)
-    153.0260              # Brisbane City Council CBD
+    153.02256254709644    # Brisbane City Council CBD
   ),
   lat      = c(
-    22.998176618344687,   # NCKU Tainan — northern hemisphere
-    25.1798,              # Tamkang New Taipei
+    23.000938960734327,   # NCKU — 都計系館 (Dept. of Urban Planning building)
+    25.17406363863662,    # Tamkang New Taipei
     -33.8833,             # UTS Sydney
     -33.7969,             # Chatswood (Appen)
     -33.88593930086862,   # SGSEP (corrected)
@@ -93,7 +93,7 @@ locations <- data.frame(
     -33.9082,             # Sydney Water Potts Hill
     -33.88041851325041,   # TfNSW (corrected)
     -27.474321855338705,  # DSpark Brisbane (corrected)
-    -27.4705              # Brisbane City Council
+    -27.470776856892282   # Brisbane City Council
   ),
   has_fieldwork = c(
     FALSE, FALSE, FALSE,
@@ -118,30 +118,26 @@ locations <- locations |>
   mutate(colour = industry_colours[industry])
 
 # ── Logo URLs ─────────────────────────────────────────────────────────────────
-# Simple Icons CDN (white on transparent — good on dark basemap) for known brands.
-# Google favicon service as fallback for others.
+# Locally hosted PNGs in career_logos/ (128x128, white circular badge backing).
+# Earlier versions pointed at Google's favicon service / Simple Icons CDN, but
+# MapLibre's mlmap.loadImage() fetches these at *render time* in the visitor's
+# browser — Google's favicon endpoint now 301s to a URL that 404s, and the
+# Simple Icons SVGs can't be rasterised by loadImage() (it only decodes raster
+# formats). Both silently failed with no error visible on the page. Hosting
+# real PNGs ourselves avoids both problems and works offline / same-origin.
+# See career_logos/README.md for how each one was sourced and how to refresh.
 locations <- locations |>
   mutate(logo_url = c(
-    # NCKU — favicon from ncku.edu.tw
-    "https://www.google.com/s2/favicons?sz=64&domain=ncku.edu.tw",
-    # Tamkang University
-    "https://www.google.com/s2/favicons?sz=64&domain=tku.edu.tw",
-    # UTS
-    "https://www.google.com/s2/favicons?sz=64&domain=uts.edu.au",
-    # Appen
-    "https://www.google.com/s2/favicons?sz=64&domain=appen.com",
-    # SGS Economics and Planning
-    "https://www.google.com/s2/favicons?sz=64&domain=sgsep.com.au",
-    # TomTom — Simple Icons, white
-    "https://cdn.simpleicons.org/tomtom/ffffff",
-    # Sydney Water
-    "https://www.google.com/s2/favicons?sz=64&domain=sydneywater.com.au",
-    # Transport for NSW
-    "https://www.google.com/s2/favicons?sz=64&domain=transport.nsw.gov.au",
-    # DSpark / Optus — Simple Icons, white
-    "https://cdn.simpleicons.org/optus/ffffff",
-    # Brisbane City Council
-    "https://www.google.com/s2/favicons?sz=64&domain=brisbane.qld.gov.au"
+    "career_logos/ncku.png",
+    "career_logos/tku.png",
+    "career_logos/uts.png",
+    "career_logos/appen.png",
+    "career_logos/sgs.png",
+    "career_logos/tomtom.png",
+    "career_logos/sydwater.png",
+    "career_logos/tfnsw.png",
+    "career_logos/optus.png",
+    "career_logos/bcc.png"
   ),
   # Unique image key per dot (used as MapLibre sprite name)
   logo_key = c(
@@ -182,12 +178,28 @@ locations <- locations |>
 # Points sf
 pts_sf <- st_as_sf(locations, coords = c("lng", "lat"), crs = 4326)
 
-# Arc lines sf — one linestring per consecutive pair
+# Arc lines sf — one curved linestring per consecutive pair.
+# Curve is a quadratic Bezier: start/end at the two points, control point
+# offset perpendicular to the straight line by `bulge` (fraction of the
+# lng/lat span), sampled into `n` vertices so it renders as a smooth arc
+# instead of a straight segment.
+make_arc <- function(lng1, lat1, lng2, lat2, bulge = 0.15, n = 40) {
+  dx <- lng2 - lng1
+  dy <- lat2 - lat1
+  perp_x <- -dy
+  perp_y <- dx
+  ctrl_x <- (lng1 + lng2) / 2 + perp_x * bulge
+  ctrl_y <- (lat1 + lat2) / 2 + perp_y * bulge
+  t <- seq(0, 1, length.out = n)
+  x <- (1 - t)^2 * lng1 + 2 * (1 - t) * t * ctrl_x + t^2 * lng2
+  y <- (1 - t)^2 * lat1 + 2 * (1 - t) * t * ctrl_y + t^2 * lat2
+  cbind(x, y)
+}
+
 arc_lines <- lapply(seq_len(nrow(locations) - 1), function(i) {
-  st_linestring(matrix(
-    c(locations$lng[i],   locations$lat[i],
-      locations$lng[i + 1], locations$lat[i + 1]),
-    ncol = 2, byrow = TRUE
+  st_linestring(make_arc(
+    locations$lng[i],     locations$lat[i],
+    locations$lng[i + 1], locations$lat[i + 1]
   ))
 })
 arcs_sf <- st_sf(
@@ -294,6 +306,38 @@ logo_manifest_js <- paste0(
   "]"
 )
 
+# ── Tour control HTML (button + "now showing" caption) ───────────────────────
+tour_control_html <- paste0(
+  "<div id='career-tour' style='",
+  "position:absolute; top:12px; right:12px; z-index:999;",
+  "display:flex; flex-direction:column; align-items:flex-end; gap:6px;'>",
+  "<button id='tour-btn' style='",
+  "font-family:system-ui,sans-serif; font-size:12px; font-weight:600;",
+  "padding:7px 14px; border-radius:100px; border:1.5px solid #2B5F8E;",
+  "background:#e8f0f8; color:#2B5F8E; cursor:pointer;'>",
+  "▶ Play career tour</button>",
+  "<div id='tour-caption' style='",
+  "opacity:0; transition:opacity 0.3s; max-width:260px; text-align:right;",
+  "background:rgba(20,20,28,0.88); border:1px solid rgba(255,255,255,0.08);",
+  "border-radius:8px; padding:6px 12px; font-family:system-ui,sans-serif;",
+  "font-size:11px; color:#e0e0e0; box-shadow:0 2px 12px rgba(0,0,0,0.4);'></div>",
+  "</div>"
+)
+
+# Serialise the ordered tour stops (locations are already chronological by id)
+tour_manifest_js <- paste0(
+  "[",
+  paste(
+    mapply(function(lng, lat, org, period) {
+      paste0('{"lng":', lng, ',"lat":', lat, ',"org":"', org, '","period":"', period, '"}')
+    },
+    locations$lng, locations$lat, locations$org, locations$period
+    ),
+    collapse = ","
+  ),
+  "]"
+)
+
 map <- map |>
   htmlwidgets::onRender(paste0(
     "function(el, x) {",
@@ -303,9 +347,16 @@ map <- map |>
     "  leg.innerHTML = `", legend_html, "`;",
     "  el.appendChild(leg.firstChild);",
 
+    # ── Inject tour control ──
+    "  var tourCtrl = document.createElement('div');",
+    "  tourCtrl.innerHTML = `", tour_control_html, "`;",
+    "  el.appendChild(tourCtrl.firstChild);",
+
     # ── Wait for map style to load, then load logos + add symbol layer ──
     "  var map = this;",
     "  var logos = ", logo_manifest_js, ";",
+    "  var tourStops = ", tour_manifest_js, ";",
+    "  var overview = { center: [145, -25], zoom: 3.5, pitch: 0, bearing: 0 };",
 
     # We need the actual MapLibre map instance — mapgl stores it on the widget
     "  function getMLMap(el) {",
@@ -326,13 +377,16 @@ map <- map |>
     "        }",
     "        loaded++;",
     "        if (loaded === logos.length) {",
-    # All images attempted — add symbol layer on top.
-    # mapgl names the geojson source after the layer id when an sf object
-    # is passed directly, so pts_layer source = 'pts_layer'.
-    "          var srcName = 'pts_layer';",
-    "          var sources = mlmap.getStyle().sources;",
-    "          if (!sources[srcName]) {",
-    # fallback: find any geojson source that has our data
+    # All images attempted — add symbol layer on top. Ask MapLibre what
+    # source the pts_layer circle layer is actually bound to instead of
+    # guessing a name — mapgl auto-generates the internal source id and it
+    # does NOT reuse the layer's own id, so the previous 'pts_layer' guess
+    # (and its key-order fallback) silently attached the icons to the wrong
+    # source, meaning icon-image resolved to nothing and nothing rendered.
+    "          var ptsStyleLayer = mlmap.getLayer('pts_layer');",
+    "          var srcName = ptsStyleLayer ? ptsStyleLayer.source : null;",
+    "          if (!srcName) {",
+    "            var sources = mlmap.getStyle().sources;",
     "            var keys = Object.keys(sources);",
     "            for (var s=0;s<keys.length;s++){",
     "              if(sources[keys[s]].type==='geojson'){srcName=keys[s];break;}",
@@ -344,7 +398,7 @@ map <- map |>
     "            source: srcName,",
     "            layout: {",
     "              'icon-image': ['get', 'logo_key'],",
-    "              'icon-size': 0.45,",
+    "              'icon-size': 0.28,",
     "              'icon-allow-overlap': true,",
     "              'icon-ignore-placement': true",
     "            }",
@@ -354,10 +408,51 @@ map <- map |>
     "    });",
     "  }",
 
+    # ── Fly-through tour: visit each career stop in chronological order.
+    # The button toggles between play/stop — clicking while touring cancels
+    # the tour immediately (stops the in-flight animation and flies back to
+    # the overview) instead of waiting for it to finish. ──
+    "  function wireTourButton(mlmap) {",
+    "    var btn = document.getElementById('tour-btn');",
+    "    var caption = document.getElementById('tour-caption');",
+    "    if (!btn || btn.dataset.wired) return;",
+    "    btn.dataset.wired = '1';",
+    "    var flying = false;",
+    "    var timer = null;",
+    "    function stopTour() {",
+    "      if (timer) { clearTimeout(timer); timer = null; }",
+    "      flying = false;",
+    "      btn.textContent = '▶ Play career tour';",
+    "      caption.style.opacity = 0;",
+    "      mlmap.stop();",
+    "      mlmap.flyTo({ center: overview.center, zoom: overview.zoom, pitch: overview.pitch, bearing: overview.bearing, duration: 1500, essential: true });",
+    "    }",
+    "    function playTour() {",
+    "      flying = true;",
+    "      btn.textContent = '⏹ Stop tour';",
+    "      var i = 0;",
+    "      function next() {",
+    "        if (!flying) return;",
+    "        if (i >= tourStops.length) { stopTour(); return; }",
+    "        var s = tourStops[i];",
+    "        caption.style.opacity = 1;",
+    "        caption.innerHTML = '<b>' + (i + 1) + ' / ' + tourStops.length + '</b> · ' + s.org + ' · ' + s.period;",
+    "        mlmap.flyTo({ center: [s.lng, s.lat], zoom: 15.5, pitch: 45, bearing: 0, duration: 1800, essential: true });",
+    "        i++;",
+    "        timer = setTimeout(next, 3200);",
+    "      }",
+    "      next();",
+    "    }",
+    "    btn.addEventListener('click', function() {",
+    "      if (flying) { stopTour(); } else { playTour(); }",
+    "    });",
+    "  }",
+
     "  function tryAdd() {",
     "    var mlmap = getMLMap(el);",
     "    if (mlmap && mlmap.isStyleLoaded()) {",
     "      addLogoLayer(mlmap);",
+    "      wireTourButton(mlmap);",
     "    } else {",
     "      setTimeout(tryAdd, 200);",
     "    }",

@@ -297,6 +297,10 @@ content <- list(
       list(
         label_en = "Other projects", label_zh = "其他專案",
         items = list(
+          list(tool="R + mapgl (MapLibre GL)", title_en="Career Location Map", title_zh="職涯地點地圖",
+               desc_en="Every stop in my career, connected by animated arcs — click ▶ Play career tour for a guided fly-through.",
+               desc_zh="用動態弧線連接職涯中的每一站，點選 ▶ Play career tour 可以自動飛覽整段旅程。",
+               links=list(list(label_en="View map", label_zh="查看地圖", url="career_map.html"))),
           list(tool="R + Mapdeck", title_en="Bus Route Cumulative Passenger Count — Brisbane Bus Route 431", title_zh="公車路線累積乘客人數 — 布里斯本 431 公車路線",
                links=list(list(label_en="View map", label_zh="查看地圖", url="https://wilsonyungsh.github.io/interactive/bus431_capacity.html"))),
           list(tool="R + MapGL",   title_en="2025 June PT Usage by Time Bucket and Trip Direction", title_zh="2025年6月大眾運輸依時段與方向使用量",
