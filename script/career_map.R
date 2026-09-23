@@ -170,6 +170,70 @@ locations <- locations |>
   )
   )
 
+# ── GIS map gallery (shown in popup) ─────────────────────────────────────────
+# Small thumbnail gallery of past GIS/analysis map outputs per career stop —
+# separate from the tour's story-card photo (that's the team/self photo
+# shown while flying past; this is supporting work samples, shown on click).
+# Click a thumb to open the full-size version in a new tab. Add a new stop's
+# maps here, then regenerate — see career_gis_maps/README.md for sourcing
+# and how the thumb/full pairs were made.
+career_maps <- list(
+  "National Cheng Kung University" = list(
+    list(year = "2002", label = "Land use audit",  slug = "ncku_2002_landaudit"),
+    list(year = "2003", label = "3D city model",    slug = "ncku_2003_3d_a"),
+    list(year = "2003", label = "3D city model",    slug = "ncku_2003_3d_b"),
+    list(year = "2005", label = "Base map",         slug = "ncku_2005_basemap"),
+    list(year = "2008", label = "Thesis map",       slug = "ncku_2008_thesis")
+  ),
+  "UTS / Research Assistant" = list(
+    list(year = "2016", label = "3D model — ArcGIS Desktop", slug = "uts_2016_arcgis3d"),
+    list(year = "2024", label = "3D model — QGIS",           slug = "uts_2024_qgis3d")
+  ),
+  "SGS Economics and Planning" = list(
+    list(year = "2014", label = "Project map", slug = "sgs_2014_project")
+  ),
+  "TomTom" = list(
+    list(year = "2017", label = "Heavy vehicle gap analysis", slug = "tomtom_2017_heavyvehicle")
+  ),
+  "DSpark (Optus)" = list(
+    list(year = "2020", label = "Project map",         slug = "dspark_2020_project"),
+    list(year = "2023", label = "ITS project",         slug = "dspark_2023_its"),
+    # Filename didn't name the org — assigned here by year (falls inside the
+    # 2019-2024 DSpark stretch). Move it if that guess is wrong.
+    list(year = "2023", label = "Flood risk analysis", slug = "dspark_2023_floodrisk")
+  ),
+  "City of Gold Coast" = list(
+    list(year = "2024", label = "Project map", slug = "goldcoast_2024_project")
+  )
+)
+
+gis_map_gallery_html <- function(org) {
+  maps <- career_maps[[org]]
+  if (is.null(maps)) return("")
+  thumbs <- paste(lapply(maps, function(m) {
+    paste0(
+      "<a href='career_gis_maps/full/", m$slug, ".jpg' target='_blank' rel='noopener' ",
+      "title='", m$year, " · ", m$label, "' ",
+      "style='display:block;width:52px;height:36px;border-radius:4px;overflow:hidden;",
+      "border:1px solid rgba(255,255,255,0.15);flex-shrink:0;'>",
+      "<img src='career_gis_maps/thumbs/", m$slug, ".jpg' loading='lazy' ",
+      "style='width:100%;height:100%;object-fit:cover;display:block;' ",
+      "alt='", m$year, " ", m$label, "'>",
+      "</a>"
+    )
+  }), collapse = "")
+  paste0(
+    "<div style='margin-top:10px;padding-top:10px;border-top:1px solid rgba(255,255,255,0.08);'>",
+    "<div style='font-size:9px;color:#777;text-transform:uppercase;",
+    "letter-spacing:0.05em;margin-bottom:6px;'>Maps from this role</div>",
+    "<div style='display:flex;flex-wrap:wrap;gap:5px;'>", thumbs, "</div>",
+    "</div>"
+  )
+}
+
+locations <- locations |>
+  mutate(gallery_html = sapply(org, gis_map_gallery_html))
+
 # ── Popup HTML (shown on click) ───────────────────────────────────────────────
 locations <- locations |>
   mutate(popup_html = paste0(
@@ -194,6 +258,7 @@ locations <- locations |>
       ),
       ""
     ),
+    gallery_html,
     "</div>"
   ))
 
