@@ -178,6 +178,12 @@ content <- list(
     cards = list(
       list(
         icon     = "🗺",
+        title_en = "My Career Location Story Map",   title_zh = "我的職涯故事圖",
+        desc     = "Google Timeline · R + Maglibre + Claude Code",
+        url      = "https://wilsonyungsh.github.io/career_map.html"
+      ),
+      list(
+        icon     = "🗺",
         title_en = "My footprint 2013–2025",         title_zh = "我的足跡 2013–2025",
         desc     = "Google Timeline · R + Mapdeck",
         url      = "https://wilsonyungsh.github.io/interactive/30DayMapChallenge2025/Map4_Mydata_2013-2025.html"
