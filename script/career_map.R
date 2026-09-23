@@ -143,14 +143,14 @@ locations <- locations |>
     "career_logos/tomtom.png",
     "career_logos/sydwater.png",
     "career_logos/tfnsw.png",
-    "career_logos/optus.png",
+    "career_logos/dspark.png",
     "career_logos/gcc.png",
     "career_logos/bcc.png"
   ),
   # Unique image key per dot (used as MapLibre sprite name)
   logo_key = c(
     "logo_ncku", "logo_tku", "logo_uts", "logo_appen", "logo_sgs",
-    "logo_tomtom", "logo_sydwater", "logo_tfnsw", "logo_optus", "logo_gcc", "logo_bcc"
+    "logo_tomtom", "logo_sydwater", "logo_tfnsw", "logo_dspark", "logo_gcc", "logo_bcc"
   )
   )
 
