@@ -10,7 +10,7 @@ library(sf)
 
 # ── Career locations ──────────────────────────────────────────────────────────
 locations <- data.frame(
-  id       = 1:10,
+  id       = 1:11,
   org      = c(
     "National Cheng Kung University",
     "Tamkang University",
@@ -21,6 +21,7 @@ locations <- data.frame(
     "Sydney Water",
     "Transport for NSW",
     "DSpark (Optus)",
+    "City of Gold Coast",
     "Brisbane City Council"
   ),
   role     = c(
@@ -33,6 +34,7 @@ locations <- data.frame(
     "Field Service Officer",
     "Spatial Data Analyst",
     "Principal Data Science Consultant",
+    "Data Scientist (Contract) — Transport Analytics",
     "Principal Research Officer, Team Lead RMU"
   ),
   period   = c(
@@ -45,6 +47,7 @@ locations <- data.frame(
     "2015",
     "2017–2018",
     "2019–2024",
+    "2024–2025",
     "2025–present"
   ),
   city     = c(
@@ -57,6 +60,7 @@ locations <- data.frame(
     "Potts Hill, Sydney",
     "Sydney CBD",
     "Macquarie Park, Sydney → Brisbane",
+    "Bundall, Gold Coast",
     "Brisbane CBD"
   ),
   industry = c(
@@ -69,6 +73,7 @@ locations <- data.frame(
     "Water Resources",               # Sydney Water
     "Transport & Mobility Data",     # Transport for NSW
     "Transport & Mobility Data",     # DSpark (Optus) — telco mobility data
+    "Transport & Mobility Data",     # City of Gold Coast — transport analytics, PT ticketing, micro-mobility
     "Urban & Land Use Planning"      # Brisbane City Council
   ),
   lng      = c(
@@ -81,6 +86,7 @@ locations <- data.frame(
     151.0338,             # Sydney Water Potts Hill
     151.20629833027127,   # TfNSW Sydney CBD (corrected)
     153.0111418034162,    # DSpark Brisbane (corrected)
+    153.42410495833954,   # City of Gold Coast council office, Bundall
     153.02256254709644    # Brisbane City Council CBD
   ),
   lat      = c(
@@ -93,12 +99,13 @@ locations <- data.frame(
     -33.9082,             # Sydney Water Potts Hill
     -33.88041851325041,   # TfNSW (corrected)
     -27.474321855338705,  # DSpark Brisbane (corrected)
+    -28.035759004676077,  # City of Gold Coast council office, Bundall
     -27.470776856892282   # Brisbane City Council
   ),
   has_fieldwork = c(
     FALSE, FALSE, FALSE,
     TRUE,   # Appen — links to fieldtrip map
-    FALSE, FALSE, FALSE, FALSE, FALSE, FALSE
+    FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE
   ),
   stringsAsFactors = FALSE
 )
@@ -137,12 +144,13 @@ locations <- locations |>
     "career_logos/sydwater.png",
     "career_logos/tfnsw.png",
     "career_logos/optus.png",
+    "career_logos/gcc.png",
     "career_logos/bcc.png"
   ),
   # Unique image key per dot (used as MapLibre sprite name)
   logo_key = c(
     "logo_ncku", "logo_tku", "logo_uts", "logo_appen", "logo_sgs",
-    "logo_tomtom", "logo_sydwater", "logo_tfnsw", "logo_optus", "logo_bcc"
+    "logo_tomtom", "logo_sydwater", "logo_tfnsw", "logo_optus", "logo_gcc", "logo_bcc"
   )
   )
 

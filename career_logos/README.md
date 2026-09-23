@@ -39,6 +39,7 @@ regardless of each source logo's own background colour.
 | `sydwater.png` | Sydney Water | `https://icons.duckduckgo.com/ip3/sydneywater.com.au.ico` |
 | `tfnsw.png` | Transport for NSW | `https://transport.nsw.gov.au/themes/tfnsw_corp_theme/favicon.ico` |
 | `optus.png` | DSpark (Optus) | `https://optus.com.au/favicon.ico` (their current "Yes" rewards app icon) |
+| `gcc.png` | City of Gold Coast | Real logo, cropped from a LinkedIn screenshot supplied directly by the site owner |
 | `bcc.png` | Brisbane City Council | `https://icons.duckduckgo.com/ip3/brisbane.qld.gov.au.ico` |
 
 ## Refreshing or replacing one
