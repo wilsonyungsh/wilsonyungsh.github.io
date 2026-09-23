@@ -370,41 +370,43 @@ map <- map |>
 
     "  function addLogoLayer(mlmap) {",
     "    var loaded = 0;",
-    "    logos.forEach(function(logo) {",
-    "      mlmap.loadImage(logo.url, function(err, img) {",
-    "        if (!err && img) {",
-    "          if (!mlmap.hasImage(logo.key)) mlmap.addImage(logo.key, img);",
+    # This build of MapLibre GL JS's Map#loadImage(url) is Promise-based —
+    # it takes ONE argument and resolves { data: <image> }. It does NOT
+    # accept a (err, img) callback as a second argument (that's the old
+    # Mapbox GL JS style). Passing one silently does nothing: the call still
+    # "succeeds" but the callback is never invoked, so `loaded` never
+    # reaches logos.length and addLayer() below never runs — no error, no
+    # image, nothing rendered. Confirmed by a live in-browser probe before
+    # fixing (loadImage's returned promise just sat unused).
+    "    function afterEachLogo() {",
+    "      loaded++;",
+    "      if (loaded !== logos.length) return;",
+    "      var ptsStyleLayer = mlmap.getLayer('pts_layer');",
+    "      var srcName = ptsStyleLayer ? ptsStyleLayer.source : null;",
+    "      if (!srcName) {",
+    "        var sources = mlmap.getStyle().sources;",
+    "        var keys = Object.keys(sources);",
+    "        for (var s=0;s<keys.length;s++){",
+    "          if(sources[keys[s]].type==='geojson'){srcName=keys[s];break;}",
     "        }",
-    "        loaded++;",
-    "        if (loaded === logos.length) {",
-    # All images attempted — add symbol layer on top. Ask MapLibre what
-    # source the pts_layer circle layer is actually bound to instead of
-    # guessing a name — mapgl auto-generates the internal source id and it
-    # does NOT reuse the layer's own id, so the previous 'pts_layer' guess
-    # (and its key-order fallback) silently attached the icons to the wrong
-    # source, meaning icon-image resolved to nothing and nothing rendered.
-    "          var ptsStyleLayer = mlmap.getLayer('pts_layer');",
-    "          var srcName = ptsStyleLayer ? ptsStyleLayer.source : null;",
-    "          if (!srcName) {",
-    "            var sources = mlmap.getStyle().sources;",
-    "            var keys = Object.keys(sources);",
-    "            for (var s=0;s<keys.length;s++){",
-    "              if(sources[keys[s]].type==='geojson'){srcName=keys[s];break;}",
-    "            }",
-    "          }",
-    "          mlmap.addLayer({",
-    "            id: 'logo_layer',",
-    "            type: 'symbol',",
-    "            source: srcName,",
-    "            layout: {",
-    "              'icon-image': ['get', 'logo_key'],",
-    "              'icon-size': 0.28,",
-    "              'icon-allow-overlap': true,",
-    "              'icon-ignore-placement': true",
-    "            }",
-    "          });",
+    "      }",
+    "      mlmap.addLayer({",
+    "        id: 'logo_layer',",
+    "        type: 'symbol',",
+    "        source: srcName,",
+    "        layout: {",
+    "          'icon-image': ['get', 'logo_key'],",
+    "          'icon-size': 0.28,",
+    "          'icon-allow-overlap': true,",
+    "          'icon-ignore-placement': true",
     "        }",
     "      });",
+    "    }",
+    "    logos.forEach(function(logo) {",
+    "      mlmap.loadImage(logo.url).then(function(res) {",
+    "        var img = res && res.data;",
+    "        if (img && !mlmap.hasImage(logo.key)) mlmap.addImage(logo.key, img);",
+    "      }).catch(function() {}).then(afterEachLogo);",
     "    });",
     "  }",
 
