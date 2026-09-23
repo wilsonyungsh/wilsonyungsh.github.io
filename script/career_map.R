@@ -107,6 +107,22 @@ locations <- data.frame(
     TRUE,   # Appen — links to fieldtrip map
     FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE
   ),
+  # Story-map photo shown as a bigger card during the tour when the
+  # flythrough reaches that stop. NA = falls back to the small text-only
+  # caption. See career_photos/README.md for sourcing.
+  photo    = c(
+    NA,                            # NCKU
+    NA,                            # Tamkang
+    NA,                            # UTS
+    "career_photos/appen.jpg",    # Appen
+    NA,                            # SGS
+    "career_photos/sydwater.jpg", # Sydney Water
+    "career_photos/tomtom.jpg",   # TomTom
+    NA,                            # Transport for NSW
+    "career_photos/dspark.jpg",   # DSpark (Optus)
+    "career_photos/gcc.jpg",      # City of Gold Coast
+    "career_photos/bcc.jpg"       # Brisbane City Council
+  ),
   stringsAsFactors = FALSE
 )
 
@@ -273,16 +289,37 @@ logo_manifest_js <- paste0(
   "]"
 )
 
-# ── Tour control HTML (button + "now showing" caption) ───────────────────────
+# ── Tour control HTML (transport controls + story-card caption) ─────────────
+# Full transport controls instead of a single play/stop toggle — prev/next
+# step through stops manually (handy for jumping straight to one with a
+# photo), pause holds position instead of flying back to the overview, and
+# restart resets to the first stop. The caption is a card that can
+# optionally hold a photo on top (hidden by default, shown only when a stop
+# has one) with the existing text underneath — stops without a photo look
+# exactly as before.
 tour_control_html <- paste0(
   "<div id='career-tour' style='",
   "position:absolute; top:12px; right:12px; z-index:999;",
   "display:flex; flex-direction:column; align-items:flex-end; gap:6px;'>",
+  "<div id='tour-controls' style='display:flex; align-items:center; gap:5px;'>",
+  "<button id='tour-prev' title='Previous stop' style='",
+  "font-family:system-ui,sans-serif; font-size:13px; width:28px; height:28px;",
+  "border-radius:50%; border:1.5px solid #2B5F8E; background:#e8f0f8;",
+  "color:#2B5F8E; cursor:pointer; padding:0;'>⏮</button>",
   "<button id='tour-btn' style='",
   "font-family:system-ui,sans-serif; font-size:12px; font-weight:600;",
   "padding:7px 14px; border-radius:100px; border:1.5px solid #2B5F8E;",
-  "background:#e8f0f8; color:#2B5F8E; cursor:pointer;'>",
+  "background:#e8f0f8; color:#2B5F8E; cursor:pointer; white-space:nowrap;'>",
   "▶ Play career tour</button>",
+  "<button id='tour-next' title='Next stop' style='",
+  "font-family:system-ui,sans-serif; font-size:13px; width:28px; height:28px;",
+  "border-radius:50%; border:1.5px solid #2B5F8E; background:#e8f0f8;",
+  "color:#2B5F8E; cursor:pointer; padding:0;'>⏭</button>",
+  "<button id='tour-restart' title='Restart' style='",
+  "font-family:system-ui,sans-serif; font-size:13px; width:28px; height:28px;",
+  "border-radius:50%; border:1.5px solid #2B5F8E; background:#e8f0f8;",
+  "color:#2B5F8E; cursor:pointer; padding:0;'>↺</button>",
+  "</div>",
   "<div id='tour-speed-wrap' style='",
   "display:flex; align-items:center; gap:6px; background:rgba(20,20,28,0.88);",
   "border:1px solid rgba(255,255,255,0.08); border-radius:100px;",
@@ -293,10 +330,13 @@ tour_control_html <- paste0(
   "<span id='tour-speed-label' style='font-family:monospace; font-size:10px; color:#e0e0e0; width:28px;'>1.0×</span>",
   "</div>",
   "<div id='tour-caption' style='",
-  "opacity:0; transition:opacity 0.3s; max-width:260px; text-align:right;",
+  "opacity:0; transition:opacity 0.3s; width:260px;",
   "background:rgba(20,20,28,0.88); border:1px solid rgba(255,255,255,0.08);",
-  "border-radius:8px; padding:6px 12px; font-family:system-ui,sans-serif;",
-  "font-size:11px; color:#e0e0e0; box-shadow:0 2px 12px rgba(0,0,0,0.4);'></div>",
+  "border-radius:10px; overflow:hidden; box-shadow:0 2px 12px rgba(0,0,0,0.4);'>",
+  "<img id='tour-caption-photo' style='display:none; width:100%; height:150px; object-fit:cover;'>",
+  "<div id='tour-caption-text' style='padding:8px 12px; text-align:right;",
+  "font-family:system-ui,sans-serif; font-size:11px; color:#e0e0e0;'></div>",
+  "</div>",
   "</div>"
 )
 
@@ -304,10 +344,12 @@ tour_control_html <- paste0(
 tour_manifest_js <- paste0(
   "[",
   paste(
-    mapply(function(lng, lat, org, period) {
-      paste0('{"lng":', lng, ',"lat":', lat, ',"org":"', org, '","period":"', period, '"}')
+    mapply(function(lng, lat, org, period, photo) {
+      photo_field <- if (is.na(photo)) "null" else paste0('"', photo, '"')
+      paste0('{"lng":', lng, ',"lat":', lat, ',"org":"', org, '","period":"', period,
+             '","photo":', photo_field, '}')
     },
-    locations$lng, locations$lat, locations$org, locations$period
+    locations$lng, locations$lat, locations$org, locations$period, locations$photo
     ),
     collapse = ","
   ),
@@ -404,57 +446,95 @@ map <- map |>
     "  }",
 
     # ── Fly-through tour: visit each career stop in chronological order.
-    # The button toggles between play/stop — clicking while touring cancels
-    # the tour immediately (stops the in-flight animation and flies back to
-    # the overview) instead of waiting for it to finish. ──
+    # Full transport-control state machine. idx = the stop we're at (or
+    # flying to). flying = auto-advance is on. started = we've flown to a
+    # stop at least once (controls the button's "Play" vs "Resume" label).
+    # Pausing never flies back to the overview any more — it just holds
+    # position wherever it is. ──
     "  function wireTourButton(mlmap) {",
     "    var btn = document.getElementById('tour-btn');",
+    "    var prevBtn = document.getElementById('tour-prev');",
+    "    var nextBtn = document.getElementById('tour-next');",
+    "    var restartBtn = document.getElementById('tour-restart');",
     "    var caption = document.getElementById('tour-caption');",
+    "    var captionPhoto = document.getElementById('tour-caption-photo');",
+    "    var captionText = document.getElementById('tour-caption-text');",
     "    var speedInput = document.getElementById('tour-speed');",
     "    var speedLabel = document.getElementById('tour-speed-label');",
     "    if (!btn || btn.dataset.wired) return;",
     "    btn.dataset.wired = '1';",
+    "    var idx = 0;",
     "    var flying = false;",
+    "    var started = false;",
     "    var timer = null;",
-    # Speed slider: 0.5x (slower, more time to look at each stop) to 2.5x
-    # (fast overview). Read fresh each hop so dragging mid-tour takes effect
-    # on the next leg immediately, rather than only at the next play click.
+    # Speed slider: 0.1x (very slow) to 2.5x (fast overview). Read fresh
+    # each hop so dragging mid-tour takes effect on the next leg
+    # immediately, rather than only at the next play click.
     "    function getSpeed() { return speedInput ? parseFloat(speedInput.value) : 1; }",
     "    if (speedInput) {",
     "      speedInput.addEventListener('input', function() {",
     "        speedLabel.textContent = getSpeed().toFixed(1) + '×';",
     "      });",
     "    }",
-    "    function stopTour() {",
-    "      if (timer) { clearTimeout(timer); timer = null; }",
-    "      flying = false;",
-    "      btn.textContent = '▶ Play career tour';",
-    "      caption.style.opacity = 0;",
-    "      mlmap.stop();",
-    "      mlmap.flyTo({ center: overview.center, zoom: overview.zoom, pitch: overview.pitch, bearing: overview.bearing, duration: Math.round(1500 / getSpeed()), essential: true });",
+    "    function updateLabel() {",
+    "      btn.textContent = flying ? '⏸ Pause' : (started ? '▶ Resume' : '▶ Play career tour');",
     "    }",
-    "    function playTour() {",
-    "      flying = true;",
-    "      btn.textContent = '⏹ Stop tour';",
-    "      var i = 0;",
-    "      function next() {",
-    "        if (!flying) return;",
-    "        if (i >= tourStops.length) { stopTour(); return; }",
-    "        var s = tourStops[i];",
-    "        var speed = getSpeed();",
-    "        caption.style.opacity = 1;",
-    "        caption.innerHTML = '<b>' + (i + 1) + ' / ' + tourStops.length + '</b> · ' + s.org + ' · ' + s.period;",
+    "    function showStop(i) {",
+    "      var s = tourStops[i];",
+    "      caption.style.opacity = 1;",
+    "      if (s.photo) {",
+    "        captionPhoto.src = s.photo;",
+    "        captionPhoto.style.display = 'block';",
+    "      } else {",
+    "        captionPhoto.style.display = 'none';",
+    "        captionPhoto.removeAttribute('src');",
+    "      }",
+    "      captionText.innerHTML = '<b>' + (i + 1) + ' / ' + tourStops.length + '</b> · ' + s.org + ' · ' + s.period;",
     # pitch 55 — steep enough to feel like a real fly-in and show the deck.gl
     # arc's elevation as it comes into each stop, but still under MapLibre's
     # default 60° max so the horizon doesn't dominate the frame.
-    "        mlmap.flyTo({ center: [s.lng, s.lat], zoom: 15.5, pitch: 55, bearing: 0, duration: Math.round(1800 / speed), essential: true });",
-    "        i++;",
-    "        timer = setTimeout(next, Math.round(3200 / speed));",
-    "      }",
-    "      next();",
+    "      mlmap.flyTo({ center: [s.lng, s.lat], zoom: 15.5, pitch: 55, bearing: 0, duration: Math.round(1800 / getSpeed()), essential: true });",
+    "      started = true;",
     "    }",
-    "    btn.addEventListener('click', function() {",
-    "      if (flying) { stopTour(); } else { playTour(); }",
+    "    function scheduleNext() {",
+    "      if (timer) clearTimeout(timer);",
+    "      timer = setTimeout(function() {",
+    "        if (idx < tourStops.length - 1) {",
+    "          idx++;",
+    "          showStop(idx);",
+    "          scheduleNext();",
+    "        } else {",
+    "          flying = false;",
+    "          updateLabel();",
+    "        }",
+    "      }, Math.round(3200 / getSpeed()));",
+    "    }",
+    "    function play() {",
+    "      flying = true;",
+    "      updateLabel();",
+    "      if (!started) showStop(idx);",
+    "      scheduleNext();",
+    "    }",
+    "    function pause() {",
+    "      flying = false;",
+    "      if (timer) { clearTimeout(timer); timer = null; }",
+    "      updateLabel();",
+    "    }",
+    "    function step(delta) {",
+    "      var next = idx + delta;",
+    "      if (next < 0 || next > tourStops.length - 1) return;",
+    "      idx = next;",
+    "      showStop(idx);",
+    "      if (flying) scheduleNext();",
+    "    }",
+    "    btn.addEventListener('click', function() { flying ? pause() : play(); });",
+    "    if (prevBtn) prevBtn.addEventListener('click', function() { step(-1); });",
+    "    if (nextBtn) nextBtn.addEventListener('click', function() { step(1); });",
+    "    if (restartBtn) restartBtn.addEventListener('click', function() {",
+    "      idx = 0;",
+    "      started = false;",
+    "      pause();",
+    "      play();",
     "    });",
     "  }",
 
