@@ -178,34 +178,11 @@ locations <- locations |>
 # Points sf
 pts_sf <- st_as_sf(locations, coords = c("lng", "lat"), crs = 4326)
 
-# Arc lines sf — one curved linestring per consecutive pair.
-# Curve is a quadratic Bezier: start/end at the two points, control point
-# offset perpendicular to the straight line by `bulge` (fraction of the
-# lng/lat span), sampled into `n` vertices so it renders as a smooth arc
-# instead of a straight segment.
-make_arc <- function(lng1, lat1, lng2, lat2, bulge = 0.15, n = 40) {
-  dx <- lng2 - lng1
-  dy <- lat2 - lat1
-  perp_x <- -dy
-  perp_y <- dx
-  ctrl_x <- (lng1 + lng2) / 2 + perp_x * bulge
-  ctrl_y <- (lat1 + lat2) / 2 + perp_y * bulge
-  t <- seq(0, 1, length.out = n)
-  x <- (1 - t)^2 * lng1 + 2 * (1 - t) * t * ctrl_x + t^2 * lng2
-  y <- (1 - t)^2 * lat1 + 2 * (1 - t) * t * ctrl_y + t^2 * lat2
-  cbind(x, y)
-}
-
-arc_lines <- lapply(seq_len(nrow(locations) - 1), function(i) {
-  st_linestring(make_arc(
-    locations$lng[i],     locations$lat[i],
-    locations$lng[i + 1], locations$lat[i + 1]
-  ))
-})
-arcs_sf <- st_sf(
-  seq      = seq_len(nrow(locations) - 1),
-  geometry = st_sfc(arc_lines, crs = 4326)
-)
+# Arcs are no longer drawn as a MapLibre line layer — MapLibre lines are
+# flat (no z-height), so however curved they look from above, they never
+# read as 3D the way mapdeck's (deck.gl) ArcLayer does. Real 3D arcs are
+# added below via deck.gl's ArcLayer, interleaved on top of this MapLibre
+# map (same underlying tech mapdeck uses). See the onRender block.
 
 # ── Build map ─────────────────────────────────────────────────────────────────
 map <- maplibre(
@@ -215,24 +192,6 @@ map <- maplibre(
   pitch   = 0,
   bearing = 0
 ) |>
-  # Arc glow (wide, low opacity — gives neon glow effect on dark)
-  add_line_layer(
-    id           = "arcs_glow",
-    source       = arcs_sf,
-    line_color   = "#5B9BD5",
-    line_width   = 6,
-    line_opacity = 0.18,
-    line_blur    = 4
-  ) |>
-  # Arc core line
-  add_line_layer(
-    id             = "arcs_layer",
-    source         = arcs_sf,
-    line_color     = "#7BB8F0",
-    line_width     = 1.8,
-    line_opacity   = 0.75,
-    line_dasharray = list(4, 3)
-  ) |>
   # Halo circles
   add_circle_layer(
     id                  = "pts_halo",
@@ -338,6 +297,22 @@ tour_manifest_js <- paste0(
   "]"
 )
 
+# Serialise consecutive-pair arcs for deck.gl's ArcLayer — one {from,to} per
+# hop, in the same chronological order as the tour.
+deck_arc_manifest_js <- paste0(
+  "[",
+  paste(
+    sapply(seq_len(nrow(locations) - 1), function(i) {
+      paste0(
+        '{"from":[', locations$lng[i],     ",", locations$lat[i],     "],",
+        '"to":[',    locations$lng[i + 1], ",", locations$lat[i + 1], "]}"
+      )
+    }),
+    collapse = ","
+  ),
+  "]"
+)
+
 map <- map |>
   htmlwidgets::onRender(paste0(
     "function(el, x) {",
@@ -356,6 +331,7 @@ map <- map |>
     "  var map = this;",
     "  var logos = ", logo_manifest_js, ";",
     "  var tourStops = ", tour_manifest_js, ";",
+    "  var deckArcs = ", deck_arc_manifest_js, ";",
     "  var overview = { center: [145, -25], zoom: 3.5, pitch: 0, bearing: 0 };",
 
     # We need the actual MapLibre map instance — mapgl stores it on the widget
@@ -460,6 +436,38 @@ map <- map |>
     "    }",
     "  }",
     "  tryAdd();",
+
+    # ── Real 3D arcs via deck.gl (the same rendering engine mapdeck/R uses),
+    # interleaved on top of this MapLibre map. MapLibre's own line layer has
+    # no z-height — however curved a line looks from above, it stays flat —
+    # so it can never read as 3D the way deck.gl's ArcLayer does (true
+    # elevation + per-vertex shading + source/target colour gradient).
+    # deck.gl is loaded from a CDN at runtime (not bundled by htmlwidgets),
+    # so this waits for both the script and the map style before adding it.
+    "  var deckScriptEl = document.createElement('script');",
+    "  deckScriptEl.src = 'https://unpkg.com/deck.gl@9.4.0/dist.min.js';",
+    "  document.head.appendChild(deckScriptEl);",
+    "  function tryAddDeckArcs() {",
+    "    var mlmap = getMLMap(el);",
+    "    if (!window.deck || !mlmap || !mlmap.isStyleLoaded()) {",
+    "      setTimeout(tryAddDeckArcs, 200);",
+    "      return;",
+    "    }",
+    "    var arcLayer = new deck.ArcLayer({",
+    "      id: 'career-arcs',",
+    "      data: deckArcs,",
+    "      getSourcePosition: function(d) { return d.from; },",
+    "      getTargetPosition: function(d) { return d.to; },",
+    "      getSourceColor: [91, 155, 213, 160],",
+    "      getTargetColor: [123, 184, 240, 220],",
+    "      getWidth: 2.5,",
+    "      widthMinPixels: 1.5,",
+    "      getHeight: 0.5,",
+    "      greatCircle: true",
+    "    });",
+    "    mlmap.addControl(new deck.MapboxOverlay({ interleaved: true, layers: [arcLayer] }));",
+    "  }",
+    "  tryAddDeckArcs();",
     "}"
   ))
 
