@@ -17,8 +17,8 @@ locations <- data.frame(
     "UTS / Research Assistant",
     "Appen Butler Hill",
     "SGS Economics and Planning",
-    "TomTom",
     "Sydney Water",
+    "TomTom",
     "Transport for NSW",
     "DSpark (Optus)",
     "City of Gold Coast",
@@ -30,8 +30,8 @@ locations <- data.frame(
     "Research Assistant + Sessional Lecturer (ongoing)",
     "Fieldwork Project Specialist",
     "GIS Researcher / Town Planner",
-    "GIS Engineer → Senior Sourcing Analyst",
     "Field Service Officer",
+    "GIS Engineer → Senior Sourcing Analyst",
     "Spatial Data Analyst",
     "Principal Data Science Consultant",
     "Data Scientist (Contract) — Transport Analytics",
@@ -43,8 +43,8 @@ locations <- data.frame(
     "2012–present",
     "2013–2014",
     "2014",
-    "2015–2017",
     "2015",
+    "2015–2017",
     "2017–2018",
     "2019–2024",
     "2024–2025",
@@ -56,8 +56,8 @@ locations <- data.frame(
     "Sydney, Australia",
     "Chatswood, Sydney",
     "Sydney CBD",
-    "North Ryde, Sydney",
     "Potts Hill, Sydney",
+    "North Ryde, Sydney",
     "Sydney CBD",
     "Macquarie Park, Sydney → Brisbane",
     "Bundall, Gold Coast",
@@ -69,8 +69,8 @@ locations <- data.frame(
     "Education & Academia",          # UTS
     "Data & Fieldwork Services",     # Appen
     "Urban & Land Use Planning",     # SGS
-    "Commercial Map Production",     # TomTom — not "GIS industry", they make commercial maps
     "Water Resources",               # Sydney Water
+    "Commercial Map Production",     # TomTom — not "GIS industry", they make commercial maps
     "Transport & Mobility Data",     # Transport for NSW
     "Transport & Mobility Data",     # DSpark (Optus) — telco mobility data
     "Transport & Mobility Data",     # City of Gold Coast — transport analytics, PT ticketing, micro-mobility
@@ -82,8 +82,8 @@ locations <- data.frame(
     151.2002,             # UTS Sydney
     151.1803,             # Chatswood (Appen)
     151.20936716143243,   # SGSEP Sydney CBD (corrected)
-    151.14550704742223,   # TomTom Lane Cove (corrected)
     151.0338,             # Sydney Water Potts Hill
+    151.14550704742223,   # TomTom Lane Cove (corrected)
     151.20629833027127,   # TfNSW Sydney CBD (corrected)
     153.0111418034162,    # DSpark Brisbane (corrected)
     153.42410495833954,   # City of Gold Coast council office, Bundall
@@ -95,8 +95,8 @@ locations <- data.frame(
     -33.8833,             # UTS Sydney
     -33.7969,             # Chatswood (Appen)
     -33.88593930086862,   # SGSEP (corrected)
-    -33.79837208739991,   # TomTom (corrected)
     -33.9082,             # Sydney Water Potts Hill
+    -33.79837208739991,   # TomTom (corrected)
     -33.88041851325041,   # TfNSW (corrected)
     -27.474321855338705,  # DSpark Brisbane (corrected)
     -28.035759004676077,  # City of Gold Coast council office, Bundall
@@ -140,8 +140,8 @@ locations <- locations |>
     "career_logos/uts.png",
     "career_logos/appen.png",
     "career_logos/sgs.png",
-    "career_logos/tomtom.png",
     "career_logos/sydwater.png",
+    "career_logos/tomtom.png",
     "career_logos/tfnsw.png",
     "career_logos/dspark.png",
     "career_logos/gcc.png",
@@ -150,7 +150,7 @@ locations <- locations |>
   # Unique image key per dot (used as MapLibre sprite name)
   logo_key = c(
     "logo_ncku", "logo_tku", "logo_uts", "logo_appen", "logo_sgs",
-    "logo_tomtom", "logo_sydwater", "logo_tfnsw", "logo_dspark", "logo_gcc", "logo_bcc"
+    "logo_sydwater", "logo_tomtom", "logo_tfnsw", "logo_dspark", "logo_gcc", "logo_bcc"
   )
   )
 
@@ -288,7 +288,7 @@ tour_control_html <- paste0(
   "border:1px solid rgba(255,255,255,0.08); border-radius:100px;",
   "padding:5px 12px; box-shadow:0 2px 12px rgba(0,0,0,0.4);'>",
   "<span style='font-family:system-ui,sans-serif; font-size:10px; color:#aaa; white-space:nowrap;'>Speed</span>",
-  "<input id='tour-speed' type='range' min='0.5' max='2.5' step='0.25' value='1' ",
+  "<input id='tour-speed' type='range' min='0.1' max='2.5' step='0.1' value='1' ",
   "style='width:90px; accent-color:#7BB8F0; cursor:pointer;'>",
   "<span id='tour-speed-label' style='font-family:monospace; font-size:10px; color:#e0e0e0; width:28px;'>1.0×</span>",
   "</div>",
