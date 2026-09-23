@@ -27,11 +27,11 @@ two processed sizes.
 | `ncku_2008_thesis` | National Cheng Kung University | 2008 | Thesis map |
 | `uts_2016_arcgis3d` | UTS | 2016 | 3D model — ArcGIS Desktop |
 | `uts_2024_qgis3d` | UTS | 2024 | 3D model — QGIS |
+| `uts_2023_floodrisk` | UTS | 2023 | Flood risk analysis |
 | `sgs_2014_project` | SGS Economics and Planning | 2014 | Project map |
 | `tomtom_2017_heavyvehicle` | TomTom | 2017 | Heavy vehicle gap analysis |
 | `dspark_2020_project` | DSpark (Optus) | 2020 | Project map |
 | `dspark_2023_its` | DSpark (Optus) | 2023 | ITS project |
-| `dspark_2023_floodrisk` | DSpark (Optus) | 2023 | Flood risk analysis — **guessed**, the source filename (`map2023_floodrisk.png`) didn't name an org; assigned here by year. Move it in `career_map.R`'s `career_maps` list if that's wrong. |
 | `goldcoast_2024_project` | City of Gold Coast | 2024 | Project map |
 
 No maps yet for: Tamkang University, Appen Butler Hill, Sydney Water,

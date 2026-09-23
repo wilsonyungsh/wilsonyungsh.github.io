@@ -187,7 +187,8 @@ career_maps <- list(
   ),
   "UTS / Research Assistant" = list(
     list(year = "2016", label = "3D model — ArcGIS Desktop", slug = "uts_2016_arcgis3d"),
-    list(year = "2024", label = "3D model — QGIS",           slug = "uts_2024_qgis3d")
+    list(year = "2024", label = "3D model — QGIS",           slug = "uts_2024_qgis3d"),
+    list(year = "2023", label = "Flood risk analysis",       slug = "uts_2023_floodrisk")
   ),
   "SGS Economics and Planning" = list(
     list(year = "2014", label = "Project map", slug = "sgs_2014_project")
@@ -196,11 +197,8 @@ career_maps <- list(
     list(year = "2017", label = "Heavy vehicle gap analysis", slug = "tomtom_2017_heavyvehicle")
   ),
   "DSpark (Optus)" = list(
-    list(year = "2020", label = "Project map",         slug = "dspark_2020_project"),
-    list(year = "2023", label = "ITS project",         slug = "dspark_2023_its"),
-    # Filename didn't name the org — assigned here by year (falls inside the
-    # 2019-2024 DSpark stretch). Move it if that guess is wrong.
-    list(year = "2023", label = "Flood risk analysis", slug = "dspark_2023_floodrisk")
+    list(year = "2020", label = "Project map", slug = "dspark_2020_project"),
+    list(year = "2023", label = "ITS project", slug = "dspark_2023_its")
   ),
   "City of Gold Coast" = list(
     list(year = "2024", label = "Project map", slug = "goldcoast_2024_project")
