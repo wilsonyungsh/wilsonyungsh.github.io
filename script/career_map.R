@@ -85,7 +85,7 @@ locations <- data.frame(
     151.0338,             # Sydney Water Potts Hill
     151.14550704742223,   # TomTom Lane Cove (corrected)
     151.20629833027127,   # TfNSW Sydney CBD (corrected)
-    153.0111418034162,    # DSpark Brisbane (corrected)
+    151.1208168,           # DSpark — started at Optus's Macquarie Park HQ (Optus Drive, Sydney)
     153.42410495833954,   # City of Gold Coast council office, Bundall
     153.02256254709644    # Brisbane City Council CBD
   ),
@@ -98,7 +98,7 @@ locations <- data.frame(
     -33.9082,             # Sydney Water Potts Hill
     -33.79837208739991,   # TomTom (corrected)
     -33.88041851325041,   # TfNSW (corrected)
-    -27.474321855338705,  # DSpark Brisbane (corrected)
+    -33.7852667,           # DSpark — started at Optus's Macquarie Park HQ (Optus Drive, Sydney)
     -28.035759004676077,  # City of Gold Coast council office, Bundall
     -27.470776856892282   # Brisbane City Council
   ),
