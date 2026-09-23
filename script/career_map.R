@@ -437,6 +437,15 @@ map <- map |>
     "  function tryAdd() {",
     "    var mlmap = getMLMap(el);",
     "    if (mlmap && mlmap.isStyleLoaded()) {",
+    # MapLibre auto-switches to a 3D globe projection at low zoom levels
+    # (this map's initial zoom 3.5 falls inside that range). deck.gl's
+    # overlay only tracks flat Mercator, so the ArcLayer silently fails to
+    # render (or renders somewhere invisible) whenever the globe is active —
+    # confirmed live: arcs appeared as soon as the map was zoomed in past
+    # the globe threshold, and were invisible at the default overview.
+    # Forcing flat projection keeps it consistent with the rest of the
+    # design (halo circles, labels, logos) which all assume flat Mercator.
+    "      if (mlmap.setProjection) mlmap.setProjection({ type: 'mercator' });",
     "      addLogoLayer(mlmap);",
     "      wireTourButton(mlmap);",
     "    } else {",
@@ -466,14 +475,14 @@ map <- map |>
     "      data: deckArcs,",
     "      getSourcePosition: function(d) { return d.from; },",
     "      getTargetPosition: function(d) { return d.to; },",
-    "      getSourceColor: [91, 155, 213, 160],",
-    "      getTargetColor: [123, 184, 240, 220],",
-    "      getWidth: 2.5,",
-    "      widthMinPixels: 1.5,",
-    "      getHeight: 0.5,",
+    "      getSourceColor: [91, 155, 213, 255],",
+    "      getTargetColor: [140, 210, 255, 255],",
+    "      getWidth: 4,",
+    "      widthMinPixels: 2.5,",
+    "      getHeight: 0.6,",
     "      greatCircle: true",
     "    });",
-    "    mlmap.addControl(new deck.MapboxOverlay({ interleaved: true, layers: [arcLayer] }));",
+    "    mlmap.addControl(new deck.MapboxOverlay({ layers: [arcLayer] }));",
     "  }",
     "  tryAddDeckArcs();",
     "}"
