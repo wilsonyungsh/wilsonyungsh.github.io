@@ -52,7 +52,11 @@ content <- list(
 
     photo     = "img/blue_mountain.jpg",
     photo_alt_en = "The Three Sisters, Blue Mountains, Australia",
-    photo_alt_zh = "澳洲藍山三姊妹峰"
+    photo_alt_zh = "澳洲藍山三姊妹峰",
+
+    avatar        = "img/feature_photo.jpg",
+    avatar_alt_en = "Wilson Yung",
+    avatar_alt_zh = "雍士賢"
   ),
 
   # ── Footprint map ─────────────────────────────────────────────────────────

@@ -186,7 +186,7 @@ css <- '    *, *::before, *::after { box-sizing: border-box; margin: 0; padding:
     .lang-toggle:hover { background:var(--accent);color:#ffffff;border-color:var(--accent); }
     .theme-toggle { font-size:14px;width:32px;height:32px;border-radius:50%;border:1.5px solid var(--accent);background:var(--accent-lt);color:var(--accent);cursor:pointer;transition:all 0.2s;display:flex;align-items:center;justify-content:center;flex-shrink:0;padding:0;line-height:1; }
     .theme-toggle:hover { background:var(--accent);color:#ffffff;border-color:var(--accent); }
-    .hero { padding:32px 0 56px; }
+    .hero { padding:0 0 56px; }
     .hero-eyebrow { font-family:var(--mono);font-size:12px;color:var(--text-3);letter-spacing:0.04em;margin-bottom:16px; }
     .hero h1 { font-size:clamp(32px,5vw,48px);font-weight:300;letter-spacing:-0.03em;line-height:1.15;color:var(--text-1);margin-bottom:20px; }
     .hero h1 em { font-style:italic;color:var(--text-3); }
@@ -194,20 +194,16 @@ css <- '    *, *::before, *::after { box-sizing: border-box; margin: 0; padding:
     .chip-row { display:flex;flex-wrap:wrap;gap:8px; }
     .chip { font-family:var(--mono);font-size:11px;padding:5px 11px;border-radius:100px;border:1px solid var(--border-md);color:var(--text-2);background:var(--surface);white-space:nowrap; }
     .chip.accent { background:var(--accent-lt);border-color:var(--accent-border);color:var(--accent); }
-    /* Full-bleed hero banner — image + gradient + overlaid title, breaks
-       out of the .container max-width on purpose (Option A from the
-       banner design review). Text stays white/glass regardless of
-       light/dark theme, since it sits on a photo, not the page background. */
-    .hero-banner { position:relative;width:100%;height:460px;overflow:hidden; }
+    /* Full-bleed hero banner — image only, breaks out of the .container
+       max-width on purpose (Option A from the banner design review). No
+       text sits on the photo any more (v2: it collided with the profile
+       avatar) — title/chips/desc all live below, in normal flow, so the
+       avatar (straddling the banner/page boundary) never overlaps them. */
+    .hero-banner { position:relative;width:100%;height:420px;overflow:hidden; }
     .hero-banner-img { width:100%;height:100%;object-fit:cover;object-position:center 60%;display:block; }
-    .hero-banner-overlay { position:absolute;inset:0;background:linear-gradient(180deg, rgba(20,20,26,0) 30%, rgba(15,20,28,0.55) 72%, rgba(12,16,22,0.85) 100%); }
-    .hero-banner-content { position:absolute;left:0;right:0;bottom:0;padding-bottom:36px; }
-    .hero-banner .hero-eyebrow { color:#cfe0f0; }
-    .hero-banner h1 { color:#ffffff;margin-bottom:18px; }
-    .hero-banner h1 em { color:#dfe6ec; }
-    .hero-banner .chip { background:rgba(255,255,255,0.14);backdrop-filter:blur(6px);color:#ffffff;border-color:rgba(255,255,255,0.32); }
-    .hero-banner .chip.accent { background:rgba(255,255,255,0.2);border-color:rgba(255,255,255,0.4);color:#ffffff; }
-    @media(max-width:700px){ .hero-banner{height:340px;} }
+    .hero-banner-overlay { position:absolute;inset:0;background:linear-gradient(180deg, rgba(20,20,26,0) 55%, rgba(12,16,22,0.32) 100%); }
+    .hero-avatar { width:104px;height:104px;border-radius:50%;object-fit:cover;border:4px solid var(--bg);box-shadow:0 6px 18px rgba(0,0,0,0.2);display:block;position:relative;z-index:2;margin:-60px 0 20px; }
+    @media(max-width:700px){ .hero-banner{height:300px;} .hero-avatar{width:84px;height:84px;margin:-48px 0 18px;} }
     section { padding:56px 0;border-top:1px solid var(--border); }
     .section-label { font-family:var(--mono);font-size:12px;color:var(--text-3);letter-spacing:0.06em;text-transform:uppercase;margin-bottom:24px; }
     .map-embed { width:100%;height:640px;border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden; }
@@ -298,24 +294,23 @@ lines <- c(
          i18n(hero$photo_alt_en, hero$photo_alt_zh), " ",
          'alt="', hero$photo_alt_en, '" loading="eager">'),
   '    <div class="hero-banner-overlay"></div>',
-  '    <div class="hero-banner-content">',
-  '      <div class="container">',
-  paste0('        <p class="hero-eyebrow" ', i18n(hero$eyebrow_en, hero$eyebrow_zh), ">", hero$eyebrow_en, "</p>"),
-  "        <h1>",
-  paste0("          <span ", i18n(hero$h1_line1_en, hero$h1_line1_zh), ">", hero$h1_line1_en, "</span><br>"),
-  paste0("          <em ", i18n(hero$h1_em_en, hero$h1_em_zh), ">", hero$h1_em_en, "</em>"),
-  "        </h1>",
-  '        <div class="chip-row">',
-  paste0("          ", chips_accent_html),
-  paste0("          ", chips_domain_html),
-  "        </div>",
-  "      </div>",
-  "    </div>",
   "  </section>",
   "",
   '  <div class="container">',
   '    <section class="hero" style="border:none;padding-bottom:48px;">',
+  paste0('      <img class="hero-avatar" src="', hero$avatar, '" ',
+         i18n(hero$avatar_alt_en, hero$avatar_alt_zh), " ",
+         'alt="', hero$avatar_alt_en, '" loading="eager">'),
+  paste0('      <p class="hero-eyebrow" ', i18n(hero$eyebrow_en, hero$eyebrow_zh), ">", hero$eyebrow_en, "</p>"),
+  "      <h1>",
+  paste0("        <span ", i18n(hero$h1_line1_en, hero$h1_line1_zh), ">", hero$h1_line1_en, "</span><br>"),
+  paste0("        <em ", i18n(hero$h1_em_en, hero$h1_em_zh), ">", hero$h1_em_en, "</em>"),
+  "      </h1>",
   paste0('      <p class="hero-desc" ', i18n(hero$desc_en, hero$desc_zh), ">", hero$desc_en, "</p>"),
+  '      <div class="chip-row">',
+  paste0("        ", chips_accent_html),
+  paste0("        ", chips_domain_html),
+  "      </div>",
   "    </section>",
   "  </div>",
   "",
