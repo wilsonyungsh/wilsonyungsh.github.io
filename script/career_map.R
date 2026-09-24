@@ -10,10 +10,11 @@ library(sf)
 
 # ── Career locations ──────────────────────────────────────────────────────────
 locations <- data.frame(
-  id       = 1:12,
+  id       = 1:13,
   org      = c(
     "National Cheng Kung University",
     "Johannes Kepler University Linz",
+    "Tainan City Environmental Protection Bureau",
     "Tamkang University",
     "UTS / Research Assistant",
     "Appen Butler Hill",
@@ -28,6 +29,7 @@ locations <- data.frame(
   role     = c(
     "Urban Planning degree (B + M)",
     "Exchange Student",
+    "Alternative Military Service — Soil & Water Conservation",
     "Research Planner, Water Resource Management",
     "Research Assistant + Sessional Lecturer (ongoing)",
     "Fieldwork Project Specialist",
@@ -42,6 +44,7 @@ locations <- data.frame(
   period   = c(
     "2001–2007",
     "2006",
+    "2008",
     "2009–2010",
     "2012–present",
     "2013–2014",
@@ -56,6 +59,7 @@ locations <- data.frame(
   city     = c(
     "Tainan, Taiwan(台南‧台灣)",
     "Linz, Austria",
+    "Tainan, Taiwan(台南‧台灣)",
     "TamShui, Taiwan(淡水‧台灣)",
     "Sydney, Australia",
     "Chatswood, Sydney",
@@ -70,6 +74,7 @@ locations <- data.frame(
   industry = c(
     "Education & Academia",          # NCKU
     "Education & Academia",          # JKU Linz — exchange
+    "Water Resources",               # Tainan EPA — soil & water conservation
     "Water Resources",               # Tamkang — water resource policy & management
     "Education & Academia",          # UTS
     "Data & Fieldwork Services",     # Appen
@@ -84,6 +89,7 @@ locations <- data.frame(
   lng      = c(
     120.2156431519289,    # NCKU — 都計系館 (Dept. of Urban Planning building)
     14.317135481851603,   # JKU Linz, Austria — exchange 2006
+    120.21979906289162,   # Tainan City Environmental Protection Bureau — 水土保持科
     121.44592677983286,   # Tamkang New Taipei
     151.2002,             # UTS Sydney
     151.1803,             # Chatswood (Appen)
@@ -98,6 +104,7 @@ locations <- data.frame(
   lat      = c(
     23.000938960734327,   # NCKU — 都計系館 (Dept. of Urban Planning building)
     48.3375034858097,     # JKU Linz, Austria — exchange 2006
+    22.985205434082832,   # Tainan City Environmental Protection Bureau — 水土保持科
     25.17406363863662,    # Tamkang New Taipei
     -33.8833,             # UTS Sydney
     -33.7969,             # Chatswood (Appen)
@@ -110,7 +117,7 @@ locations <- data.frame(
     -27.470776856892282   # Brisbane City Council
   ),
   has_fieldwork = c(
-    FALSE, FALSE, FALSE, FALSE,
+    FALSE, FALSE, FALSE, FALSE, FALSE,
     TRUE,   # Appen — links to fieldtrip map
     FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE
   ),
@@ -118,10 +125,11 @@ locations <- data.frame(
   # flythrough reaches that stop. NA = falls back to the small text-only
   # caption. See career_photos/README.md for sourcing.
   photo    = c(
-    NA,                            # NCKU
+    NA,                            # NCKU — photo lost to a case-insensitive-filesystem mixup (see career_photos/README.md), need it re-supplied
     "career_photos/jku.jpg",      # JKU Linz — exchange
+    "career_photos/tainan_epa.jpg", # Tainan EPA — alternative military service
     NA,                            # Tamkang
-    NA,                            # UTS
+    "career_photos/uts.jpg",      # UTS
     "career_photos/appen.jpg",    # Appen
     NA,                            # SGS
     "career_photos/sydwater.jpg", # Sydney Water
@@ -161,6 +169,7 @@ locations <- locations |>
   mutate(logo_url = c(
     "career_logos/ncku.png",
     "career_logos/jku.png",
+    "career_logos/tainan_epa.png",
     "career_logos/tku.png",
     "career_logos/uts.png",
     "career_logos/appen.png",
@@ -174,7 +183,7 @@ locations <- locations |>
   ),
   # Unique image key per dot (used as MapLibre sprite name)
   logo_key = c(
-    "logo_ncku", "logo_jku", "logo_tku", "logo_uts", "logo_appen", "logo_sgs",
+    "logo_ncku", "logo_jku", "logo_tainan_epa", "logo_tku", "logo_uts", "logo_appen", "logo_sgs",
     "logo_sydwater", "logo_tomtom", "logo_tfnsw", "logo_dspark", "logo_gcc", "logo_bcc"
   )
   )

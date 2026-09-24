@@ -32,6 +32,7 @@ regardless of each source logo's own background colour.
 |---|---|---|
 | `ncku.png` | National Cheng Kung University | Real emblem (the red plum-blossom mark), supplied directly by the site owner and cropped from their official lockup |
 | `jku.png` | Johannes Kepler University Linz | Real logo, `https://www.jku.at/apple-touch-icon.png` |
+| `tainan_epa.png` | Tainan City Environmental Protection Bureau | Real icon mark, cropped from the department's logo lockup supplied directly (the lockup also had white text that's invisible on our white badge, so only the icon half was kept) |
 | `tku.png` | Tamkang University | Real logo, `https://www.tku.edu.tw/tku/wp-content/uploads/.../TKU-logo.png` (from homepage `<link rel="icon">`) |
 | `uts.png` | UTS | Real brand mark, supplied directly by the site owner. Kept on its official blue field (circle-cropped only, no white badge) since it's white-on-blue by design |
 | `appen.png` | Appen Butler Hill | `https://icons.duckduckgo.com/ip3/appen.com.ico` |

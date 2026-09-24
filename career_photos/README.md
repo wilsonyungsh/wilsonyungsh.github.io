@@ -28,6 +28,8 @@ these load during fast tour transitions, not on a static page.
 | File | Stop | Notes |
 |---|---|---|
 | `jku.jpg` | Johannes Kepler University Linz | Exchange-year photo (Hallstatt, Austria), supplied directly |
+| `tainan_epa.jpg` | Tainan City Environmental Protection Bureau | Team photo, supplied directly |
+| `uts.jpg` | UTS | Fieldwork photo, supplied directly |
 | `appen.jpg` | Appen Butler Hill | Team photo, supplied directly |
 | `sydwater.jpg` | Sydney Water | Team photo, supplied directly |
 | `tomtom.jpg` | TomTom | Team photo, supplied directly |
@@ -35,8 +37,26 @@ these load during fast tour transitions, not on a static page.
 | `gcc.jpg` | City of Gold Coast | Team photo, supplied directly |
 | `bcc.jpg` | Brisbane City Council | Team photo, supplied directly |
 
-No photo yet for: NCKU, Tamkang University, UTS, SGS Economics and Planning,
-Transport for NSW.
+No photo yet for: Tamkang University, SGS Economics and Planning,
+Transport for NSW. **NCKU** had one (a graduation photo) but it was
+accidentally destroyed while processing — see "A cautionary note" below —
+and needs to be re-supplied.
+
+## A cautionary note: macOS filesystems are case-insensitive
+
+The NCKU photo was lost this way: the source file was `ncku.JPG`
+(uppercase), and the processed version was written to `career_photos/ncku.jpg`
+(lowercase). On macOS's default case-insensitive-but-case-preserving
+filesystem, those are **the same path** — the write silently overwrote the
+original's content instead of creating a second file. A follow-up
+`rm career_photos/ncku.JPG`, intended to clean up the now-redundant original,
+deleted that single (already-overwritten) file entirely. No trash, no git
+history (it was never committed) — genuinely unrecoverable.
+
+**Going forward**: when a processed file's name differs from its source only
+by case, write the output to a clearly different temporary name first, and
+only `rm` the original once the output has been verified to exist under its
+own name.
 
 ## Adding or replacing one
 
