@@ -27,6 +27,7 @@ these load during fast tour transitions, not on a static page.
 
 | File | Stop | Notes |
 |---|---|---|
+| `ncku.jpg` | National Cheng Kung University | Graduation photo, supplied directly (re-supplied after the original was lost — see "A cautionary note" below) |
 | `jku.jpg` | Johannes Kepler University Linz | Exchange-year photo (Hallstatt, Austria), supplied directly |
 | `tainan_epa.jpg` | Tainan City Environmental Protection Bureau | Team photo, supplied directly |
 | `uts.jpg` | UTS | Fieldwork photo, supplied directly |
@@ -38,9 +39,7 @@ these load during fast tour transitions, not on a static page.
 | `bcc.jpg` | Brisbane City Council | Team photo, supplied directly |
 
 No photo yet for: Tamkang University, SGS Economics and Planning,
-Transport for NSW. **NCKU** had one (a graduation photo) but it was
-accidentally destroyed while processing — see "A cautionary note" below —
-and needs to be re-supplied.
+Transport for NSW.
 
 ## A cautionary note: macOS filesystems are case-insensitive
 

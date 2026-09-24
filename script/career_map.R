@@ -125,7 +125,7 @@ locations <- data.frame(
   # flythrough reaches that stop. NA = falls back to the small text-only
   # caption. See career_photos/README.md for sourcing.
   photo    = c(
-    NA,                            # NCKU — photo lost to a case-insensitive-filesystem mixup (see career_photos/README.md), need it re-supplied
+    "career_photos/ncku.jpg",     # NCKU — re-supplied after the original was lost
     "career_photos/jku.jpg",      # JKU Linz — exchange
     "career_photos/tainan_epa.jpg", # Tainan EPA — alternative military service
     NA,                            # Tamkang
