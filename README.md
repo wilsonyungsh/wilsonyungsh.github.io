@@ -4,6 +4,8 @@ Personal website，純靜態 GitHub Pages（沒有後端）。
 
 這份 README 是給自己看的維護筆記：之後要改內容、加作品時，照這裡的步驟做，不要直接手改 `index.html` / `map_list.html`，因為這兩個檔案是**產生出來的**，重跑 build 腳本就會被蓋掉。
 
+整個網站的架構總覽（兩條各自獨立的 build pipeline、目錄結構、設計系統）寫在 [ARCHITECTURE.md](ARCHITECTURE.md)。
+
 ## 網站結構
 
 | 檔案 / 資料夾 | 說明 |
