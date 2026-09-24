@@ -46,9 +46,18 @@ script/career_map.R ────────────────────
   every time, even if only one page's content changed.
 - The two pages share one design system (CSS custom properties for
   colour/type in both `css` and `css_map` variables inside `build.R`) —
-  light theme, `DM Sans`/`DM Mono` for Latin text, `LXGW WenKai TC` as the
-  fallback for anything the Latin fonts can't render (i.e. all Chinese
-  text), same `--accent` blue throughout.
+  `DM Sans`/`DM Mono` for Latin text, `LXGW WenKai TC` as the fallback for
+  anything the Latin fonts can't render (i.e. all Chinese text), same
+  `--accent` blue throughout.
+- **Light/dark theme**: every colour is a CSS custom property, with a dark
+  palette defined alongside the light one in `:root` — `prefers-color-scheme`
+  picks the default, and a toggle button (moon/sun icon, next to the
+  language toggle) lets the visitor override it explicitly via a
+  `data-theme` attribute on `<html>`, persisted in `localStorage` under
+  `wy_theme` (independent of the `wy_lang` language choice). An inline
+  script in `<head>` applies the saved choice before first paint to avoid
+  a flash of the wrong theme. `career_map.html` is unaffected — it's
+  already dark-themed by design, independent of the page it's embedded in.
 
 ### 2. `career_map.R` → `career_map.html`
 
