@@ -75,6 +75,8 @@ Rscript script/career_map.R
 
 會直接輸出 `career_map.html`。這個跟 `build.R` 的流程是分開的（不用改完 career_map.R 又跑 build.R，也不用反過來）。
 
+這個地圖的完整架構、還有開發過程中踩過的幾個坑（logo 讀不出來、arc 沒立體感、地球儀投影搞壞 deck.gl 之類的），寫在 [CAREER_MAP_DEVLOG.md](CAREER_MAP_DEVLOG.md)。
+
 需要系統裝了 **pandoc**（`htmlwidgets::saveWidget(selfcontained = TRUE)` 需要它來打包成單一 HTML 檔），沒裝的話 `brew install pandoc`。
 
 - **分類（legend）**：地圖上的分類是「產業別」，不是年資/職涯階段。改 `locations$industry`（每個地點一個分類）和 `industry_colours`（分類 → 顏色，同時也是圖例的內容和順序）。想加新分類就在 `industry_colours` 加一行，並讓對應地點的 `industry` 用一樣的名稱。**盡量維持在 5–7 類以內**，太多的話圖例會很擠。
