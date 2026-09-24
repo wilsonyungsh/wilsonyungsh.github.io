@@ -50,9 +50,9 @@ content <- list(
     chips_en = c("Spatial analytics", "GTFS · Transport data", "Urban growth modelling", "Open data"),
     chips_zh = c("空間分析",           "GTFS · 大眾運輸資料",        "都市成長預測建模",            "開源資料"),
 
-    photo     = "img/feature_photo.jpg",
-    photo_alt_en = "Wilson Yung on a road trip in rural Australia",
-    photo_alt_zh = "雍士賢在澳洲鄉間公路旅行"
+    photo     = "img/blue_mountain.jpg",
+    photo_alt_en = "The Three Sisters, Blue Mountains, Australia",
+    photo_alt_zh = "澳洲藍山三姊妹峰"
   ),
 
   # ── Footprint map ─────────────────────────────────────────────────────────

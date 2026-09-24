@@ -55,12 +55,7 @@
     .lang-toggle:hover { background:var(--accent);color:#ffffff;border-color:var(--accent); }
     .theme-toggle { font-size:14px;width:32px;height:32px;border-radius:50%;border:1.5px solid var(--accent);background:var(--accent-lt);color:var(--accent);cursor:pointer;transition:all 0.2s;display:flex;align-items:center;justify-content:center;flex-shrink:0;padding:0;line-height:1; }
     .theme-toggle:hover { background:var(--accent);color:#ffffff;border-color:var(--accent); }
-    .hero { padding:72px 0 56px; }
-    .hero-grid { display:flex;align-items:center;gap:40px; }
-    .hero-text { flex:1;min-width:0; }
-    .hero-photo { width:280px;flex-shrink:0; }
-    .hero-photo img { width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:var(--radius-lg);border:1px solid var(--border);display:block; }
-    @media(max-width:700px){.hero-grid{flex-direction:column;}.hero-photo{width:100%;max-width:320px;}}
+    .hero { padding:32px 0 56px; }
     .hero-eyebrow { font-family:var(--mono);font-size:12px;color:var(--text-3);letter-spacing:0.04em;margin-bottom:16px; }
     .hero h1 { font-size:clamp(32px,5vw,48px);font-weight:300;letter-spacing:-0.03em;line-height:1.15;color:var(--text-1);margin-bottom:20px; }
     .hero h1 em { font-style:italic;color:var(--text-3); }
@@ -68,6 +63,20 @@
     .chip-row { display:flex;flex-wrap:wrap;gap:8px; }
     .chip { font-family:var(--mono);font-size:11px;padding:5px 11px;border-radius:100px;border:1px solid var(--border-md);color:var(--text-2);background:var(--surface);white-space:nowrap; }
     .chip.accent { background:var(--accent-lt);border-color:var(--accent-border);color:var(--accent); }
+    /* Full-bleed hero banner — image + gradient + overlaid title, breaks
+       out of the .container max-width on purpose (Option A from the
+       banner design review). Text stays white/glass regardless of
+       light/dark theme, since it sits on a photo, not the page background. */
+    .hero-banner { position:relative;width:100%;height:460px;overflow:hidden; }
+    .hero-banner-img { width:100%;height:100%;object-fit:cover;object-position:center 60%;display:block; }
+    .hero-banner-overlay { position:absolute;inset:0;background:linear-gradient(180deg, rgba(20,20,26,0) 30%, rgba(15,20,28,0.55) 72%, rgba(12,16,22,0.85) 100%); }
+    .hero-banner-content { position:absolute;left:0;right:0;bottom:0;padding-bottom:36px; }
+    .hero-banner .hero-eyebrow { color:#cfe0f0; }
+    .hero-banner h1 { color:#ffffff;margin-bottom:18px; }
+    .hero-banner h1 em { color:#dfe6ec; }
+    .hero-banner .chip { background:rgba(255,255,255,0.14);backdrop-filter:blur(6px);color:#ffffff;border-color:rgba(255,255,255,0.32); }
+    .hero-banner .chip.accent { background:rgba(255,255,255,0.2);border-color:rgba(255,255,255,0.4);color:#ffffff; }
+    @media(max-width:700px){ .hero-banner{height:340px;} }
     section { padding:56px 0;border-top:1px solid var(--border); }
     .section-label { font-family:var(--mono);font-size:12px;color:var(--text-3);letter-spacing:0.06em;text-transform:uppercase;margin-bottom:24px; }
     .map-embed { width:100%;height:640px;border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden; }
@@ -134,28 +143,32 @@
     </div>
   </nav>
 
-  <div class="container">
-    <section class="hero" id="top" style="border:none;padding-bottom:48px;">
-      <div class="hero-grid">
-        <div class="hero-text">
-          <p class="hero-eyebrow" data-i18n data-en="Spatial Data Scientist · Brisbane, Australia" data-zh="空間資料科學家 · 澳洲布里斯本">Spatial Data Scientist · Brisbane, Australia</p>
-          <h1>
-            <span data-i18n data-en="Cities, Data," data-zh="都市、資料，">Cities, Data,</span><br>
-            <em data-i18n data-en="Movement." data-zh="與流動的人群。">Movement.</em>
-          </h1>
-          <p class="hero-desc" data-i18n data-en="End-to-end consulting across spatial analytics, transport data, urban growth modelling, and open-source data engineering. Over a decade bridging GIS, mobility data, and modern cloud-native pipelines across government and industry." data-zh="透過空間分析、運輸資料、都市模擬與開源資料工程。 將散落於城市中的資訊串連成故事，從地圖撇見人群移動的軌跡，以資料角度出發進而理解城市演變的脈絡。 十餘年來持續在政府、研究與產業之間搭建橋梁，讓資料成為理解都市的一種語彙，以自身旅居經驗努力實踐。">End-to-end consulting across spatial analytics, transport data, urban growth modelling, and open-source data engineering. Over a decade bridging GIS, mobility data, and modern cloud-native pipelines across government and industry.</p>
-          <div class="chip-row">
-            <span class="chip accent">R · Python · SQL</span>
+  <section class="hero-banner" id="top">
+    <img class="hero-banner-img" src="img/blue_mountain.jpg" data-i18n data-en="The Three Sisters, Blue Mountains, Australia" data-zh="澳洲藍山三姊妹峰" alt="The Three Sisters, Blue Mountains, Australia" loading="eager">
+    <div class="hero-banner-overlay"></div>
+    <div class="hero-banner-content">
+      <div class="container">
+        <p class="hero-eyebrow" data-i18n data-en="Spatial Data Scientist · Brisbane, Australia" data-zh="空間資料科學家 · 澳洲布里斯本">Spatial Data Scientist · Brisbane, Australia</p>
+        <h1>
+          <span data-i18n data-en="Cities, Data," data-zh="都市、資料，">Cities, Data,</span><br>
+          <em data-i18n data-en="Movement." data-zh="與流動的人群。">Movement.</em>
+        </h1>
+        <div class="chip-row">
+          <span class="chip accent">R · Python · SQL</span>
         <span class="chip accent">PostGIS · QGIS</span>
         <span class="chip accent">Apache Spark · Sedona</span>
-            <span class="chip" data-i18n data-en="Spatial analytics" data-zh="空間分析">Spatial analytics</span>
+          <span class="chip" data-i18n data-en="Spatial analytics" data-zh="空間分析">Spatial analytics</span>
         <span class="chip" data-i18n data-en="GTFS · Transport data" data-zh="GTFS · 大眾運輸資料">GTFS · Transport data</span>
         <span class="chip" data-i18n data-en="Urban growth modelling" data-zh="都市成長預測建模">Urban growth modelling</span>
         <span class="chip" data-i18n data-en="Open data" data-zh="開源資料">Open data</span>
-          </div>
         </div>
-        <div class="hero-photo"><img src="img/feature_photo.jpg" data-i18n data-en="Wilson Yung on a road trip in rural Australia" data-zh="雍士賢在澳洲鄉間公路旅行" alt="Wilson Yung on a road trip in rural Australia" loading="eager"></div>
       </div>
+    </div>
+  </section>
+
+  <div class="container">
+    <section class="hero" style="border:none;padding-bottom:48px;">
+      <p class="hero-desc" data-i18n data-en="End-to-end consulting across spatial analytics, transport data, urban growth modelling, and open-source data engineering. Over a decade bridging GIS, mobility data, and modern cloud-native pipelines across government and industry." data-zh="透過空間分析、運輸資料、都市模擬與開源資料工程。 將散落於城市中的資訊串連成故事，從地圖撇見人群移動的軌跡，以資料角度出發進而理解城市演變的脈絡。 十餘年來持續在政府、研究與產業之間搭建橋梁，讓資料成為理解都市的一種語彙，以自身旅居經驗努力實踐。">End-to-end consulting across spatial analytics, transport data, urban growth modelling, and open-source data engineering. Over a decade bridging GIS, mobility data, and modern cloud-native pipelines across government and industry.</p>
     </section>
   </div>
 
