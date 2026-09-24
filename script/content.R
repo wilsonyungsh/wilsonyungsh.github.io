@@ -48,7 +48,11 @@ content <- list(
 
     # Chips — 領域標籤（右側一般色）
     chips_en = c("Spatial analytics", "GTFS · Transport data", "Urban growth modelling", "Open data"),
-    chips_zh = c("空間分析",           "GTFS · 大眾運輸資料",        "都市成長預測建模",            "開源資料")
+    chips_zh = c("空間分析",           "GTFS · 大眾運輸資料",        "都市成長預測建模",            "開源資料"),
+
+    photo     = "img/feature_photo.jpg",
+    photo_alt_en = "Wilson Yung on a road trip in rural Australia",
+    photo_alt_zh = "雍士賢在澳洲鄉間公路旅行"
   ),
 
   # ── Footprint map ─────────────────────────────────────────────────────────

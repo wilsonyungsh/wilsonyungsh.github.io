@@ -353,7 +353,7 @@
       document.documentElement.lang = lang === "zh" ? "zh-TW" : "en";
       document.querySelectorAll("[data-i18n]").forEach(function(el) {
         var text = el.getAttribute("data-" + lang);
-        if (text) el.innerHTML = text;
+        if (text) { if (el.tagName === 'IMG') el.alt = text; else el.innerHTML = text; }
       });
       var btn = document.getElementById("langToggle");
       btn.textContent = lang === "zh" ? "EN" : "繁中";

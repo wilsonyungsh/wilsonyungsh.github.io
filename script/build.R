@@ -187,6 +187,11 @@ css <- '    *, *::before, *::after { box-sizing: border-box; margin: 0; padding:
     .theme-toggle { font-size:14px;width:32px;height:32px;border-radius:50%;border:1.5px solid var(--accent);background:var(--accent-lt);color:var(--accent);cursor:pointer;transition:all 0.2s;display:flex;align-items:center;justify-content:center;flex-shrink:0;padding:0;line-height:1; }
     .theme-toggle:hover { background:var(--accent);color:#ffffff;border-color:var(--accent); }
     .hero { padding:72px 0 56px; }
+    .hero-grid { display:flex;align-items:center;gap:40px; }
+    .hero-text { flex:1;min-width:0; }
+    .hero-photo { width:280px;flex-shrink:0; }
+    .hero-photo img { width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:var(--radius-lg);border:1px solid var(--border);display:block; }
+    @media(max-width:700px){.hero-grid{flex-direction:column;}.hero-photo{width:100%;max-width:320px;}}
     .hero-eyebrow { font-family:var(--mono);font-size:12px;color:var(--text-3);letter-spacing:0.04em;margin-bottom:16px; }
     .hero h1 { font-size:clamp(32px,5vw,48px);font-weight:300;letter-spacing:-0.03em;line-height:1.15;color:var(--text-1);margin-bottom:20px; }
     .hero h1 em { font-style:italic;color:var(--text-3); }
@@ -281,15 +286,22 @@ lines <- c(
   "",
   '  <div class="container">',
   '    <section class="hero" id="top" style="border:none;padding-bottom:48px;">',
-  paste0('      <p class="hero-eyebrow" ', i18n(hero$eyebrow_en, hero$eyebrow_zh), ">", hero$eyebrow_en, "</p>"),
-  "      <h1>",
-  paste0("        <span ", i18n(hero$h1_line1_en, hero$h1_line1_zh), ">", hero$h1_line1_en, "</span><br>"),
-  paste0("        <em ", i18n(hero$h1_em_en, hero$h1_em_zh), ">", hero$h1_em_en, "</em>"),
-  "      </h1>",
-  paste0('      <p class="hero-desc" ', i18n(hero$desc_en, hero$desc_zh), ">", hero$desc_en, "</p>"),
-  '      <div class="chip-row">',
-  paste0("        ", chips_accent_html),
-  paste0("        ", chips_domain_html),
+  '      <div class="hero-grid">',
+  '        <div class="hero-text">',
+  paste0('          <p class="hero-eyebrow" ', i18n(hero$eyebrow_en, hero$eyebrow_zh), ">", hero$eyebrow_en, "</p>"),
+  "          <h1>",
+  paste0("            <span ", i18n(hero$h1_line1_en, hero$h1_line1_zh), ">", hero$h1_line1_en, "</span><br>"),
+  paste0("            <em ", i18n(hero$h1_em_en, hero$h1_em_zh), ">", hero$h1_em_en, "</em>"),
+  "          </h1>",
+  paste0('          <p class="hero-desc" ', i18n(hero$desc_en, hero$desc_zh), ">", hero$desc_en, "</p>"),
+  '          <div class="chip-row">',
+  paste0("            ", chips_accent_html),
+  paste0("            ", chips_domain_html),
+  "          </div>",
+  "        </div>",
+  paste0('        <div class="hero-photo"><img src="', hero$photo, '" ',
+         i18n(hero$photo_alt_en, hero$photo_alt_zh), " ",
+         'alt="', hero$photo_alt_en, '" loading="eager"></div>'),
   "      </div>",
   "    </section>",
   "  </div>",
@@ -383,7 +395,7 @@ lines <- c(
   '      document.documentElement.lang = lang === "zh" ? "zh-TW" : "en";',
   '      document.querySelectorAll("[data-i18n]").forEach(function(el) {',
   '        var text = el.getAttribute("data-" + lang);',
-  "        if (text) el.innerHTML = text;",
+  "        if (text) { if (el.tagName === 'IMG') el.alt = text; else el.innerHTML = text; }",
   "      });",
   '      var btn = document.getElementById("langToggle");',
   '      btn.textContent = lang === "zh" ? "EN" : "\u7e41\u4e2d";',
@@ -566,7 +578,7 @@ lines2 <- c(
   '      document.documentElement.lang = lang === "zh" ? "zh-TW" : "en";',
   '      document.querySelectorAll("[data-i18n]").forEach(function(el) {',
   '        var text = el.getAttribute("data-" + lang);',
-  "        if (text) el.innerHTML = text;",
+  "        if (text) { if (el.tagName === 'IMG') el.alt = text; else el.innerHTML = text; }",
   "      });",
   '      var btn = document.getElementById("langToggle");',
   '      btn.textContent = lang === "zh" ? "EN" : "\u7e41\u4e2d";',
