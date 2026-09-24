@@ -27,6 +27,7 @@ these load during fast tour transitions, not on a static page.
 
 | File | Stop | Notes |
 |---|---|---|
+| `jku.jpg` | Johannes Kepler University Linz | Exchange-year photo (Hallstatt, Austria), supplied directly |
 | `appen.jpg` | Appen Butler Hill | Team photo, supplied directly |
 | `sydwater.jpg` | Sydney Water | Team photo, supplied directly |
 | `tomtom.jpg` | TomTom | Team photo, supplied directly |
