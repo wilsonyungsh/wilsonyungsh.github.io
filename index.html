@@ -3,6 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <script>(function(){try{var t=localStorage.getItem("wy_theme");if(t)document.documentElement.setAttribute("data-theme",t);}catch(e){}})();</script>
   <title>Wilson Yung — Spatial Data Scientist</title>
   <meta name="description" content="Spatial data scientist and consultant specialising in transport data, urban modelling, and open-source spatial analytics. Learning operational and domain knowledge on City scale 3D Modelling. Based in Brisbane, Australia.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -13,14 +15,37 @@
     :root {
       --bg:#f7f6f2;--surface:#ffffff;--border:rgba(0,0,0,0.08);--border-md:rgba(0,0,0,0.13);
       --text-1:#1a1917;--text-2:#4a4845;--text-3:#8a8784;
-      --accent:#2B5F8E;--accent-lt:#e8f0f8;--pivot:#C4783A;--pivot-lt:#fdf0e6;
+      --accent:#2B5F8E;--accent-lt:#e8f0f8;--accent-border:#b8cfe4;
+      --pivot:#C4783A;--pivot-lt:#fdf0e6;--pivot-border:#e8c9a8;
+      --nav-bg:rgba(247,246,242,0.88);--map-placeholder-bg:#eef2f6;
+      --stack-old-bg:#f5f4f0;--stack-new-bg:#edf4ee;--stack-new-text:#2d6b35;--stack-new-border:#c8dfc9;
       --mono:"DM Mono","LXGW WenKai TC",monospace;--sans:"DM Sans","LXGW WenKai TC",system-ui,sans-serif;
       --radius-sm:6px;--radius-md:10px;--radius-lg:16px;
     }
+    /* Dark theme — follows system preference by default; data-theme attribute
+       (set by the toggle button, persisted in localStorage) overrides it. */
+    @media(prefers-color-scheme:dark){
+      :root:not([data-theme="light"]) {
+        --bg:#15151a;--surface:#1e1e25;--border:rgba(255,255,255,0.08);--border-md:rgba(255,255,255,0.14);
+        --text-1:#f0efec;--text-2:#b7b4ad;--text-3:#7d7a73;
+        --accent:#6FA8D8;--accent-lt:rgba(111,168,216,0.14);--accent-border:rgba(111,168,216,0.35);
+        --pivot:#E0985C;--pivot-lt:rgba(224,152,92,0.14);--pivot-border:rgba(224,152,92,0.35);
+        --nav-bg:rgba(21,21,26,0.85);--map-placeholder-bg:#1c1c22;
+        --stack-old-bg:#232228;--stack-new-bg:rgba(76,175,120,0.14);--stack-new-text:#6fcf97;--stack-new-border:rgba(111,207,151,0.35);
+      }
+    }
+    :root[data-theme="dark"] {
+      --bg:#15151a;--surface:#1e1e25;--border:rgba(255,255,255,0.08);--border-md:rgba(255,255,255,0.14);
+      --text-1:#f0efec;--text-2:#b7b4ad;--text-3:#7d7a73;
+      --accent:#6FA8D8;--accent-lt:rgba(111,168,216,0.14);--accent-border:rgba(111,168,216,0.35);
+      --pivot:#E0985C;--pivot-lt:rgba(224,152,92,0.14);--pivot-border:rgba(224,152,92,0.35);
+      --nav-bg:rgba(21,21,26,0.85);--map-placeholder-bg:#1c1c22;
+      --stack-old-bg:#232228;--stack-new-bg:rgba(76,175,120,0.14);--stack-new-text:#6fcf97;--stack-new-border:rgba(111,207,151,0.35);
+    }
     html { scroll-behavior: smooth; }
-    body { font-family:var(--sans);background:var(--bg);color:var(--text-1);font-size:17px;line-height:1.7;-webkit-font-smoothing:antialiased; }
+    body { font-family:var(--sans);background:var(--bg);color:var(--text-1);font-size:17px;line-height:1.7;-webkit-font-smoothing:antialiased;transition:background-color 0.25s ease,color 0.25s ease; }
     .container { max-width:900px;margin:0 auto;padding:0 24px; }
-    nav { position:sticky;top:0;z-index:100;background:rgba(247,246,242,0.88);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:14px 0; }
+    nav { position:sticky;top:0;z-index:100;background:var(--nav-bg);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:14px 0;transition:background-color 0.25s ease,border-color 0.25s ease; }
     nav .inner { max-width:900px;margin:0 auto;padding:0 24px;display:flex;align-items:center;gap:28px; }
     .nav-logo { font-size:15px;font-weight:500;color:var(--text-1);text-decoration:none;margin-right:auto;letter-spacing:-0.01em; }
     .nav-logo span { color:var(--text-3);font-weight:300; }
@@ -28,6 +53,8 @@
     nav a:hover { color:var(--text-1); }
     .lang-toggle { font-family:var(--mono);font-size:11px;font-weight:500;padding:5px 12px;border-radius:100px;border:1.5px solid var(--accent);background:var(--accent-lt);color:var(--accent);cursor:pointer;transition:all 0.2s;white-space:nowrap;flex-shrink:0;letter-spacing:0.03em; }
     .lang-toggle:hover { background:var(--accent);color:#ffffff;border-color:var(--accent); }
+    .theme-toggle { font-size:14px;width:32px;height:32px;border-radius:50%;border:1.5px solid var(--accent);background:var(--accent-lt);color:var(--accent);cursor:pointer;transition:all 0.2s;display:flex;align-items:center;justify-content:center;flex-shrink:0;padding:0;line-height:1; }
+    .theme-toggle:hover { background:var(--accent);color:#ffffff;border-color:var(--accent); }
     .hero { padding:72px 0 56px; }
     .hero-eyebrow { font-family:var(--mono);font-size:12px;color:var(--text-3);letter-spacing:0.04em;margin-bottom:16px; }
     .hero h1 { font-size:clamp(32px,5vw,48px);font-weight:300;letter-spacing:-0.03em;line-height:1.15;color:var(--text-1);margin-bottom:20px; }
@@ -35,13 +62,13 @@
     .hero-desc { font-size:18px;color:var(--text-2);max-width:560px;margin-bottom:28px;line-height:1.75; }
     .chip-row { display:flex;flex-wrap:wrap;gap:8px; }
     .chip { font-family:var(--mono);font-size:11px;padding:5px 11px;border-radius:100px;border:1px solid var(--border-md);color:var(--text-2);background:var(--surface);white-space:nowrap; }
-    .chip.accent { background:var(--accent-lt);border-color:#b8cfe4;color:var(--accent); }
+    .chip.accent { background:var(--accent-lt);border-color:var(--accent-border);color:var(--accent); }
     section { padding:56px 0;border-top:1px solid var(--border); }
     .section-label { font-family:var(--mono);font-size:12px;color:var(--text-3);letter-spacing:0.06em;text-transform:uppercase;margin-bottom:24px; }
     .map-embed { width:100%;height:640px;border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden; }
     .map-embed iframe { width:100%;height:100%;border:none;display:block; }
     .map-caption { font-size:13px;color:var(--text-3);margin-top:10px;font-family:var(--mono); }
-    .career-map-embed { width:100%;height:600px;border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;background:#eef2f6; }
+    .career-map-embed { width:100%;height:600px;border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;background:var(--map-placeholder-bg); }
     .career-map-embed iframe { width:100%;height:100%;border:none;display:block; }
     .domain-grid { display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px; }
     .domain-card { background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md);padding:20px;transition:border-color 0.15s,transform 0.15s; }
@@ -52,8 +79,8 @@
     .chapter-grid { display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:36px; }
     @media(max-width:600px){.chapter-grid{grid-template-columns:1fr;}}
     .chapter-card { background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md);padding:20px 22px; }
-    .chapter-card.featured { border-color:#b8cfe4; }
-    .chapter-card.pivot-card { border-color:#e8c9a8; }
+    .chapter-card.featured { border-color:var(--accent-border); }
+    .chapter-card.pivot-card { border-color:var(--pivot-border); }
     .chapter-badge { display:inline-block;font-size:11px;font-family:var(--mono);padding:3px 9px;border-radius:100px;margin-bottom:10px; }
     .chapter-badge.current { background:var(--accent-lt);color:var(--accent); }
     .chapter-badge.pivot { background:var(--pivot-lt);color:var(--pivot); }
@@ -65,8 +92,8 @@
     .stack-col-label { font-family:var(--mono);font-size:11px;color:var(--text-3);letter-spacing:0.04em;margin-bottom:10px; }
     .stack-col { display:flex;flex-direction:column;gap:6px; }
     .stack-item { font-family:var(--mono);font-size:13px;padding:8px 12px;border-radius:var(--radius-sm);border:1px solid var(--border); }
-    .stack-item.old { background:#f5f4f0;color:var(--text-3); }
-    .stack-item.new { background:#edf4ee;color:#2d6b35;border-color:#c8dfc9; }
+    .stack-item.old { background:var(--stack-old-bg);color:var(--text-3); }
+    .stack-item.new { background:var(--stack-new-bg);color:var(--stack-new-text);border-color:var(--stack-new-border); }
     .stack-arrow-col { display:flex;align-items:center;justify-content:center;padding-top:30px;color:var(--text-3);font-size:20px; }
     .portfolio-grid { display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px; }
     .port-card { background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md);overflow:hidden;text-decoration:none;color:inherit;transition:border-color 0.15s,transform 0.15s;display:block; }
@@ -97,6 +124,7 @@
       <a href="#career"    data-i18n data-en="Career" data-zh="工作歷程">Career</a>
       <a href="#portfolio" data-i18n data-en="Portfolio" data-zh="作品集">Portfolio</a>
       <a href="#contact"   data-i18n data-en="Contact" data-zh="聯絡">Contact</a>
+      <button class="theme-toggle" id="themeToggle" aria-label="切換深色模式">🌙</button>
       <button class="lang-toggle" id="langToggle" aria-label="切換為繁體中文">繁中</button>
     </div>
   </nav>
@@ -332,6 +360,29 @@
       applyLang(currentLang === "en" ? "zh" : "en");
     });
     applyLang(currentLang);
+
+    function systemPrefersDark() {
+      return window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+    }
+    function isDarkActive() {
+      var forced = document.documentElement.getAttribute("data-theme");
+      return forced === "dark" || (!forced && systemPrefersDark());
+    }
+    function updateThemeBtn() {
+      var themeBtn = document.getElementById("themeToggle");
+      var dark = isDarkActive();
+      themeBtn.textContent = dark ? "☀️" : "🌙";
+      themeBtn.setAttribute("aria-label", dark ? "Switch to light mode" : "Switch to dark mode");
+    }
+    var savedTheme = localStorage.getItem("wy_theme");
+    if (savedTheme) document.documentElement.setAttribute("data-theme", savedTheme);
+    updateThemeBtn();
+    document.getElementById("themeToggle").addEventListener("click", function() {
+      var next = isDarkActive() ? "light" : "dark";
+      document.documentElement.setAttribute("data-theme", next);
+      localStorage.setItem("wy_theme", next);
+      updateThemeBtn();
+    });
   </script>
 
 </body>
