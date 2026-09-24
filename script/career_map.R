@@ -128,10 +128,10 @@ locations <- data.frame(
     "career_photos/ncku.jpg",     # NCKU — re-supplied after the original was lost
     "career_photos/jku.jpg",      # JKU Linz — exchange
     "career_photos/tainan_epa.jpg", # Tainan EPA — alternative military service
-    NA,                            # Tamkang
+    "career_photos/tku.jpg",      # Tamkang
     "career_photos/uts.jpg",      # UTS
     "career_photos/appen.jpg",    # Appen
-    NA,                            # SGS
+    "career_photos/sgs.jpg",      # SGS
     "career_photos/sydwater.jpg", # Sydney Water
     "career_photos/tomtom.jpg",   # TomTom
     NA,                            # Transport for NSW

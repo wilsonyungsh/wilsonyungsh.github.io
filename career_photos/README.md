@@ -30,16 +30,17 @@ these load during fast tour transitions, not on a static page.
 | `ncku.jpg` | National Cheng Kung University | Graduation photo, supplied directly (re-supplied after the original was lost — see "A cautionary note" below) |
 | `jku.jpg` | Johannes Kepler University Linz | Exchange-year photo (Hallstatt, Austria), supplied directly |
 | `tainan_epa.jpg` | Tainan City Environmental Protection Bureau | Team photo, supplied directly |
+| `tku.jpg` | Tamkang University | Group hiking-trip photo, supplied directly |
 | `uts.jpg` | UTS | Fieldwork photo, supplied directly |
 | `appen.jpg` | Appen Butler Hill | Team photo, supplied directly |
+| `sgs.jpg` | SGS Economics and Planning | Team social photo, supplied directly |
 | `sydwater.jpg` | Sydney Water | Team photo, supplied directly |
-| `tomtom.jpg` | TomTom | Team photo, supplied directly |
+| `tomtom.jpg` | TomTom | Team office photo, supplied directly (replaces an earlier archery team-building photo, kept at `archive/tomtom_archery.jpg`) |
 | `dspark.jpg` | DSpark (Optus) | Team photo, supplied directly |
 | `gcc.jpg` | City of Gold Coast | Team photo, supplied directly |
 | `bcc.jpg` | Brisbane City Council | Team photo, supplied directly |
 
-No photo yet for: Tamkang University, SGS Economics and Planning,
-Transport for NSW.
+No photo yet for: Transport for NSW.
 
 ## A cautionary note: macOS filesystems are case-insensitive
 
