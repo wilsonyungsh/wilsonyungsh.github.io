@@ -16,6 +16,7 @@ Personal website，純靜態 GitHub Pages（沒有後端）。
 | `script/build.R` | 讀 `content.R`，組出 `index.html` 和 `map_list.html` 的 HTML。改版面/樣式才需要動這個檔案。 |
 | `script/career_map.R` | 產生 `career_map.html`（工作地點地圖），用 `mapgl` 畫的獨立 widget，`index.html` 用 `<iframe>` 嵌入。這個是獨立產生的檔案，跟 `build.R` 無關。 |
 | `career_map.html` | `career_map.R` 的輸出，同樣是產生檔，不要手改，改完 `career_map.R` 要重新 render。 |
+| `img/` | 首頁 hero banner、大頭貼照片。用法見下面「更換首頁 Hero Banner」跟 [img/README.md](img/README.md)。 |
 | `interactive/` | 每張互動地圖／小工具各自的獨立 HTML（R + mapgl / mapdeck / deck.gl 輸出），是各作品實際的內容頁，被首頁和 `map_list.html` 用連結指過去。 |
 | `.nojekyll` | 停用 GitHub Pages 預設的 Jekyll 處理。沒有這個檔案，GitHub 會想把 `.md` 檔轉成網頁，可能跟手動產生的 `.html` 撞名。**不要刪掉**。 |
 
@@ -82,11 +83,27 @@ Rscript script/career_map.R
 需要系統裝了 **pandoc**（`htmlwidgets::saveWidget(selfcontained = TRUE)` 需要它來打包成單一 HTML 檔），沒裝的話 `brew install pandoc`。
 
 - **分類（legend）**：地圖上的分類是「產業別」，不是年資/職涯階段。改 `locations$industry`（每個地點一個分類）和 `industry_colours`（分類 → 顏色，同時也是圖例的內容和順序）。想加新分類就在 `industry_colours` 加一行，並讓對應地點的 `industry` 用一樣的名稱。**盡量維持在 5–7 類以內**，太多的話圖例會很擠。
-- **Marker 就是各公司 logo**：地圖上每個點用的是該機構的 logo（`logo_url`／`logo_key` 兩欄，優先用 Google favicon service，知名品牌用 [Simple Icons](https://simpleicons.org) 的白色版本），不是預設的地圖大頭針。加新地點時記得也要補這兩欄，不然那個點會沒有 logo（只剩底下的顏色圓點）。
+- **Marker 就是各公司 logo**：地圖上每個點用的是該機構的真實 logo（`logo_url`／`logo_key` 兩欄），存在 `career_logos/`（白底圓形徽章，見那份 README——Google favicon service 早就掛了，改成本地存真的 logo 圖檔）。加新地點時記得也要補這兩欄，不然那個點會沒有 logo（只剩底下的顏色圓點）。
+- **Story card 照片 / GIS 地圖 gallery**：`locations$photo`（tour 飛行時的大卡片照片，`career_photos/`）跟 `career_maps` 清單（點 marker 彈出的舊地圖縮圖 gallery，`career_gis_maps/`）都是選填，兩個資料夾各自有 README 說明怎麼加。
 
 ### 6. 加一張新的互動地圖本體
 
 新地圖的 R script 輸出到 `interactive/`（可另外開子資料夾歸類，參考 `30DayMapChallenge2025/`），確定網址能打開後，再照第 1、2 點把它加進作品清單。
+
+### 7. 更換首頁 Hero Banner / 大頭貼照片
+
+改 `script/content.R` 的 `content$hero`：
+
+```r
+photo     = "img/blue_mountain.jpg",   # 全幅 banner 照片
+photo_alt_en = "...", photo_alt_zh = "...",
+avatar        = "img/feature_photo.jpg",  # 圓形大頭貼
+avatar_alt_en = "...", avatar_alt_zh = "..."
+```
+
+換照片：把新檔案放進 `img/`（處理方式、命名慣例見 [img/README.md](img/README.md)），改上面兩個路徑，`Rscript script/build.R`。
+
+版面是「封面照 + 大頭貼」的經典疊法（banner 純照片，沒有文字疊在上面；大頭貼用負的 `margin-top` 往上拉，疊在 banner 跟白底交界處，跟下面的標題文字保持垂直分開，不會互相擋到）。CSS 在 `build.R` 的 `.hero-banner` / `.hero-avatar` 那幾條規則。
 
 ## 訪客計數器
 

@@ -73,8 +73,8 @@ Dark theme, independent of the rest of the site — it's an embedded widget,
 not a content page, so it doesn't need to match the light theme outside it.
 
 Full architecture and the debug history live in
-[CAREER_MAP_DEVLOG.md](CAREER_MAP_DEVLOG.md); the short version: an
-11-stop `locations` data.frame drives a MapLibre base map, a real deck.gl
+[CAREER_MAP_DEVLOG.md](CAREER_MAP_DEVLOG.md); the short version: a
+13-stop `locations` data.frame drives a MapLibre base map, a real deck.gl
 `ArcLayer` for the connecting lines, a fly-through tour with transport
 controls, and three sibling asset folders (`career_logos/`,
 `career_photos/`, `career_gis_maps/`) each feeding one part of it.
@@ -92,6 +92,7 @@ controls, and three sibling asset folders (`career_logos/`,
 | `career_logos/` | Assets | Company/institution logos for the career map. Own `README.md`. |
 | `career_photos/` | Assets | Team/self photos for the career map's tour story-cards. Own `README.md`. |
 | `career_gis_maps/{thumbs,full}/` | Assets | Historical GIS project outputs, shown in the career map's click-popups. Own `README.md`. |
+| `img/` | Assets | Homepage-only images — hero banner + profile avatar. Own `README.md`. |
 | `interactive/` | Mostly generated elsewhere | Standalone interactive maps/dashboards/tools — each is its own R script's output (mapdeck, MapGL, deck.gl, Shiny, etc.), linked to from the homepage's "Selected work" and the full portfolio page. Not part of either build pipeline above; each one is self-contained. |
 | `.nojekyll` | — | Disables GitHub Pages' default Jekyll processing. **Don't delete.** |
 | `README.md` | — | Maintenance notes — how to add a map, change text, update the career map, fonts, visitor counter. |
@@ -101,9 +102,12 @@ controls, and three sibling asset folders (`career_logos/`,
 
 ## Content model, in one sentence per page
 
-- **`index.html`**: hero → footprint map embed → expertise domain cards →
-  career chapters + stack-evolution comparison + career map embed →
-  selected-work portfolio grid → footer/contact. All from `content.R`.
+- **`index.html`**: full-bleed hero banner (photo, breaks out of the page's
+  max-width) → hero content (circular avatar overlapping the banner edge,
+  title, description, chips) → footprint map embed → expertise domain
+  cards → career chapters + stack-evolution comparison + career map embed
+  → selected-work portfolio grid → footer/contact. All from `content.R`
+  (`hero$photo`/`hero$avatar` for the two images, `img/` on disk).
 - **`map_list.html`**: every interactive map/tool grouped into sections
   (`content$map_list$sections`), each item optionally bilingual, optionally
   multiple links. Also EN/ZH toggle, also from `content.R`.
