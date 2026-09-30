@@ -1,0 +1,662 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Route 431 Stop Load</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/maplibre-gl/4.7.1/maplibre-gl.min.css">
+<style>
+  :root {
+    color-scheme: light;
+    --surface: #fcfcfb;
+    --panel: #ffffff;
+    --border: #e4e3df;
+    --text: #0b0b0b;
+    --text-2: #52514e;
+    --muted: #7a7974;
+    --grid: #ecebe7;
+    --track: #efeeea;
+    --series: #2a78d6;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      color-scheme: dark;
+      --surface: #1a1a19; --panel: #232322; --border: #383835; --text: #ffffff; --text-2: #c3c2b7;
+      --muted: #8f8e86; --grid: #2e2e2c; --track: #2c2c2a; --series: #3987e5;
+    }
+  }
+  :root[data-theme="dark"] {
+    color-scheme: dark;
+    --surface: #1a1a19; --panel: #232322; --border: #383835; --text: #ffffff; --text-2: #c3c2b7;
+    --muted: #8f8e86; --grid: #2e2e2c; --track: #2c2c2a; --series: #3987e5;
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; }
+  body {
+    background: var(--surface); color: var(--text);
+    font: 14px/1.4 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  }
+  #root { min-height: 100%; display: flex; flex-direction: column; }
+  .app { display: flex; flex-direction: column; min-height: 100vh; padding: 16px; gap: 12px; max-width: 1400px; width: 100%; margin: 0 auto; }
+
+  header { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 12px; }
+  h1 { font-size: 20px; margin: 0; font-weight: 650; letter-spacing: -0.01em; }
+  .sub { color: var(--text-2); margin-top: 2px; }
+
+  .seg { display: inline-flex; background: var(--track); border-radius: 8px; padding: 3px; }
+  .seg button {
+    border: 0; background: transparent; color: var(--text-2); font: inherit; font-weight: 550;
+    padding: 6px 14px; border-radius: 6px; cursor: pointer;
+  }
+  .seg button[aria-pressed="true"] { background: var(--panel); color: var(--text); box-shadow: 0 1px 2px rgb(0 0 0 / 0.12); }
+
+  .map-wrap { position: relative; flex: 1 1 auto; min-height: 420px; border: 1px solid var(--border); border-radius: 10px; overflow: hidden; }
+  .map { position: absolute; inset: 0; }
+  .legend {
+    position: absolute; top: 12px; left: 12px; background: var(--panel); color: var(--text);
+    border: 1px solid var(--border); border-radius: 8px; padding: 10px 12px; font-size: 12px; max-width: calc(100% - 80px);
+  }
+  .legend .t { font-weight: 600; margin-bottom: 6px; }
+  .legend .n { color: var(--muted); margin-top: 4px; }
+  .legend svg text { fill: var(--text-2); font-size: 11px; }
+
+  .tour {
+    position: absolute; left: 12px; bottom: 12px; display: flex; gap: 8px; align-items: center;
+    background: var(--panel); border: 1px solid var(--border); border-radius: 10px; padding: 6px;
+  }
+  .tour .seg button { padding: 5px 10px; }
+  .follow {
+    border: 0; border-radius: 7px; padding: 7px 14px; font: inherit; font-weight: 600; cursor: pointer;
+    background: var(--series); color: #fff;
+  }
+  .follow[aria-pressed="true"] { background: var(--text); color: var(--panel); }
+
+  .panel { background: var(--panel); border: 1px solid var(--border); border-radius: 10px; padding: 12px 16px 8px; }
+  .controls { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 16px; }
+  .btns { display: inline-flex; gap: 4px; }
+  .icon {
+    width: 34px; height: 34px; border-radius: 8px; border: 1px solid var(--border); background: var(--surface);
+    color: var(--text); cursor: pointer; display: inline-grid; place-items: center; padding: 0;
+  }
+  .icon:hover { border-color: var(--text-2); }
+  .icon svg { width: 16px; height: 16px; fill: currentColor; }
+  .month { font-size: 20px; font-weight: 650; font-variant-numeric: tabular-nums; min-width: 96px; }
+  .range { color: var(--text-2); }
+  .link { border: 0; background: none; color: var(--series); font: inherit; cursor: pointer; padding: 0; }
+  .link:disabled { color: var(--muted); cursor: default; }
+  .spacer { flex: 1; }
+  .kbd { color: var(--muted); font-size: 12px; }
+
+  .chart-title { margin-top: 10px; font-weight: 600; font-size: 13px; }
+  .chart-title span { color: var(--muted); font-weight: 400; }
+  .tl { position: relative; }
+  .tl svg { display: block; width: 100%; }
+  .tl .axis text { fill: var(--muted); font-size: 11px; }
+  .tl .grid line { stroke: var(--grid); }
+  .tl .hit { cursor: pointer; }
+  /* drag anywhere on the strip draws a new range; handles still resize it */
+  .brush .selection { fill: var(--series); fill-opacity: 0.28; stroke: none; pointer-events: none; }
+  .brush .handle { fill: var(--series); rx: 3px; }
+  .brush .overlay { cursor: crosshair; }
+  .tip-tl {
+    position: absolute; pointer-events: none; background: var(--panel); border: 1px solid var(--border);
+    border-radius: 6px; padding: 4px 8px; font-size: 12px; white-space: nowrap; transform: translate(-50%, -100%);
+    box-shadow: 0 2px 8px rgb(0 0 0 / 0.12);
+  }
+  .tip-tl b { font-variant-numeric: tabular-nums; }
+
+  .maplibregl-popup.tip .maplibregl-popup-content {
+    background: var(--panel); color: var(--text); border: 1px solid var(--border); border-radius: 8px;
+    padding: 10px 12px; box-shadow: 0 4px 14px rgb(0 0 0 / 0.18); font: 12px/1.4 system-ui, sans-serif;
+  }
+  .maplibregl-popup.tip .maplibregl-popup-tip { display: none; }
+  .tip .tt { font-weight: 600; font-size: 13px; }
+  .tip .ts { color: var(--text-2); margin-bottom: 6px; }
+  .tip table { border-collapse: collapse; }
+  .tip td { padding: 1px 0; }
+  .tip td + td { padding-left: 16px; text-align: right; font-variant-numeric: tabular-nums; }
+  .tip tr.on { font-weight: 650; }
+  .tip tr:not(.on) { color: var(--text-2); }
+
+  footer { color: var(--muted); font-size: 12px; }
+  footer .credit { margin: 6px 0 0; color: var(--text-2); }
+  footer a { color: var(--series); }
+
+  @media (max-width: 640px) {
+    .app { padding: 16px; }
+    .map-wrap { min-height: 360px; flex: 0 0 55vh; }
+    .kbd { display: none; }
+  }
+</style>
+</head>
+<body>
+<div id="root"></div>
+
+<script src="rocket_431_data.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.3.1/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.3.1/umd/react-dom.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.26.4/babel.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/maplibre-gl/4.7.1/maplibre-gl.js"></script>
+
+<script type="text/babel" data-presets="react">
+const { useState, useEffect, useRef, useMemo } = React;
+
+// ---- data ------------------------------------------------------------------
+const DATA = window.ROCKET_431;
+const MONTHS = DATA.months;
+const N = MONTHS.length;
+
+const METRICS = [
+  { key: "pass_cnt_onboard", label: "On board", long: "Passengers on board after each stop",
+    agg: "max", aggLabel: "Peak passengers on board" },
+  { key: "boarding_mean", label: "Boarding", long: "Passengers boarding at each stop",
+    agg: "sum", aggLabel: "Boardings, all stops" },
+  { key: "alighting_mean", label: "Alighting", long: "Passengers alighting at each stop",
+    agg: "sum", aggLabel: "Alightings, all stops" },
+];
+
+const parseMonth = d3.timeParse("%Y-%m");
+const fmtMonth = (m) => d3.timeFormat("%b %Y")(parseMonth(m));
+
+const byMonth = d3.group(DATA.values, (r) => r.month);
+const byMonthStop = new Map(MONTHS.map((m) => [m, new Map((byMonth.get(m) || []).map((r) => [r.stop_id, r]))]));
+
+// hide stops with no recorded trips in any month
+const active = new Set(DATA.values.filter((r) => r.boarding_mean || r.alighting_mean || r.pass_cnt_onboard).map((r) => r.stop_id));
+const STOPS = DATA.stops.filter((s) => active.has(s.id));
+const STOP_BY_ID = new Map(STOPS.map((s) => [s.id, s]));
+
+// colour + height domains fixed across all months so months compare directly
+const DOMAIN_MAX = Object.fromEntries(METRICS.map((m) => [m.key, d3.max(DATA.values, (r) => Math.max(0, r[m.key])) || 1]));
+const SERIES = Object.fromEntries(METRICS.map((m) => [m.key, MONTHS.map((mo) => {
+  const rows = byMonth.get(mo) || [];
+  return m.agg === "max" ? (d3.max(rows, (r) => r[m.key]) ?? 0) : d3.sum(rows, (r) => r[m.key]);
+})]));
+
+const BOUNDS = (() => {
+  const pts = STOPS.flatMap((s) => s.poly);
+  return [[d3.min(pts, (p) => p[0]), d3.min(pts, (p) => p[1])], [d3.max(pts, (p) => p[0]), d3.max(pts, (p) => p[1])]];
+})();
+
+const HEIGHT_MAX = 600; // metres for the busiest stop of each metric
+
+// sequential blue ramp; in dark mode the anchor flips so large values are brightest
+const RAMP = ["#cde2fb", "#b7d3f6", "#9ec5f4", "#86b6ef", "#6da7ec", "#5598e7", "#3987e5",
+  "#2a78d6", "#256abf", "#1c5cab", "#184f95", "#104281", "#0d366b"];
+const rampFor = (dark) => d3.piecewise(d3.interpolateRgb, dark ? RAMP.slice(0, 11).reverse() : RAMP);
+
+const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+
+// ---- theme -----------------------------------------------------------------
+function useDark() {
+  const q = window.matchMedia("(prefers-color-scheme: dark)");
+  const read = () => {
+    const t = document.documentElement.dataset.theme;
+    return t === "dark" || (t !== "light" && q.matches);
+  };
+  const [dark, setDark] = useState(read);
+  useEffect(() => {
+    const on = () => setDark(read());
+    q.addEventListener("change", on);
+    const mo = new MutationObserver(on);
+    mo.observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+    return () => { q.removeEventListener("change", on); mo.disconnect(); };
+  }, []);
+  return dark;
+}
+
+// ---- map -------------------------------------------------------------------
+const basemap = (dark) => `https://basemaps.cartocdn.com/gl/${dark ? "dark-matter" : "positron"}-gl-style/style.json`;
+
+function colorExpr(metric, dark) {
+  const max = DOMAIN_MAX[metric], ramp = rampFor(dark), stops = [];
+  for (let i = 0; i <= 6; i++) stops.push((i / 6) * max, ramp(i / 6));
+  return ["interpolate", ["linear"], ["get", "v"], ...stops];
+}
+
+function stopFeatures(metric, month) {
+  const rows = byMonthStop.get(month);
+  return {
+    type: "FeatureCollection",
+    features: STOPS.map((s) => {
+      const r = rows.get(s.id);
+      return {
+        type: "Feature",
+        properties: { id: s.id, v: Math.max(0, r ? r[metric] : 0) },
+        geometry: { type: "Polygon", coordinates: [s.poly] },
+      };
+    }),
+  };
+}
+
+function tipHtml(stopId, month, metric) {
+  const s = STOP_BY_ID.get(stopId), r = byMonthStop.get(month).get(stopId);
+  const head = `<div class="tt">${esc(s.name)}</div>
+    <div class="ts">${s.seq != null ? `Stop ${s.seq} · ` : ""}${fmtMonth(month)}</div>`;
+  if (!r) return head + `<div class="ts">No trips recorded this month</div>`;
+  const rows = METRICS.map((m) =>
+    `<tr class="${m.key === metric ? "on" : ""}"><td>${m.label}</td><td>${r[m.key]}</td></tr>`).join("");
+  return head + `<table>${rows}</table>`;
+}
+
+// ---- route animation + follow-the-bus tour ---------------------------------
+const RUN_MS = 60000; // one run along the route at 1x
+const CHASE = { zoom: 16, pitch: 65 };
+const LOOK_AHEAD = 0.0015; // ~150 m ahead along the route sets the heading
+
+const ROUTE = (() => {
+  const c = DATA.route, n = c.length, k0 = Math.cos(c[0][1] * Math.PI / 180);
+  // cumulative distance so speed is even along the road (uneven vertex spacing)
+  const cum = [0];
+  for (let i = 1; i < n; i++) {
+    const dx = (c[i][0] - c[i - 1][0]) * k0, dy = c[i][1] - c[i - 1][1];
+    cum.push(cum[i - 1] + Math.hypot(dx, dy));
+  }
+  const total = cum[n - 1];
+  const at = (d) => {
+    let lo = 0, hi = n - 1;
+    while (hi - lo > 1) { const mid = (lo + hi) >> 1; if (cum[mid] <= d) lo = mid; else hi = mid; }
+    const seg = cum[hi] - cum[lo], f = seg > 0 ? (d - cum[lo]) / seg : 0;
+    return { k: lo, p: [c[lo][0] + (c[hi][0] - c[lo][0]) * f, c[lo][1] + (c[hi][1] - c[lo][1]) * f] };
+  };
+  const heading = (d) => {
+    const a = at(d).p, b = at(Math.min(total, d + LOOK_AHEAD)).p;
+    const dx = (b[0] - a[0]) * k0, dy = b[1] - a[1];
+    return dx === 0 && dy === 0 ? null : Math.atan2(dx, dy) * 180 / Math.PI;
+  };
+  return { c, total, at, heading };
+})();
+
+const turnToward = (a, b, f) => a + ((((b - a) % 360) + 540) % 360 - 180) * f;
+
+function MapView({ metric, month, dark, follow, speed, onFollowEnd }) {
+  const el = useRef(null);
+  const mapRef = useRef(null);
+  const live = useRef({ metric, month, dark, hover: null });
+  live.current = { ...live.current, metric, month, dark, speed, onFollowEnd };
+  const tour = useRef({ on: false, entering: false, prog: 0, bearing: null });
+
+  const apply = (map) => {
+    const { metric, month, dark } = live.current;
+    if (!map.getSource("stops")) return;
+    map.getSource("stops").setData(stopFeatures(metric, month));
+    map.setPaintProperty("bus", "fill-extrusion-height", ["*", ["get", "v"], HEIGHT_MAX / DOMAIN_MAX[metric]]);
+    map.setPaintProperty("bus", "fill-extrusion-color", colorExpr(metric, dark));
+  };
+
+  useEffect(() => {
+    const map = new maplibregl.Map({
+      container: el.current,
+      style: basemap(live.current.dark),
+      bounds: BOUNDS,
+      fitBoundsOptions: { padding: { top: 60, bottom: 40, left: 40, right: 40 } },
+      pitch: 55,
+      bearing: -20,
+      attributionControl: { compact: true },
+    });
+    map.addControl(new maplibregl.NavigationControl({ visualizePitch: true }), "top-right");
+
+    map.on("style.load", () => {
+      const dark = live.current.dark;
+      map.addSource("route", { type: "geojson", data: { type: "Feature", geometry: { type: "LineString", coordinates: DATA.route } } });
+      map.addLayer({
+        id: "route", type: "line", source: "route",
+        layout: { "line-cap": "round", "line-join": "round" },
+        paint: { "line-color": dark ? "#c3c2b7" : "#52514e", "line-width": 2.5, "line-opacity": 0.8 },
+      });
+      const trail = dark ? "#ffd400" : "#eda100";
+      map.addSource("route-anim", { type: "geojson", data: { type: "Feature", geometry: { type: "LineString", coordinates: [DATA.route[0], DATA.route[0]] } } });
+      map.addLayer({
+        id: "route-anim", type: "line", source: "route-anim",
+        layout: { "line-cap": "round", "line-join": "round" },
+        paint: { "line-color": trail, "line-width": 5 },
+      });
+      map.addSource("stops", { type: "geojson", data: { type: "FeatureCollection", features: [] } });
+      map.addLayer({
+        id: "bus", type: "fill-extrusion", source: "stops",
+        paint: { "fill-extrusion-opacity": 0.9, "fill-extrusion-height": 0, "fill-extrusion-color": RAMP[6] },
+      });
+      map.addSource("route-head", { type: "geojson", data: { type: "Feature", geometry: { type: "Point", coordinates: DATA.route[0] } } });
+      map.addLayer({
+        id: "route-head", type: "circle", source: "route-head",
+        paint: { "circle-radius": 7, "circle-color": "#ffffff", "circle-stroke-color": trail, "circle-stroke-width": 3 },
+      });
+      apply(map);
+    });
+
+    // animation loop: draws the trail + head, and drives the camera while following
+    let raf, last = null;
+    const frame = (t) => {
+      const dt = last == null ? 0 : Math.min(100, t - last);
+      last = t;
+      const tr = tour.current;
+      if (!tr.entering) tr.prog = (tr.prog + dt * live.current.speed / RUN_MS) % 1;
+      const d = tr.prog * ROUTE.total, { k, p } = ROUTE.at(d);
+      const trailSrc = map.getSource("route-anim"), headSrc = map.getSource("route-head");
+      if (trailSrc && headSrc) {
+        trailSrc.setData({ type: "Feature", geometry: { type: "LineString", coordinates: ROUTE.c.slice(0, k + 1).concat([p]) } });
+        headSrc.setData({ type: "Feature", geometry: { type: "Point", coordinates: p } });
+      }
+      if (tr.on && !tr.entering) {
+        const h = ROUTE.heading(d);
+        if (h != null) tr.bearing = tr.bearing == null ? h : turnToward(tr.bearing, h, 1 - Math.exp(-dt / 350));
+        map.jumpTo({ center: p, bearing: tr.bearing ?? map.getBearing(), ...CHASE });
+      }
+      raf = requestAnimationFrame(frame);
+    };
+    raf = requestAnimationFrame(frame);
+
+    // any press or scroll on the map hands the camera back to the user
+    // (DOM events: jumpTo every frame cancels MapLibre's own drag handlers before they fire)
+    const release = () => {
+      if (!tour.current.on) return;
+      tour.current.on = false;
+      tour.current.entering = false;
+      live.current.onFollowEnd();
+    };
+    ["pointerdown", "wheel"].forEach((ev) => map.getCanvasContainer().addEventListener(ev, release, { passive: true }));
+
+    const popup = new maplibregl.Popup({ closeButton: false, closeOnClick: false, offset: 12, className: "tip", maxWidth: "300px" });
+    map.on("mousemove", "bus", (e) => {
+      map.getCanvas().style.cursor = "pointer";
+      const id = e.features[0].properties.id;
+      live.current.hover = { id, lngLat: e.lngLat };
+      popup.setLngLat(e.lngLat).setHTML(tipHtml(id, live.current.month, live.current.metric)).addTo(map);
+    });
+    map.on("mouseleave", "bus", () => {
+      map.getCanvas().style.cursor = "";
+      live.current.hover = null;
+      popup.remove();
+    });
+    live.current.popup = popup;
+
+    mapRef.current = map;
+    return () => { cancelAnimationFrame(raf); map.remove(); };
+  }, []);
+
+  // start / stop following; the head holds still while the camera flies in
+  useEffect(() => {
+    const map = mapRef.current, tr = tour.current;
+    if (!map) return;
+    if (follow && !tr.on) {
+      const d = tr.prog * ROUTE.total;
+      tr.on = true;
+      tr.entering = true;
+      tr.bearing = ROUTE.heading(d) ?? map.getBearing();
+      map.flyTo({ center: ROUTE.at(d).p, bearing: tr.bearing, ...CHASE, duration: 1800 });
+      map.once("moveend", () => { tr.entering = false; });
+    } else if (!follow && tr.on) {
+      tr.on = false;
+      tr.entering = false;
+      map.fitBounds(BOUNDS, { padding: { top: 60, bottom: 40, left: 40, right: 40 }, pitch: 55, bearing: -20, duration: 1500 });
+    }
+  }, [follow]);
+
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map) return;
+    apply(map);
+    const h = live.current.hover;
+    if (h) live.current.popup.setHTML(tipHtml(h.id, month, metric));
+  }, [metric, month]);
+
+  const firstDark = useRef(dark);
+  useEffect(() => {
+    if (firstDark.current === dark) return;
+    firstDark.current = dark;
+    mapRef.current?.setStyle(basemap(dark), { diff: false });
+  }, [dark]);
+
+  return <div className="map" ref={el} />;
+}
+
+function Legend({ metric, dark }) {
+  const m = METRICS.find((d) => d.key === metric);
+  const max = DOMAIN_MAX[metric], W = 180, ramp = rampFor(dark);
+  const x = d3.scaleLinear([0, max], [0, W]);
+  const ticks = x.ticks(4).filter(Number.isInteger);
+  return (
+    <div className="legend">
+      <div className="t">{m.long}, per service</div>
+      <svg width={W + 12} height={30} role="img" aria-label={`Colour scale from 0 to ${max}`}>
+        <defs>
+          <linearGradient id="lg">
+            {d3.range(0, 1.01, 0.1).map((t) => <stop key={t} offset={t} stopColor={ramp(t)} />)}
+          </linearGradient>
+        </defs>
+        <rect x={6} y={0} width={W} height={10} rx={2} fill="url(#lg)" />
+        {ticks.map((t) => <text key={t} x={6 + x(t)} y={25} textAnchor="middle">{t}</text>)}
+      </svg>
+      <div className="n">Bar height shows the same value</div>
+    </div>
+  );
+}
+
+// ---- timeline --------------------------------------------------------------
+function Timeline({ metric, range, current, onRange, onPick }) {
+  const wrap = useRef(null), brushG = useRef(null), brushRef = useRef(null);
+  const [width, setWidth] = useState(800);
+  const [hover, setHover] = useState(null);
+
+  useEffect(() => {
+    const ro = new ResizeObserver(([e]) => setWidth(Math.max(280, e.contentRect.width)));
+    ro.observe(wrap.current);
+    return () => ro.disconnect();
+  }, []);
+
+  const H = 176, M = { t: 14, r: 12, b: 0, l: 34 };
+  const plotB = 112, axisY = plotB, stripT = 134, stripB = 158;
+  const series = SERIES[metric];
+  const x = useMemo(() => d3.scaleLinear([0, N - 1], [M.l, width - M.r]), [width]);
+  const y = useMemo(() => d3.scaleLinear([0, d3.max(series) || 1], [plotB, M.t]).nice(), [series]);
+  const step = x(1) - x(0);
+  const clampIdx = (i) => Math.max(0, Math.min(N - 1, i));
+
+  const area = d3.area().x((d, i) => x(i)).y0(plotB).y1((d) => y(d)).curve(d3.curveMonotoneX)(series);
+  const line = d3.line().x((d, i) => x(i)).y((d) => y(d)).curve(d3.curveMonotoneX)(series);
+  const yearTicks = MONTHS.map((m, i) => [m, i]).filter(([m]) => m.endsWith("-01"));
+
+  const cb = useRef({});
+  cb.current = { onRange, range, x };
+
+  // range brush on the strip under the axis; snaps to whole months
+  useEffect(() => {
+    const brush = d3.brushX()
+      .extent([[M.l - step / 2, stripT], [width - M.r + step / 2, stripB]])
+      .handleSize(10)
+      .on("end", (ev) => {
+        if (!ev.sourceEvent) return;
+        const { onRange, range, x } = cb.current;
+        if (!ev.selection) { d3.select(brushG.current).call(brush.move, [x(range[0]) - step / 2, x(range[1]) + step / 2]); return; }
+        const a = clampIdx(Math.round(x.invert(ev.selection[0] + step / 2)));
+        const b = clampIdx(Math.round(x.invert(ev.selection[1] - step / 2)));
+        onRange([Math.min(a, b), Math.max(a, b)]);
+        d3.select(brushG.current).call(brush.move, [x(Math.min(a, b)) - step / 2, x(Math.max(a, b)) + step / 2]);
+      });
+    brushRef.current = brush;
+    d3.select(brushG.current).call(brush);
+  }, [width]);
+
+  useEffect(() => {
+    d3.select(brushG.current).call(brushRef.current.move, [x(range[0]) - step / 2, x(range[1]) + step / 2]);
+  }, [range, x]);
+
+  const idxAt = (evt) => {
+    const [px] = d3.pointer(evt, evt.currentTarget);
+    return clampIdx(Math.round(x.invert(px)));
+  };
+  const lo = x(range[0]) - step / 2, hi = x(range[1]) + step / 2;
+  const fmt = d3.format(",d");
+
+  return (
+    <div className="tl" ref={wrap}>
+      <svg height={H} role="img" aria-label="Monthly trend with selectable date range">
+        <g className="grid">
+          {y.ticks(3).map((t) => <line key={t} x1={M.l} x2={width - M.r} y1={y(t)} y2={y(t)} />)}
+        </g>
+        <g className="axis">
+          {y.ticks(3).map((t) => <text key={t} x={M.l - 8} y={y(t)} dy="0.32em" textAnchor="end">{fmt(t)}</text>)}
+          {yearTicks.map(([m, i]) => (
+            <g key={m}>
+              <line x1={x(i)} x2={x(i)} y1={axisY} y2={axisY + 4} stroke="var(--muted)" />
+              <text x={x(i)} y={axisY + 16} textAnchor="middle">{m.slice(0, 4)}</text>
+            </g>
+          ))}
+        </g>
+        <path d={area} fill="var(--series)" fillOpacity={0.14} />
+        <path d={line} fill="none" stroke="var(--series)" strokeWidth={2} />
+
+        {/* dim months outside the selected range */}
+        <rect x={M.l - step / 2} y={M.t - 4} width={Math.max(0, lo - (M.l - step / 2))} height={plotB - M.t + 4} fill="var(--panel)" fillOpacity={0.72} />
+        <rect x={hi} y={M.t - 4} width={Math.max(0, width - M.r + step / 2 - hi)} height={plotB - M.t + 4} fill="var(--panel)" fillOpacity={0.72} />
+
+        {hover != null && hover !== current && (
+          <line x1={x(hover)} x2={x(hover)} y1={M.t} y2={plotB} stroke="var(--muted)" strokeDasharray="2 3" />
+        )}
+        <line x1={x(current)} x2={x(current)} y1={M.t - 4} y2={plotB} stroke="var(--text)" strokeWidth={1} />
+        <circle cx={x(current)} cy={y(series[current])} r={4.5} fill="var(--series)" stroke="var(--panel)" strokeWidth={2} />
+
+        <rect className="hit" x={M.l - step / 2} y={M.t - 4} width={width - M.l - M.r + step} height={plotB - M.t + 4} fill="transparent"
+          onMouseMove={(e) => setHover(idxAt(e))} onMouseLeave={() => setHover(null)} onClick={(e) => onPick(idxAt(e))} />
+
+        <rect x={M.l - step / 2} y={stripT} width={width - M.l - M.r + step} height={stripB - stripT} rx={4} fill="var(--track)" />
+        <g className="brush" ref={brushG} />
+      </svg>
+      {hover != null && (
+        <div className="tip-tl" style={{ left: x(hover), top: y(series[hover]) - 8 }}>
+          {fmtMonth(MONTHS[hover])} · <b>{fmt(series[hover])}</b>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ---- app -------------------------------------------------------------------
+const Icon = {
+  prev: <svg viewBox="0 0 16 16"><path d="M4 3h2v10H4zM13 3v10L7 8z" /></svg>,
+  next: <svg viewBox="0 0 16 16"><path d="M10 3h2v10h-2zM3 3v10l6-5z" /></svg>,
+  play: <svg viewBox="0 0 16 16"><path d="M4 2.5v11l9.5-5.5z" /></svg>,
+  pause: <svg viewBox="0 0 16 16"><path d="M4 3h3v10H4zM9 3h3v10H9z" /></svg>,
+};
+
+function App() {
+  const dark = useDark();
+  const [metric, setMetric] = useState(METRICS[0].key);
+  const [range, setRange] = useState([0, N - 1]);
+  const [current, setCurrent] = useState(N - 1);
+  const [playing, setPlaying] = useState(false);
+  const [follow, setFollow] = useState(false);
+  const [speed, setSpeed] = useState(1);
+  const m =METRICS.find((d) => d.key === metric);
+
+  // keep the shown month inside the range
+  useEffect(() => {
+    if (current < range[0] || current > range[1]) setCurrent(range[0]);
+  }, [range]);
+
+  const step = (d) => setCurrent((c) => {
+    const [a, b] = range;
+    const n = c + d;
+    return n > b ? a : n < a ? b : n;
+  });
+
+  useEffect(() => {
+    if (!playing) return;
+    const t = setInterval(() => step(1), 900);
+    return () => clearInterval(t);
+  }, [playing, range]);
+
+  useEffect(() => {
+    const onKey = (e) => {
+      if (e.target.closest("input, textarea, select")) return;
+      if (e.key === " ") { e.preventDefault(); setPlaying((p) => !p); }
+      else if (e.key === "ArrowRight") step(1);
+      else if (e.key === "ArrowLeft") step(-1);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [range]);
+
+  // clicking a month outside the range widens the range to include it
+  const pick = (i) => {
+    if (i < range[0]) setRange([i, range[1]]);
+    else if (i > range[1]) setRange([range[0], i]);
+    setCurrent(i);
+  };
+
+  const full = range[0] === 0 && range[1] === N - 1;
+  const span = range[1] - range[0] + 1;
+
+  return (
+    <div className="app">
+      <header>
+        <div>
+          <h1>Route 431 inbound: passengers by stop</h1>
+          <div className="sub">Weekday 12:00am–8:30am · average per service · Source: Translink</div>
+        </div>
+        <div className="seg" role="group" aria-label="Metric">
+          {METRICS.map((d) => (
+            <button key={d.key} aria-pressed={d.key === metric} onClick={() => setMetric(d.key)}>{d.label}</button>
+          ))}
+        </div>
+      </header>
+
+      <div className="map-wrap">
+        <MapView metric={metric} month={MONTHS[current]} dark={dark}
+          follow={follow} speed={speed} onFollowEnd={() => setFollow(false)} />
+        <Legend metric={metric} dark={dark} />
+        <div className="tour">
+          <button className="follow" aria-pressed={follow} onClick={() => setFollow((f) => !f)}>
+            {follow ? "Stop following" : "Follow bus"}
+          </button>
+          <div className="seg" role="group" aria-label="Bus speed">
+            {[1, 2, 4].map((s) => (
+              <button key={s} aria-pressed={s === speed} onClick={() => setSpeed(s)}>{s}x</button>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      <section className="panel">
+        <div className="controls">
+          <div className="btns">
+            <button className="icon" onClick={() => step(-1)} aria-label="Previous month">{Icon.prev}</button>
+            <button className="icon" onClick={() => setPlaying((p) => !p)} aria-label={playing ? "Pause" : "Play"}>
+              {playing ? Icon.pause : Icon.play}
+            </button>
+            <button className="icon" onClick={() => step(1)} aria-label="Next month">{Icon.next}</button>
+          </div>
+          <div className="month" aria-live="polite">{fmtMonth(MONTHS[current])}</div>
+          <div className="range">
+            Range {fmtMonth(MONTHS[range[0]])} – {fmtMonth(MONTHS[range[1]])} ({span} month{span > 1 ? "s" : ""})
+            {" · "}
+            <button className="link" disabled={full} onClick={() => setRange([0, N - 1])}>Reset</button>
+          </div>
+          <div className="spacer" />
+          <div className="kbd">Space play/pause · ← → step</div>
+        </div>
+        <div className="chart-title">{m.aggLabel}, per service <span>· click a month to show it · drag the bar below to set the range</span></div>
+        <Timeline metric={metric} range={range} current={current} onRange={setRange} onPick={pick} />
+      </section>
+
+      <footer>
+        Stops with no recorded trips in any month are hidden. Negative on-board values (from rounding) are drawn as 0.
+        Colour and height scales are fixed across all months, so months compare directly.
+        <p className="credit">
+          Built with Claude (Anthropic's AI assistant) as a coding partner. I led the analysis, the R data pipeline
+          and the design decisions; Claude wrote the React, D3 and MapLibre front end, which I'm learning as I go.
+        </p>
+        <p className="credit">
+          Earlier version: <a href="https://wilsonyungsh.github.io/interactive/bus431_capacity.html">route 431 cumulative passenger map (R + Mapdeck)</a>
+        </p>
+      </footer>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+</script>
+</body>
+</html>
