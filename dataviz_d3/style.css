@@ -1,22 +1,37 @@
 .profile_card {
-  background-color: #95f291;
+  background-color: white;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   padding: 20px;
   margin: 20px auto;
-  max-width: 400px;
+  max-width: 250px;
+  text-align: center;
+  font-family: Garamond, sans-serif;
 }
+
 .avatar {
-  width: 100%;
-  border-radius: 8px;
+  width: 80px;
+  height: 80px;
+  border-radius: 35px;
+  border: 5px solid #b5f3b5;
 }
+
+.avatar:hover {
+  border-color: #a3f607;
+  box-shadow: 0 0 10px rgba(76, 175, 80, 0.5);
+  width: 100%;
+  height: 100%;
+}
+
 .bio {
-  font-size: 16px;
+  font-size: 14px;
   color: #333;
   margin-top: 10px;
 }
+
 .name {
-  font-size: 24px;
+  font-size: 32px;
   font-weight: bold;
   margin-top: 10px;
+  font-family: "Brush Script MT", sans-serif;
 }
