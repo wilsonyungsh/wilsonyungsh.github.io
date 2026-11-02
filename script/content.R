@@ -259,11 +259,11 @@ content <- list(
     hero_title_zh   = "互動地圖、儀表板與工具。",
     hero_desc_en    = paste(
       "A complete list of interactive maps, Shiny dashboards, and small tools built with R and the",
-      "open-source spatial stack — including entries from the 2024 and 2025 30 Day Map Challenges."
+      "open-source spatial stack — including entries from the 2024, 2025 and 2026 30 Day Map Challenges."
     ),
     hero_desc_zh    = paste(
       "完整的互動地圖、Shiny 儀表板與小工具清單，皆以 R 與開源空間分析工具打造，",
-      "包含 2024 與 2025 年 30 天地圖挑戰（30 Day Map Challenge）的作品。"
+      "包含 2024、2025 與 2026 年 30 天地圖挑戰（30 Day Map Challenge）的作品。"
     ),
     nav_home_en = "← Home",
     nav_home_zh = "← 首頁",
@@ -274,6 +274,8 @@ content <- list(
 
       list(
         label_en = "2024 Map Challenge", label_zh = "2024 地圖挑戰",
+        note_en = "For the full 30 Day Map Challenge repo, see <a href='https://github.com/wilsonyungsh/30DayMapChallenge2024' target='_blank' rel='noopener'>github.com/wilsonyungsh/30DayMapChallenge2024</a>.",
+        note_zh = "完整的 30 天地圖挑戰原始碼請見 <a href='https://github.com/wilsonyungsh/30DayMapChallenge2024' target='_blank' rel='noopener'>github.com/wilsonyungsh/30DayMapChallenge2024</a>。",
         items = list(
           list(badge="Day 4",  tool="R + MapGL",       title_en="Hexagon — Brisbane Dwelling Hexagon Map", title_zh="六角格 — 布里斯本住宅六角格地圖",
                links=list(list(label_en="View map", label_zh="查看地圖", url="https://wilsonyungsh.github.io/interactive/Map4_Brisbane_Dwelling.html"))),
@@ -305,6 +307,18 @@ content <- list(
                links=list(list(label_en="View map", label_zh="查看地圖", url="https://wilsonyungsh.github.io/interactive/30DayMapChallenge2025/map3_address_density_map.html"))),
           list(badge="Day 4", tool="R + Mapdeck",        title_en="My Data — My Footprint 2013–2025 (Google Timeline)", title_zh="我的資料 — 我的足跡 2013–2025（Google 時間軸）",
                links=list(list(label_en="View map", label_zh="查看地圖", url="https://wilsonyungsh.github.io/interactive/30DayMapChallenge2025/Map4_Mydata_2013-2025.html")))
+        )
+      ),
+
+      list(
+        label_en = "2026 Map Challenge", label_zh = "2026 地圖挑戰",
+        note_en = "For the full 30 Day Map Challenge repo, see <a href='https://github.com/wilsonyungsh/30DayMapChallenge2026' target='_blank' rel='noopener'>github.com/wilsonyungsh/30DayMapChallenge2026</a>.",
+        note_zh = "完整的 30 天地圖挑戰原始碼請見 <a href='https://github.com/wilsonyungsh/30DayMapChallenge2026' target='_blank' rel='noopener'>github.com/wilsonyungsh/30DayMapChallenge2026</a>。",
+        items = list(
+          list(badge="Day 1", tool="R + MapGL",          title_en="Points — ABS Mesh Block Land Use 2026, Australia (as Centroids)", title_zh="點 — 澳洲統計局 2026 網格區塊土地使用，全澳（以中心點呈現）",
+               links=list(list(label_en="View map", label_zh="查看地圖", url="https://wilsonyungsh.github.io/interactive/30DayMapChallenge2026/day1_aus26_mb.html"))),
+          list(badge="Day 2", tool="R + duckdb + MapGL", title_en="Lines — Australia Water Transport Routes (Overture Maps)", title_zh="線 — 澳洲水上運輸航線（Overture Maps）",
+               links=list(list(label_en="View map", label_zh="查看地圖", url="https://wilsonyungsh.github.io/interactive/30DayMapChallenge2026/day2_aus_water_routes.html")))
         )
       ),
 
