@@ -318,7 +318,9 @@ content <- list(
           list(badge="Day 1", tool="R + MapGL",          title_en="Points — ABS Mesh Block Land Use 2026, Australia (as Centroids)", title_zh="點 — 澳洲統計局 2026 網格區塊土地使用，全澳（以中心點呈現）",
                links=list(list(label_en="View map", label_zh="查看地圖", url="https://wilsonyungsh.github.io/interactive/30DayMapChallenge2026/day1_aus26_mb.html"))),
           list(badge="Day 2", tool="R + duckdb + MapGL", title_en="Lines — Australia Water Transport Routes (Overture Maps)", title_zh="線 — 澳洲水上運輸航線（Overture Maps）",
-               links=list(list(label_en="View map", label_zh="查看地圖", url="https://wilsonyungsh.github.io/interactive/30DayMapChallenge2026/day2_aus_water_routes.html")))
+               links=list(list(label_en="View map", label_zh="查看地圖", url="https://wilsonyungsh.github.io/interactive/30DayMapChallenge2026/day2_aus_water_routes.html"))),
+          list(badge="Day 3", tool="R + MapGL",          title_en="Polygons — Taiwan National Parks", title_zh="多邊形 — 台灣國家公園",
+               links=list(list(label_en="View map", label_zh="查看地圖", url="https://wilsonyungsh.github.io/interactive/30DayMapChallenge2026/day3_tw_boundary_national_parks.html")))
         )
       ),
 
