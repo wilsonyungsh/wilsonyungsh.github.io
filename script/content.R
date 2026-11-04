@@ -320,7 +320,9 @@ content <- list(
           list(badge="Day 2", tool="R + duckdb + MapGL", title_en="Lines — Australia Water Transport Routes (Overture Maps)", title_zh="線 — 澳洲水上運輸航線（Overture Maps）",
                links=list(list(label_en="View map", label_zh="查看地圖", url="https://wilsonyungsh.github.io/interactive/30DayMapChallenge2026/day2_aus_water_routes.html"))),
           list(badge="Day 3", tool="R + MapGL",          title_en="Polygons — Taiwan National Parks", title_zh="多邊形 — 台灣國家公園",
-               links=list(list(label_en="View map", label_zh="查看地圖", url="https://wilsonyungsh.github.io/interactive/30DayMapChallenge2026/day3_tw_boundary_national_parks.html")))
+               links=list(list(label_en="View map", label_zh="查看地圖", url="https://wilsonyungsh.github.io/interactive/30DayMapChallenge2026/day3_tw_boundary_national_parks.html"))),
+          list(badge="Day 4", tool="R + spdep + MapGL",  title_en="Clusters — Where Industry Workers Live: Sydney, Melbourne &amp; Brisbane", title_zh="群聚 — 各產業從業人員住在哪裡：雪梨、墨爾本與布里斯本",
+               links=list(list(label_en="View map", label_zh="查看地圖", url="https://wilsonyungsh.github.io/interactive/30DayMapChallenge2026/day4_3gcc_top5_lisa.html")))
         )
       ),
 
