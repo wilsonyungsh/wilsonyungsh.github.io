@@ -315,7 +315,7 @@ content <- list(
         note_en = "For the full 30 Day Map Challenge repo, see <a href='https://github.com/wilsonyungsh/30DayMapChallenge2026' target='_blank' rel='noopener'>github.com/wilsonyungsh/30DayMapChallenge2026</a>.",
         note_zh = "完整的 30 天地圖挑戰原始碼請見 <a href='https://github.com/wilsonyungsh/30DayMapChallenge2026' target='_blank' rel='noopener'>github.com/wilsonyungsh/30DayMapChallenge2026</a>。",
         items = list(
-          list(badge="Day 1", tool="R + MapGL",          title_en="Points — ABS Mesh Block Land Use 2026, Australia (as Centroids)", title_zh="點 — 澳洲統計局 2026 網格區塊土地使用，全澳（以中心點呈現）",
+          list(badge="Day 1", tool="R + MapGL",          title_en="Points — ABS Mesh Block Land Use 2026, Australia (as Centroids)", title_zh="點 — 澳洲統計局 2026 網格區塊土地使用，全澳（以質心點呈現）",
                links=list(list(label_en="View map", label_zh="查看地圖", url="https://wilsonyungsh.github.io/interactive/30DayMapChallenge2026/day1_aus26_mb.html"))),
           list(badge="Day 2", tool="R + duckdb + MapGL", title_en="Lines — Australia Water Transport Routes (Overture Maps)", title_zh="線 — 澳洲水上運輸航線（Overture Maps）",
                links=list(list(label_en="View map", label_zh="查看地圖", url="https://wilsonyungsh.github.io/interactive/30DayMapChallenge2026/day2_aus_water_routes.html"))),
