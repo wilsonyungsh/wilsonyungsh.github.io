@@ -90,6 +90,17 @@ Rscript script/career_map.R
 
 新地圖的 R script 輸出到 `interactive/`（可另外開子資料夾歸類，參考 `30DayMapChallenge2025/`），確定網址能打開後，再照第 1、2 點把它加進作品清單。
 
+### 6b. 新增 / 更新文章 (articles/)
+
+文章內容在 `script/articles.R`（中英文成對），每篇輸出成 `articles/<slug>.html`，一樣跑 `Rscript script/build.R` 產生，**不要手改** `articles/` 裡的 HTML。
+
+- 一篇文章是 `articles` 清單裡的一筆 `list(slug=, title_en=, ..., blocks=list(...))`，`blocks` 依序放 `h2` / `date` / `h3` / `p` / `ul` / `img` / `links`，各欄位的說明寫在 `articles.R` 開頭。
+- 有 `id` 的 `h2` 會自動變成文章開頭的目錄按鈕。
+- 圖片放在 `img/articles/<slug>/`，`src` 從 repo 根目錄寫起（build 會自動加 `../`）。
+- 文字裡不要用雙引號 `"`，改用 `“ ”`；連結用單引號 `<a href='...'>`（理由同第 1 點）。
+- LinkedIn 貼文的原始備份在 `scratch/linkedin-posts-archive/`（已加進 `.gitignore`，不會上傳）。
+- 寫好後記得在 `content.R` 加入口連結（首頁精選集或作品集分類的 `note`）。
+
 ### 7. 更換首頁 Hero Banner / 大頭貼照片
 
 改 `script/content.R` 的 `content$hero`：

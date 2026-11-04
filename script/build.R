@@ -627,3 +627,145 @@ lines2 <- c(
 
 writeLines(lines2, "map_list.html", useBytes = TRUE)
 message("\u2713 map_list.html \u5df2\u7522\u751f")
+
+# ── articles/<slug>.html（文章）──────────────────────────────────────────────
+# 內容在 articles.R。文章放在 articles/ 子資料夾，所以連回根目錄的路徑都要加 ../
+
+source("script/articles.R")
+
+css_article <- paste0(css_map, '
+    .article { max-width:720px; }
+    .article-toc { display:flex;flex-wrap:wrap;gap:8px;margin-top:24px; }
+    .article-toc a { font-family:var(--mono);font-size:12px;padding:5px 11px;border-radius:100px;border:1px solid var(--accent-border);background:var(--accent-lt);color:var(--accent);text-decoration:none; }
+    .article-toc a:hover { background:var(--accent);color:#ffffff; }
+    .article-body h2 { font-size:clamp(22px,3.5vw,28px);font-weight:400;letter-spacing:-0.02em;line-height:1.3;margin:0 0 4px;scroll-margin-top:80px; }
+    .article-body h2:not(:first-child) { margin-top:64px;padding-top:44px;border-top:1px solid var(--border); }
+    .article-body .post-date { font-family:var(--mono);font-size:12px;color:var(--text-3);margin-bottom:24px; }
+    .article-body h3 { font-size:18px;font-weight:500;letter-spacing:-0.01em;margin:36px 0 10px; }
+    .article-body p { color:var(--text-2);margin-bottom:18px; }
+    .article-body ul { color:var(--text-2);margin:0 0 18px;padding-left:22px; }
+    .article-body ul.plain { list-style:none;padding-left:0; }
+    .article-body li { margin-bottom:8px; }
+    .article-body a { color:var(--accent);text-decoration:none; }
+    .article-body a:hover { text-decoration:underline; }
+    .article-body figure { margin:28px 0; }
+    .article-body figure img { width:100%;height:auto;display:block;border-radius:var(--radius-md);border:1px solid var(--border); }
+    .article-body figcaption { font-family:var(--mono);font-size:12px;color:var(--text-3);margin-top:10px;line-height:1.6; }
+    .post-links { display:flex;flex-wrap:wrap;gap:8px 22px;margin-top:28px;padding:14px 0;border-top:1px solid var(--border);border-bottom:1px solid var(--border);font-size:14px; }
+    .article-outro { font-size:15px;color:var(--text-3);margin-top:56px; }
+    .article-outro a { color:var(--accent);text-decoration:none; }
+    .article-outro a:hover { text-decoration:underline; }')
+
+post_link <- function(url, icon, en, zh) {
+  if (is.null(url)) return(NULL)
+  paste0('<a href="', url, '" target="_blank" rel="noopener">', icon, ' <span ', i18n(en, zh), ">", en, "</span> →</a>")
+}
+
+article_block <- function(b) {
+  switch(b$type,
+    h2   = paste0('\n      <h2 id="', b$id, '" ', i18n(b$en, b$zh), ">", b$en, "</h2>"),
+    date = paste0('\n      <p class="post-date" ', i18n(b$en, b$zh), ">", b$en, "</p>"),
+    h3   = paste0("\n      <h3 ", i18n(b$en, b$zh), ">", b$en, "</h3>"),
+    p    = paste0("\n      <p ", i18n(b$en, b$zh), ">", b$en, "</p>"),
+    ul   = paste0(
+      "\n      <ul", if (isTRUE(b$plain)) ' class="plain"' else "", ">",
+      paste(lapply(b$items, function(it) paste0("\n        <li ", i18n(it$en, it$zh), ">", it$en, "</li>")), collapse = ""),
+      "\n      </ul>"
+    ),
+    img  = paste0(
+      "\n      <figure>",
+      '\n        <img src="../', b$src, '" ', i18n(b$alt_en, b$alt_zh), ' alt="', b$alt_en, '" loading="lazy">',
+      if (!is.null(b$cap_en)) paste0("\n        <figcaption ", i18n(b$cap_en, b$cap_zh), ">", b$cap_en, "</figcaption>") else "",
+      "\n      </figure>"
+    ),
+    links = paste0(
+      '\n      <div class="post-links">\n        ',
+      paste(c(post_link(b$map,  "🗺️", "Interactive map", "互動地圖"),
+              post_link(b$code, "💻", "Code",            "程式碼"),
+              post_link(b$post, "💬", "LinkedIn post",   "LinkedIn 貼文")), collapse = "\n        "),
+      "\n      </div>"
+    )
+  )
+}
+
+article_toc <- function(blocks) {
+  h2s <- Filter(function(b) b$type == "h2" && !is.null(b$id), blocks)
+  if (length(h2s) == 0) return(NULL)
+  paste0(
+    '      <div class="article-toc">',
+    paste(lapply(h2s, function(b) paste0('\n        <a href="#', b$id, '" ', i18n(b$en, b$zh), ">", b$en, "</a>")), collapse = ""),
+    "\n      </div>"
+  )
+}
+
+# 語言/深色模式切換的 script 跟 map_list.html 一樣，直接沿用
+page_script <- lines2[seq(match("  <script>", lines2), match("  </script>", lines2))]
+
+dir.create("articles", showWarnings = FALSE)
+
+for (a in articles) {
+  lines3 <- c(
+    "<!DOCTYPE html>",
+    '<html lang="en">',
+    "<head>",
+    '  <meta charset="utf-8">',
+    '  <meta name="viewport" content="width=device-width, initial-scale=1">',
+    '  <meta name="color-scheme" content="light dark">',
+    "  <script>(function(){try{var t=localStorage.getItem(\"wy_theme\");if(t)document.documentElement.setAttribute(\"data-theme\",t);}catch(e){}})();</script>",
+    paste0("  <title>", a$meta_title, "</title>"),
+    paste0('  <meta name="description" content="', a$meta_description, '">'),
+    '  <link rel="preconnect" href="https://fonts.googleapis.com">',
+    '  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>',
+    '  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&family=DM+Mono:wght@400;500&family=LXGW+WenKai+TC:wght@300;400;700&display=swap" rel="stylesheet">',
+    "  <style>",
+    css_article,
+    "  </style>",
+    "</head>",
+    "<body>",
+    "",
+    "  <nav>",
+    '    <div class="inner">',
+    '      <a class="nav-logo" href="../index.html">Wilson Yung <span>雍士賢</span></a>',
+    paste0('      <a class="back" href="../index.html" ', i18n(ml$nav_home_en, ml$nav_home_zh), ">", ml$nav_home_en, "</a>"),
+    '      <button class="theme-toggle" id="themeToggle" aria-label="切換深色模式">🌙</button>',
+    '      <button class="lang-toggle" id="langToggle" aria-label="切換為繁體中文">繁中</button>',
+    "    </div>",
+    "  </nav>",
+    "",
+    '  <div class="container article">',
+    '    <section class="hero" style="border:none;padding-bottom:8px;">',
+    paste0('      <p class="hero-eyebrow" ', i18n(a$eyebrow_en, a$eyebrow_zh), ">", a$eyebrow_en, "</p>"),
+    paste0("      <h1 ", i18n(a$title_en, a$title_zh), ">", a$title_en, "</h1>"),
+    paste0('      <p class="hero-desc" ', i18n(a$lede_en, a$lede_zh), ">", a$lede_en, "</p>"),
+    article_toc(a$blocks),
+    "    </section>",
+    '    <section class="article-body">',
+    paste(lapply(a$blocks, article_block), collapse = ""),
+    paste0('\n      <p class="article-outro" ', i18n(a$outro_en, a$outro_zh), ">", a$outro_en, "</p>"),
+    "    </section>",
+    "  </div>",
+    "",
+    "  <footer>",
+    '    <div class="inner">',
+    "      <div>",
+    '        <p class="name">Wilson Shih-Hsien Yung <span>雍士賢</span></p>',
+    paste0('        <p style="font-size:12px;color:var(--text-3);margin-top:3px;" ', i18n(ftr$tagline_en, ftr$tagline_zh), ">", ftr$tagline_en, "</p>"),
+    "      </div>",
+    '      <div class="links">',
+    paste0('        <a href="mailto:', ftr$email, '">Email</a>'),
+    paste0('        <a href="', ftr$linkedin, '" target="_blank" rel="noopener">LinkedIn</a>'),
+    paste0('        <a href="../map_list.html" ', i18n(ftr$portfolio_en, ftr$portfolio_zh), ">", ftr$portfolio_en, "</a>"),
+    "      </div>",
+    "    </div>",
+    visitor_badge(paste0("articles%2F", a$slug, ".html")),
+    "  </footer>",
+    "",
+    page_script,
+    "",
+    "</body>",
+    "</html>"
+  )
+  out <- file.path("articles", paste0(a$slug, ".html"))
+  writeLines(lines3, out, useBytes = TRUE)
+  message("✓ ", out, " 已產生")
+}

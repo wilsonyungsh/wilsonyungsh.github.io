@@ -185,6 +185,13 @@ content <- list(
 
     cards = list(
       list(
+        icon     = "✍️",
+        title_en = "My #30DayMapChallenge 2026",    title_zh = "我的 2026 三十天地圖挑戰",
+        desc_en  = "Article · the maps and the stories behind them",
+        desc_zh  = "文章 · 每張地圖和背後的故事",
+        url      = "articles/30daymapchallenge-2026.html"
+      ),
+      list(
         icon     = "🗺",
         title_en = "My Career Location Story Map",   title_zh = "我的職涯故事圖",
         desc     = "Google Timeline · R + Maglibre + Claude Code",
@@ -312,8 +319,8 @@ content <- list(
 
       list(
         label_en = "2026 Map Challenge", label_zh = "2026 地圖挑戰",
-        note_en = "For the full 30 Day Map Challenge repo, see <a href='https://github.com/wilsonyungsh/30DayMapChallenge2026' target='_blank' rel='noopener'>github.com/wilsonyungsh/30DayMapChallenge2026</a>.",
-        note_zh = "完整的 30 天地圖挑戰原始碼請見 <a href='https://github.com/wilsonyungsh/30DayMapChallenge2026' target='_blank' rel='noopener'>github.com/wilsonyungsh/30DayMapChallenge2026</a>。",
+        note_en = "For the full 30 Day Map Challenge repo, see <a href='https://github.com/wilsonyungsh/30DayMapChallenge2026' target='_blank' rel='noopener'>github.com/wilsonyungsh/30DayMapChallenge2026</a>. The stories behind the maps are in my article, <a href='articles/30daymapchallenge-2026.html'>My #30DayMapChallenge 2026</a>.",
+        note_zh = "完整的 30 天地圖挑戰原始碼請見 <a href='https://github.com/wilsonyungsh/30DayMapChallenge2026' target='_blank' rel='noopener'>github.com/wilsonyungsh/30DayMapChallenge2026</a>。每張地圖背後的故事，請看我的文章<a href='articles/30daymapchallenge-2026.html'>〈我的 2026 三十天地圖挑戰〉</a>。",
         items = list(
           list(badge="Day 1", tool="R + MapGL",          title_en="Points — ABS Mesh Block Land Use 2026, Australia (as Centroids)", title_zh="點 — 澳洲統計局 2026 網格區塊土地使用，全澳（以質心點呈現）",
                links=list(list(label_en="View map", label_zh="查看地圖", url="https://wilsonyungsh.github.io/interactive/30DayMapChallenge2026/day1_aus26_mb.html"))),
