@@ -329,7 +329,9 @@ content <- list(
           list(badge="Day 3", tool="R + MapGL",          title_en="Polygons — Taiwan National Parks", title_zh="多邊形 — 台灣國家公園",
                links=list(list(label_en="View map", label_zh="查看地圖", url="https://wilsonyungsh.github.io/interactive/30DayMapChallenge2026/day3_tw_boundary_national_parks.html"))),
           list(badge="Day 4", tool="R + spdep + MapGL",  title_en="Clusters — Where Industry Workers Live: Sydney, Melbourne &amp; Brisbane", title_zh="群聚 — 各產業從業人員住在哪裡：雪梨、墨爾本與布里斯本",
-               links=list(list(label_en="View map", label_zh="查看地圖", url="https://wilsonyungsh.github.io/interactive/30DayMapChallenge2026/day4_3gcc_top5_lisa.html")))
+               links=list(list(label_en="View map", label_zh="查看地圖", url="https://wilsonyungsh.github.io/interactive/30DayMapChallenge2026/day4_3gcc_top5_lisa.html"))),
+          list(badge="Day 5", tool="HeyWhatsThat + Mapbox", title_en="Sense: Sight — Can You See Brisbane&#39;s CBD from Kenmore?", title_zh="感官：視覺 — 從 Kenmore 看得到布里斯本市中心嗎？",
+               links=list(list(label_en="Read article", label_zh="閱讀文章", url="articles/30daymapchallenge-2026.html#day-5")))
         )
       ),
 
