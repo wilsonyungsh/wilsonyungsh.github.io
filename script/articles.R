@@ -398,7 +398,8 @@ articles <- list(
            zh="資料：高雄市政府都市發展局資料開放平台（urbangisdata.kcg.gov.tw）與政府資料開放平臺（odportal.tw）。使用 R 的 mapgl（MapLibre GL JS）製作。"),
       list(type="links",
            map  = paste0(maps_2026, "day9_urban_rural.html"),
-           code = paste0(repo_2026, "/blob/main/scripts/Day9_Urban_vs_Rural.R"))
+           code = paste0(repo_2026, "/blob/main/scripts/Day9_Urban_vs_Rural.R"),
+           post = "https://www.linkedin.com/feed/update/urn:li:activity:7525569990075473921/")
     ),
 
     outro_en = paste0(
