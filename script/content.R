@@ -333,7 +333,10 @@ content <- list(
           list(badge="Day 5", tool="HeyWhatsThat + Mapbox", title_en="Sense: Sight — Can You See Brisbane&#39;s CBD from Kenmore?", title_zh="感官：視覺 — 從 Kenmore 看得到布里斯本市中心嗎？",
                links=list(list(label_en="Read article", label_zh="閱讀文章", url="articles/30daymapchallenge-2026.html#day-5"))),
           list(badge="Day 7", tool="QGIS + TravelTime API", title_en="10-Minute Map — Brisbane Bushfire Risk &amp; Travel Time from the CBD", title_zh="十分鐘地圖 — 布里斯本森林火災風險與市中心旅行時間",
-               links=list(list(label_en="Read article", label_zh="閱讀文章", url="articles/30daymapchallenge-2026.html#day-7")))
+               links=list(list(label_en="Read article", label_zh="閱讀文章", url="articles/30daymapchallenge-2026.html#day-7"))),
+          list(badge="Day 9", tool="R + MapGL", title_en="Urban–Rural — Kaohsiung&#39;s Planning Framework", title_zh="城市與鄉村 — 高雄的計畫體系",
+               links=list(list(label_en="View map", label_zh="查看地圖", url="https://wilsonyungsh.github.io/interactive/30DayMapChallenge2026/day9_urban_rural.html"),
+                          list(label_en="Read article", label_zh="閱讀文章", url="articles/30daymapchallenge-2026.html#day-9")))
         )
       ),
 
