@@ -265,7 +265,7 @@ locations <- locations |>
     ifelse(has_fieldwork, "10px", "0"), ";'>", city, "</div>",
     ifelse(has_fieldwork,
       paste0(
-        "<a href='https://wilsonyungsh.github.io/interactive/Map15_fieldtrips.html' ",
+        "<a href='https://wilsonyungsh.github.io/interactive/30DayMapChallenge2024/Map15_fieldtrips.html' ",
         "target='_blank' rel='noopener' ",
         "style='display:inline-block;font-size:11px;font-family:monospace;",
         "padding:4px 10px;border-radius:4px;background:#B5925A;color:#fff;",

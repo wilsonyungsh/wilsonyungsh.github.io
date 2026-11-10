@@ -207,25 +207,25 @@ content <- list(
         icon     = "🏙",
         title_en = "Greater Taipei building heights", title_zh = "大台北建築高度圖",
         desc     = "Overture Maps · R + Mapdeck",
-        url      = "https://wilsonyungsh.github.io/interactive/Map29.html"
+        url      = "https://wilsonyungsh.github.io/interactive/30DayMapChallenge2024/Map29.html"
       ),
       list(
         icon     = "🚌",
         title_en = "SEQ bus service density",         title_zh = "昆士蘭東南區公車服務密度",
         desc     = "3D · R + deck.gl",
-        url      = "https://wilsonyungsh.github.io/interactive/map18_seq_bus_service_density.html"
+        url      = "https://wilsonyungsh.github.io/interactive/30DayMapChallenge2024/map18_seq_bus_service_density.html"
       ),
       list(
         icon     = "🔷",
         title_en = "Brisbane dwelling hexagon map",   title_zh = "布里斯本住宅六角格地圖",
         desc     = "R + MapGL",
-        url      = "https://wilsonyungsh.github.io/interactive/Map4_Brisbane_Dwelling.html"
+        url      = "https://wilsonyungsh.github.io/interactive/30DayMapChallenge2024/Map4_Brisbane_Dwelling.html"
       ),
       list(
         icon     = "🏘",
         title_en = "Greater Brisbane land use change", title_zh = "大布里斯本土地使用變遷",
         desc_en  = "Time &amp; Space · R + MapGL",    desc_zh  = "時間與空間 · R + MapGL",
-        url      = "https://wilsonyungsh.github.io/interactive/map12_brisbane_lu_map.html"
+        url      = "https://wilsonyungsh.github.io/interactive/30DayMapChallenge2024/map12_brisbane_lu_map.html"
       ),
       list(
         icon     = "📊",
@@ -285,21 +285,21 @@ content <- list(
         note_zh = "完整的 30 天地圖挑戰原始碼請見 <a href='https://github.com/wilsonyungsh/30DayMapChallenge2024' target='_blank' rel='noopener'>github.com/wilsonyungsh/30DayMapChallenge2024</a>。",
         items = list(
           list(badge="Day 4",  tool="R + MapGL",       title_en="Hexagon — Brisbane Dwelling Hexagon Map", title_zh="六角格 — 布里斯本住宅六角格地圖",
-               links=list(list(label_en="View map", label_zh="查看地圖", url="https://wilsonyungsh.github.io/interactive/Map4_Brisbane_Dwelling.html"))),
+               links=list(list(label_en="View map", label_zh="查看地圖", url="https://wilsonyungsh.github.io/interactive/30DayMapChallenge2024/Map4_Brisbane_Dwelling.html"))),
           list(badge="Day 5",  tool="R + Mapdeck",     title_en="Journey — Brisbane My First Cycle Journey", title_zh="旅程 — 布里斯本我的第一次單車旅程",
-               links=list(list(label_en="View map", label_zh="查看地圖", url="https://wilsonyungsh.github.io/interactive/Map5_Brisbane_cycle_journey.html"))),
+               links=list(list(label_en="View map", label_zh="查看地圖", url="https://wilsonyungsh.github.io/interactive/30DayMapChallenge2024/Map5_Brisbane_cycle_journey.html"))),
           list(badge="Day 11", tool="R + Mapgl",       title_en="Arctic — Arctic Summit Boundary Ice Map", title_zh="北極 — 北極海冰邊界地圖",
-               links=list(list(label_en="View map", label_zh="查看地圖", url="https://wilsonyungsh.github.io/interactive/Map11_artic_ice_boundary.html"))),
+               links=list(list(label_en="View map", label_zh="查看地圖", url="https://wilsonyungsh.github.io/interactive/30DayMapChallenge2024/Map11_artic_ice_boundary.html"))),
           list(badge="Day 12", tool="R + MapGL",       title_en="Time &amp; Space — Greater Brisbane Land Use Change Map", title_zh="時間與空間 — 大布里斯本土地使用變遷地圖",
-               links=list(list(label_en="View map", label_zh="查看地圖", url="https://wilsonyungsh.github.io/interactive/map12_brisbane_lu_map.html"))),
+               links=list(list(label_en="View map", label_zh="查看地圖", url="https://wilsonyungsh.github.io/interactive/30DayMapChallenge2024/map12_brisbane_lu_map.html"))),
           list(badge="Day 15", tool="R + Mapdeck",     title_en="My Data — My Fieldtrip Traces", title_zh="我的資料 — 田野調查足跡",
-               links=list(list(label_en="View map", label_zh="查看地圖", url="https://wilsonyungsh.github.io/interactive/Map15_fieldtrips.html"))),
+               links=list(list(label_en="View map", label_zh="查看地圖", url="https://wilsonyungsh.github.io/interactive/30DayMapChallenge2024/Map15_fieldtrips.html"))),
           list(badge="Day 18", tool="R + Deck.gl",     title_en="3D — South East Queensland Bus Service Density", title_zh="3D — 昆士蘭東南區公車服務密度",
-               links=list(list(label_en="View map", label_zh="查看地圖", url="https://wilsonyungsh.github.io/interactive/map18_seq_bus_service_density.html"))),
+               links=list(list(label_en="View map", label_zh="查看地圖", url="https://wilsonyungsh.github.io/interactive/30DayMapChallenge2024/map18_seq_bus_service_density.html"))),
           list(badge="Day 24", tool="R + Mapgl",       title_en="Only Circular Shape — Brisbane Toilet Map", title_zh="只用圓形 — 布里斯本公廁地圖",
-               links=list(list(label_en="View map", label_zh="查看地圖", url="https://wilsonyungsh.github.io/interactive/Map24_brisbane_toilets.html"))),
+               links=list(list(label_en="View map", label_zh="查看地圖", url="https://wilsonyungsh.github.io/interactive/30DayMapChallenge2024/Map24_brisbane_toilets.html"))),
           list(badge="Day 29", tool="R + Mapdeck",     title_en="Overture Maps — Greater Taipei Building Height", title_zh="Overture Maps — 大台北建築高度圖",
-               links=list(list(label_en="View map", label_zh="查看地圖", url="https://wilsonyungsh.github.io/interactive/Map29.html")))
+               links=list(list(label_en="View map", label_zh="查看地圖", url="https://wilsonyungsh.github.io/interactive/30DayMapChallenge2024/Map29.html")))
         )
       ),
 
