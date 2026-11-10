@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <script>(function(){try{var t=localStorage.getItem("wy_theme");if(t)document.documentElement.setAttribute("data-theme",t);}catch(e){}})();</script>
+  <title>#30DayMapChallenge 2025 — Wilson Yung</title>
+  <meta name="description" content="Wilson Yung's #30DayMapChallenge 2025: Overture Maps addresses with DuckDB, and 12 years of Google Timeline data.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&family=DM+Mono:wght@400;500&family=LXGW+WenKai+TC:wght@300;400;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg:#f7f6f2;--surface:#ffffff;--border:rgba(0,0,0,0.08);--border-md:rgba(0,0,0,0.13);
+      --text-1:#1a1917;--text-2:#4a4845;--text-3:#8a8784;
+      --accent:#2B5F8E;--accent-lt:#e8f0f8;--accent-border:#b8cfe4;
+      --pivot:#C4783A;--pivot-lt:#fdf0e6;--pivot-border:#e8c9a8;
+      --nav-bg:rgba(247,246,242,0.88);--map-placeholder-bg:#eef2f6;
+      --stack-old-bg:#f5f4f0;--stack-new-bg:#edf4ee;--stack-new-text:#2d6b35;--stack-new-border:#c8dfc9;
+      --mono:"DM Mono","LXGW WenKai TC",monospace;--sans:"DM Sans","LXGW WenKai TC",system-ui,sans-serif;
+      --radius-sm:6px;--radius-md:10px;--radius-lg:16px;
+    }
+    @media(prefers-color-scheme:dark){
+      :root:not([data-theme="light"]) {
+        --bg:#15151a;--surface:#1e1e25;--border:rgba(255,255,255,0.08);--border-md:rgba(255,255,255,0.14);
+        --text-1:#f0efec;--text-2:#b7b4ad;--text-3:#7d7a73;
+        --accent:#6FA8D8;--accent-lt:rgba(111,168,216,0.14);--accent-border:rgba(111,168,216,0.35);
+        --pivot:#E0985C;--pivot-lt:rgba(224,152,92,0.14);--pivot-border:rgba(224,152,92,0.35);
+        --nav-bg:rgba(21,21,26,0.85);--map-placeholder-bg:#1c1c22;
+        --stack-old-bg:#232228;--stack-new-bg:rgba(76,175,120,0.14);--stack-new-text:#6fcf97;--stack-new-border:rgba(111,207,151,0.35);
+      }
+    }
+    :root[data-theme="dark"] {
+      --bg:#15151a;--surface:#1e1e25;--border:rgba(255,255,255,0.08);--border-md:rgba(255,255,255,0.14);
+      --text-1:#f0efec;--text-2:#b7b4ad;--text-3:#7d7a73;
+      --accent:#6FA8D8;--accent-lt:rgba(111,168,216,0.14);--accent-border:rgba(111,168,216,0.35);
+      --pivot:#E0985C;--pivot-lt:rgba(224,152,92,0.14);--pivot-border:rgba(224,152,92,0.35);
+      --nav-bg:rgba(21,21,26,0.85);--map-placeholder-bg:#1c1c22;
+      --stack-old-bg:#232228;--stack-new-bg:rgba(76,175,120,0.14);--stack-new-text:#6fcf97;--stack-new-border:rgba(111,207,151,0.35);
+    }
+    html { scroll-behavior: smooth; }
+    body { font-family:var(--sans);background:var(--bg);color:var(--text-1);font-size:17px;line-height:1.7;-webkit-font-smoothing:antialiased;transition:background-color 0.25s ease,color 0.25s ease; }
+    .container { max-width:960px;margin:0 auto;padding:0 24px; }
+    nav { position:sticky;top:0;z-index:100;background:var(--nav-bg);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:14px 0;transition:background-color 0.25s ease,border-color 0.25s ease; }
+    nav .inner { max-width:960px;margin:0 auto;padding:0 24px;display:flex;align-items:center;gap:28px; }
+    .nav-logo { font-size:15px;font-weight:500;color:var(--text-1);text-decoration:none;margin-right:auto;letter-spacing:-0.01em; }
+    .nav-logo span { color:var(--text-3);font-weight:300; }
+    nav a.back { font-size:14px;color:var(--text-3);text-decoration:none;transition:color 0.15s;display:flex;align-items:center;gap:6px; }
+    nav a.back:hover { color:var(--text-1); }
+    .lang-toggle { font-family:var(--mono);font-size:11px;font-weight:500;padding:5px 12px;border-radius:100px;border:1.5px solid var(--accent);background:var(--accent-lt);color:var(--accent);cursor:pointer;transition:all 0.2s;white-space:nowrap;flex-shrink:0;letter-spacing:0.03em; }
+    .lang-toggle:hover { background:var(--accent);color:#ffffff;border-color:var(--accent); }
+    .theme-toggle { font-size:14px;width:32px;height:32px;border-radius:50%;border:1.5px solid var(--accent);background:var(--accent-lt);color:var(--accent);cursor:pointer;transition:all 0.2s;display:flex;align-items:center;justify-content:center;flex-shrink:0;padding:0;line-height:1; }
+    .theme-toggle:hover { background:var(--accent);color:#ffffff;border-color:var(--accent); }
+    .hero { padding:56px 0 40px; }
+    .hero-eyebrow { font-family:var(--mono);font-size:12px;color:var(--text-3);letter-spacing:0.04em;margin-bottom:16px; }
+    .hero h1 { font-size:clamp(28px,4.5vw,42px);font-weight:300;letter-spacing:-0.03em;line-height:1.2;color:var(--text-1);margin-bottom:14px; }
+    .hero-desc { font-size:16px;color:var(--text-2);max-width:600px; }
+    section { padding:44px 0;border-top:1px solid var(--border); }
+    .section-head { display:flex;align-items:baseline;justify-content:space-between;gap:16px;margin-bottom:20px;flex-wrap:wrap; }
+    .section-label { font-family:var(--mono);font-size:12px;color:var(--text-3);letter-spacing:0.06em;text-transform:uppercase; }
+    .section-count { font-family:var(--mono);font-size:12px;color:var(--text-3); }
+    .map-grid { display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px; }
+    .map-card { background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md);padding:16px 18px;display:flex;flex-direction:column;gap:8px;transition:border-color 0.15s,transform 0.15s; }
+    .map-card:hover { border-color:var(--border-md);transform:translateY(-2px); }
+    .map-card-top { display:flex;align-items:center;justify-content:space-between;gap:8px; }
+    .map-badge { font-family:var(--mono);font-size:11px;padding:3px 9px;border-radius:100px;background:var(--accent-lt);color:var(--accent);white-space:nowrap; }
+    .map-tool { font-family:var(--mono);font-size:11px;color:var(--text-3);white-space:nowrap; }
+    .map-title { font-size:15px;font-weight:500;letter-spacing:-0.01em;color:var(--text-1);line-height:1.4; }
+    .map-links { display:flex;flex-direction:column;gap:4px;margin-top:2px; }
+    .map-links a { font-size:13px;color:var(--accent);text-decoration:none;display:inline-flex;align-items:center;gap:4px; }
+    .map-links a:hover { text-decoration:underline; }
+    .map-links a .arrow { transition:transform 0.15s; }
+    .map-links a:hover .arrow { transform:translateX(2px); }
+    .note { font-size:14px;color:var(--text-3);margin-top:20px; }
+    .note a { color:var(--accent);text-decoration:none; }
+    .note a:hover { text-decoration:underline; }
+    footer { border-top:1px solid var(--border);padding:36px 0; }
+    footer .inner { max-width:960px;margin:0 auto;padding:0 24px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px; }
+    footer .name { font-size:16px;font-weight:500;color:var(--text-1); }
+    footer .name span { color:var(--text-3);font-weight:300; }
+    footer .links { display:flex;gap:20px; }
+    footer .links a { font-size:15px;color:var(--text-3);text-decoration:none;transition:color 0.15s; }
+    footer .links a:hover { color:var(--text-1); }
+    .visitor-badge { display:block;margin-top:14px;opacity:0.7;height:20px; }
+    @media(max-width:600px){ .hero{padding:40px 0 32px;} .map-grid{grid-template-columns:1fr;} }
+    nav .inner { flex-wrap:wrap;row-gap:8px; }
+    .nav-links { display:flex;align-items:center;gap:28px; }
+    nav a { font-size:14px;color:var(--text-3);text-decoration:none;transition:color 0.15s; }
+    nav a:hover, nav a.active { color:var(--text-1); }
+    nav a.active { font-weight:500; }
+    .page-head { padding:56px 0 8px;border:none; }
+    .page-head .eyebrow { font-family:var(--mono);font-size:12px;color:var(--text-3);letter-spacing:0.04em;margin-bottom:14px; }
+    .page-head h1 { font-size:clamp(28px,4.5vw,42px);font-weight:300;letter-spacing:-0.03em;line-height:1.2;color:var(--text-1); }
+    .explore-grid { display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px; }
+    .explore-card { background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md);padding:20px 22px;text-decoration:none;color:inherit;display:block;transition:border-color 0.15s,transform 0.15s; }
+    .explore-card:hover { border-color:var(--accent-border);transform:translateY(-2px); }
+    .explore-card .icon { font-size:20px;display:block;margin-bottom:10px; }
+    .explore-card h3 { font-size:17px;font-weight:500;letter-spacing:-0.01em;margin-bottom:6px; }
+    .explore-card p { font-size:14px;color:var(--text-3);line-height:1.6; }
+    .explore-card .go { font-size:13px;color:var(--accent);margin-top:12px;display:block; }
+    @media(max-width:640px){ nav .inner{gap:12px;} .nav-links{order:3;width:100%;gap:20px;overflow-x:auto;} .nav-logo span{display:none;} }
+    .portfolio-grid { display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px; }
+    .port-card { background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md);overflow:hidden;text-decoration:none;color:inherit;transition:border-color 0.15s,transform 0.15s;display:block; }
+    .port-card:hover { border-color:var(--border-md);transform:translateY(-2px); }
+    .port-thumb { height:72px;background:var(--bg);display:flex;align-items:center;justify-content:center;font-size:24px;border-bottom:1px solid var(--border); }
+    .port-info { padding:12px 14px; }
+    .port-info h3 { font-size:15px;font-weight:500;margin-bottom:3px; }
+    .port-info p { font-size:13px;color:var(--text-3); }
+    .port-card.has-extra { position:relative; }
+    .port-main { color:inherit;text-decoration:none; }
+    .port-main::after { content:"";position:absolute;inset:0; }
+    .port-extra { position:relative;z-index:1;display:inline-block;margin-top:8px;font-size:12px;color:var(--accent);text-decoration:none; }
+    .port-extra:hover { text-decoration:underline; }
+    .article { max-width:720px; }
+    .article-toc { display:flex;flex-wrap:wrap;gap:8px;margin-top:24px; }
+    .article-toc a { font-family:var(--mono);font-size:12px;padding:5px 11px;border-radius:100px;border:1px solid var(--accent-border);background:var(--accent-lt);color:var(--accent);text-decoration:none; }
+    .article-toc a:hover { background:var(--accent);color:#ffffff; }
+    .article-body h2 { font-size:clamp(22px,3.5vw,28px);font-weight:400;letter-spacing:-0.02em;line-height:1.3;margin:0 0 4px;scroll-margin-top:80px; }
+    .article-body h2:not(:first-child) { margin-top:64px;padding-top:44px;border-top:1px solid var(--border); }
+    .article-body .post-date { font-family:var(--mono);font-size:12px;color:var(--text-3);margin-bottom:24px; }
+    .article-body h3 { font-size:18px;font-weight:500;letter-spacing:-0.01em;margin:36px 0 10px; }
+    .article-body p { color:var(--text-2);margin-bottom:18px; }
+    .article-body ul { color:var(--text-2);margin:0 0 18px;padding-left:22px; }
+    .article-body ul.plain { list-style:none;padding-left:0; }
+    .article-body li { margin-bottom:8px; }
+    .article-body a { color:var(--accent);text-decoration:none; }
+    .article-body a:hover { text-decoration:underline; }
+    .article-body figure { margin:28px 0; }
+    .article-body figure img { width:100%;height:auto;display:block;border-radius:var(--radius-md);border:1px solid var(--border); }
+    .article-body figcaption { font-family:var(--mono);font-size:12px;color:var(--text-3);margin-top:10px;line-height:1.6; }
+    .post-links { display:flex;flex-wrap:wrap;gap:8px 22px;margin-top:28px;padding:14px 0;border-top:1px solid var(--border);border-bottom:1px solid var(--border);font-size:14px; }
+    .article-outro { font-size:15px;color:var(--text-3);margin-top:56px; }
+    .article-outro a { color:var(--accent);text-decoration:none; }
+    .article-outro a:hover { text-decoration:underline; }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <div class="inner">
+      <a class="nav-logo" href="../index.html">Wilson Yung <span>雍士賢</span></a>
+      <div class="nav-links">
+        <a href="../expertise.html" data-i18n data-en="Expertise" data-zh="專業領域">Expertise</a>
+        <a href="../career.html" data-i18n data-en="Career" data-zh="工作歷程">Career</a>
+        <a href="../map_list.html" data-i18n data-en="Portfolio" data-zh="作品集">Portfolio</a>
+        <a href="#contact" data-i18n data-en="Contact" data-zh="聯絡">Contact</a>
+      </div>
+      <button class="theme-toggle" id="themeToggle" aria-label="切換深色模式">🌙</button>
+      <button class="lang-toggle" id="langToggle" aria-label="切換為繁體中文">繁中</button>
+    </div>
+  </nav>
+
+  <div class="container article">
+    <section class="hero" style="border:none;padding-bottom:8px;">
+      <p class="hero-eyebrow" data-i18n data-en="Article · November 2025" data-zh="文章 · 2025 年 11 月">Article · November 2025</p>
+      <h1 data-i18n data-en="My #30DayMapChallenge 2025" data-zh="我的 2025 #30DayMapChallenge 三十天地圖挑戰">My #30DayMapChallenge 2025</h1>
+      <p class="hero-desc" data-i18n data-en="In 2025 I made three maps for the #30DayMapChallenge. Two of them query Overture Maps straight from the cloud with DuckDB, all inside R. The third maps 12 years of my own Google Timeline data. Here they are, with the notes I shared on LinkedIn." data-zh="2025 年我為 #30DayMapChallenge 做了三張地圖。其中兩張在 R 裡用 DuckDB 直接從雲端查詢 Overture Maps 的資料，第三張則是我自己 12 年的 Google 時間軸資料。以下是這三張地圖，以及我在 LinkedIn 上分享的筆記。">In 2025 I made three maps for the #30DayMapChallenge. Two of them query Overture Maps straight from the cloud with DuckDB, all inside R. The third maps 12 years of my own Google Timeline data. Here they are, with the notes I shared on LinkedIn.</p>
+      <div class="article-toc">
+        <a href="#day-1" data-i18n data-en="Day 1 · Points 📍" data-zh="第 1 天 · 點 📍">Day 1 · Points 📍</a>
+        <a href="#day-3" data-i18n data-en="Day 3 · Polygons 🧩" data-zh="第 3 天 · 多邊形 🧩">Day 3 · Polygons 🧩</a>
+        <a href="#day-4" data-i18n data-en="Day 4 · My data 🧭" data-zh="第 4 天 · 我的資料 🧭">Day 4 · My data 🧭</a>
+      </div>
+    </section>
+    <section class="article-body">
+
+      <h2 id="day-1" data-i18n data-en="Day 1 · Points 📍" data-zh="第 1 天 · 點 📍">Day 1 · Points 📍</h2>
+      <p class="post-date" data-i18n data-en="6 Nov 2025" data-zh="2025 年 11 月 6 日">6 Nov 2025</p>
+      <p data-i18n data-en="Starting off with Ipswich addresses: about 130K, filtered down from around 3.5 million across 7 South East Queensland LGAs, using Overture Maps data. Everything was processed end to end in R with DuckDB Spatial, and mapped with {mapboxgl}." data-zh="從 Ipswich 的地址開始：使用 Overture Maps 的資料，從昆士蘭東南區 7 個地方政府區域約 350 萬筆地址中，篩選出約 13 萬筆。全程在 R 裡用 DuckDB Spatial 處理，再用 {mapboxgl} 製圖。">Starting off with Ipswich addresses: about 130K, filtered down from around 3.5 million across 7 South East Queensland LGAs, using Overture Maps data. Everything was processed end to end in R with DuckDB Spatial, and mapped with {mapboxgl}.</p>
+      <p data-i18n data-en="A few takeaways from this run:" data-zh="這次的幾個心得：">A few takeaways from this run:</p>
+      <ul>
+        <li data-i18n data-en="The colour shows the address count per suburb: red is higher density, green is lower." data-zh="顏色代表每個郊區的地址數：紅色密度較高，綠色較低。">The colour shows the address count per suburb: red is higher density, green is lower.</li>
+        <li data-i18n data-en="Each dot is a single address. Surprisingly, the Ipswich CBD only sits at medium, while some outer suburbs glow hard 🔥" data-zh="每個點都是一筆地址。意外的是，Ipswich 市中心只落在中等，反而一些外圍郊區亮得驚人 🔥">Each dot is a single address. Surprisingly, the Ipswich CBD only sits at medium, while some outer suburbs glow hard 🔥</li>
+        <li data-i18n data-en="When you zoom in, several addresses can sit on exactly the same coordinate. I probably should have mapped that instead 😅, a future improvement with a quick DuckDB calculation." data-zh="放大後會發現，好幾筆地址可能落在完全相同的座標上。也許我應該改畫這個才對 😅，之後可以用 DuckDB 快速算一下來改進。">When you zoom in, several addresses can sit on exactly the same coordinate. I probably should have mapped that instead 😅, a future improvement with a quick DuckDB calculation.</li>
+        <li data-i18n data-en="To keep the points from cluttering the map, they only show at zoom levels 10–15. No global confetti explosion." data-zh="為了不讓點把地圖弄亂，只在縮放等級 10–15 顯示，不會變成滿天飛的彩色紙屑。">To keep the points from cluttering the map, they only show at zoom levels 10–15. No global confetti explosion.</li>
+      </ul>
+      <p data-i18n data-en="Same setup as Day 3: query straight from AWS S3, filter in DuckDB, then spatial joins to assign suburbs." data-zh="做法和第 3 天一樣：直接從 AWS S3 查詢、在 DuckDB 裡篩選，再用空間連結對應到郊區。">Same setup as Day 3: query straight from AWS S3, filter in DuckDB, then spatial joins to assign suburbs.</p>
+      <figure>
+        <img src="../img/articles/30daymapchallenge-2025/day1-ipswich-addresses.jpg" width="2048" height="1128" data-i18n data-en="Map of Ipswich with each address as a point and suburbs coloured by address count" data-zh="Ipswich 地圖，每筆地址為一個點，郊區依地址數上色" alt="Map of Ipswich with each address as a point and suburbs coloured by address count" loading="lazy">
+        <figcaption data-i18n data-en="About 130K Ipswich addresses from Overture Maps, with suburbs coloured by address count." data-zh="Overture Maps 中約 13 萬筆 Ipswich 地址，郊區依地址數上色。">About 130K Ipswich addresses from Overture Maps, with suburbs coloured by address count.</figcaption>
+      </figure>
+      <div class="post-links">
+        <a href="https://wilsonyungsh.github.io/interactive/30DayMapChallenge2025/map1_ipswich_address_map.html" target="_blank" rel="noopener">🗺️ <span data-i18n data-en="Interactive map" data-zh="互動地圖">Interactive map</span> →</a>
+        <a href="https://github.com/wilsonyungsh/30DayMapChallenge2025" target="_blank" rel="noopener">💻 <span data-i18n data-en="Code" data-zh="程式碼">Code</span> →</a>
+        <a href="https://www.linkedin.com/feed/update/urn:li:activity:7392184050049912833/" target="_blank" rel="noopener">💬 <span data-i18n data-en="LinkedIn post" data-zh="LinkedIn 貼文">LinkedIn post</span> →</a>
+      </div>
+      <h2 id="day-3" data-i18n data-en="Day 3 · Polygons 🧩" data-zh="第 3 天 · 多邊形 🧩">Day 3 · Polygons 🧩</h2>
+      <p class="post-date" data-i18n data-en="6 Nov 2025" data-zh="2025 年 11 月 6 日">6 Nov 2025</p>
+      <p data-i18n data-en="I set out to get hands-on with DuckDB and its spatial extension, all within R, using Overture Maps data directly from AWS S3. A few highlights:" data-zh="這次我想實際上手 DuckDB 和它的空間擴充功能，全程在 R 裡進行，直接從 AWS S3 讀取 Overture Maps 的資料。幾個重點：">I set out to get hands-on with DuckDB and its spatial extension, all within R, using Overture Maps data directly from AWS S3. A few highlights:</p>
+      <ul>
+        <li data-i18n data-en="DuckDB can scan huge datasets without downloading everything, so processing millions of addresses finished in under 5 minutes ⚡" data-zh="DuckDB 不用下載全部資料就能掃描龐大的資料集，處理數百萬筆地址不到 5 分鐘就完成 ⚡">DuckDB can scan huge datasets without downloading everything, so processing millions of addresses finished in under 5 minutes ⚡</li>
+        <li data-i18n data-en="Starting from worldwide address data, I filtered down to Queensland, then to 7 local government areas (LGAs)." data-zh="從全球地址資料開始，先篩選到昆士蘭，再縮小到 7 個地方政府區域。">Starting from worldwide address data, I filtered down to Queensland, then to 7 local government areas (LGAs).</li>
+        <li data-i18n data-en="DuckDB spatial joins linked each address to its LGA and suburb." data-zh="用 DuckDB 的空間連結，把每筆地址對應到所屬的地方政府區域和郊區。">DuckDB spatial joins linked each address to its LGA and suburb.</li>
+        <li data-i18n data-en="The result is an address density map per suburb, showing where people work, shop, dine and live." data-zh="成果是一張各郊區的地址密度地圖，呈現人們工作、購物、用餐和居住的地方。">The result is an address density map per suburb, showing where people work, shop, dine and live.</li>
+      </ul>
+      <p data-i18n data-en="It’s a first look at spatial patterns in these 7 LGAs. I’m still exploring the best way to show individual addresses, but the density map gives a clear picture of where activity is concentrated." data-zh="這是對這 7 個地方政府區域空間型態的初步觀察。我還在摸索呈現個別地址的最佳方式，但密度地圖已經清楚看出活動集中在哪裡。">It’s a first look at spatial patterns in these 7 LGAs. I’m still exploring the best way to show individual addresses, but the density map gives a clear picture of where activity is concentrated.</p>
+      <figure>
+        <img src="../img/articles/30daymapchallenge-2025/day3-address-density.jpg" width="2048" height="1436" data-i18n data-en="Choropleth map of address density by suburb across seven South East Queensland local government areas" data-zh="昆士蘭東南區 7 個地方政府區域各郊區的地址密度面量圖" alt="Choropleth map of address density by suburb across seven South East Queensland local government areas" loading="lazy">
+        <figcaption data-i18n data-en="Address density by suburb across 7 South East Queensland LGAs." data-zh="昆士蘭東南區 7 個地方政府區域各郊區的地址密度。">Address density by suburb across 7 South East Queensland LGAs.</figcaption>
+      </figure>
+      <div class="post-links">
+        <a href="https://wilsonyungsh.github.io/interactive/30DayMapChallenge2025/map3_address_density_map.html" target="_blank" rel="noopener">🗺️ <span data-i18n data-en="Interactive map" data-zh="互動地圖">Interactive map</span> →</a>
+        <a href="https://github.com/wilsonyungsh/30DayMapChallenge2025" target="_blank" rel="noopener">💻 <span data-i18n data-en="Code" data-zh="程式碼">Code</span> →</a>
+        <a href="https://www.linkedin.com/feed/update/urn:li:activity:7391949948310876160/" target="_blank" rel="noopener">💬 <span data-i18n data-en="LinkedIn post" data-zh="LinkedIn 貼文">LinkedIn post</span> →</a>
+      </div>
+      <h2 id="day-4" data-i18n data-en="Day 4 · My data 🧭" data-zh="第 4 天 · 我的資料 🧭">Day 4 · My data 🧭</h2>
+      <p class="post-date" data-i18n data-en="10 Nov 2025" data-zh="2025 年 11 月 10 日">10 Nov 2025</p>
+      <p data-i18n data-en="I’ve had Google Timeline quietly running in the background for years, and finally decided to dive into it. It turns out I have mobility data going all the way back to March 2013. Exploring it has been fascinating and nostalgic. The structure even reminds me of telco mobility data, from my five years working in the telco big data space." data-zh="Google 時間軸在背景默默記錄了好多年，我終於決定好好研究一下。原來我的移動資料一路可以追溯到 2013 年 3 月。探索這些資料既有趣又懷舊，資料結構甚至讓我想起在電信大數據領域工作五年時處理的電信移動資料。">I’ve had Google Timeline quietly running in the background for years, and finally decided to dive into it. It turns out I have mobility data going all the way back to March 2013. Exploring it has been fascinating and nostalgic. The structure even reminds me of telco mobility data, from my five years working in the telco big data space.</p>
+      <p data-i18n data-en="For this map, I extracted the semantic layers and kept only the places not tagged as home or work. The data is aggregated into 500 m hexagons by time spent, showing my footprint across NSW and, increasingly, around Brisbane since moving here, with some traces overseas in Taiwan, Finland and Japan." data-zh="這張地圖取用了語意圖層，只保留沒有標記為住家或公司的地點。資料依停留時間彙整到 500 公尺的六角格中，呈現我在新南威爾斯的足跡，以及搬來布里斯本後越來越多的足跡，還有一些在台灣、芬蘭和日本的海外紀錄。">For this map, I extracted the semantic layers and kept only the places not tagged as home or work. The data is aggregated into 500 m hexagons by time spent, showing my footprint across NSW and, increasingly, around Brisbane since moving here, with some traces overseas in Taiwan, Finland and Japan.</p>
+      <p data-i18n data-en="By the numbers, my busiest day on record was 18 Nov 2023, when I visited 20 places and stayed out for 7.84 hours straight 😅. There’s a lot more to unpack, especially the trips, but that’s for another day." data-zh="從數據來看，紀錄中最忙的一天是 2023 年 11 月 18 日，我去了 20 個地方，連續在外面待了 7.84 個小時 😅。還有很多可以挖掘的，尤其是旅程的部分，就留待下次了。">By the numbers, my busiest day on record was 18 Nov 2023, when I visited 20 places and stayed out for 7.84 hours straight 😅. There’s a lot more to unpack, especially the trips, but that’s for another day.</p>
+      <figure>
+        <img src="../img/articles/30daymapchallenge-2025/day4-timeline-busiest-day.jpg" width="480" height="1066" data-i18n data-en="Google Timeline screenshot of 18 November 2023, showing a day of trips and stops across Brisbane" data-zh="2023 年 11 月 18 日的 Google 時間軸截圖，呈現當天在布里斯本各地的移動與停留" alt="Google Timeline screenshot of 18 November 2023, showing a day of trips and stops across Brisbane" loading="lazy">
+        <figcaption data-i18n data-en="Checking the numbers: my busiest day, 18 Nov 2023, in Google Timeline." data-zh="驗證數據：Google 時間軸裡我最忙的一天，2023 年 11 月 18 日。">Checking the numbers: my busiest day, 18 Nov 2023, in Google Timeline.</figcaption>
+      </figure>
+      <figure>
+        <img src="../img/articles/30daymapchallenge-2025/day4-footprint.jpg" width="889" height="618" data-i18n data-en="3D hexagon map of time spent at places around Sydney from Google Timeline data, 2013–2025" data-zh="以 Google 時間軸資料製作的雪梨地區停留時間 3D 六角格地圖，2013–2025" alt="3D hexagon map of time spent at places around Sydney from Google Timeline data, 2013–2025" loading="lazy">
+        <figcaption data-i18n data-en="My footprint around Sydney, 2013–2025, in 500 m hexagons by time spent." data-zh="我在雪梨一帶的足跡，2013–2025，以 500 公尺六角格依停留時間呈現。">My footprint around Sydney, 2013–2025, in 500 m hexagons by time spent.</figcaption>
+      </figure>
+      <h3 data-i18n data-en="Update" data-zh="後續">Update</h3>
+      <p data-i18n data-en="Right after I exported my Google Maps Timeline data, my Pixel phone’s journey ended abruptly: it landed screen-down on the metal legs of my standing desk. I lost my whole timeline, but luckily, thanks to this exercise, it lives on in my data backup." data-zh="就在我匯出 Google 地圖時間軸資料之後，我的 Pixel 手機突然壽終正寢：它螢幕朝下摔在站立桌的金屬桌腳上。我失去了整個時間軸紀錄，但幸好因為做了這次練習，資料還留在我的備份裡。">Right after I exported my Google Maps Timeline data, my Pixel phone’s journey ended abruptly: it landed screen-down on the metal legs of my standing desk. I lost my whole timeline, but luckily, thanks to this exercise, it lives on in my data backup.</p>
+      <div class="post-links">
+        <a href="https://wilsonyungsh.github.io/interactive/30DayMapChallenge2025/Map4_Mydata_2013-2025.html" target="_blank" rel="noopener">🗺️ <span data-i18n data-en="Interactive map" data-zh="互動地圖">Interactive map</span> →</a>
+        <a href="https://github.com/wilsonyungsh/30DayMapChallenge2025" target="_blank" rel="noopener">💻 <span data-i18n data-en="Code" data-zh="程式碼">Code</span> →</a>
+        <a href="https://www.linkedin.com/feed/update/urn:li:activity:7393584836306911232/" target="_blank" rel="noopener">💬 <span data-i18n data-en="LinkedIn post" data-zh="LinkedIn 貼文">LinkedIn post</span> →</a>
+      </div>
+
+      <p class="article-outro" data-i18n data-en="Every 2025 map is listed in my <a href='../map_list.html'>full portfolio</a>, and the code is on <a href='https://github.com/wilsonyungsh/30DayMapChallenge2025' target='_blank' rel='noopener'>GitHub</a>. See also my <a href='30daymapchallenge-2024.html'>2024</a> and <a href='30daymapchallenge-2026.html'>2026</a> challenges." data-zh="2025 年的所有地圖都列在<a href='../map_list.html'>完整作品集</a>，程式碼放在 <a href='https://github.com/wilsonyungsh/30DayMapChallenge2025' target='_blank' rel='noopener'>GitHub</a>。也歡迎看看我的 <a href='30daymapchallenge-2024.html'>2024</a> 和 <a href='30daymapchallenge-2026.html'>2026</a> 挑戰。">Every 2025 map is listed in my <a href='../map_list.html'>full portfolio</a>, and the code is on <a href='https://github.com/wilsonyungsh/30DayMapChallenge2025' target='_blank' rel='noopener'>GitHub</a>. See also my <a href='30daymapchallenge-2024.html'>2024</a> and <a href='30daymapchallenge-2026.html'>2026</a> challenges.</p>
+    </section>
+  </div>
+
+  <footer id="contact">
+    <div class="inner">
+      <div>
+        <p class="name">Wilson Shih-Hsien Yung <span>雍士賢</span></p>
+        <p style="font-size:12px;color:var(--text-3);margin-top:3px;" data-i18n data-en="Open to spatial, transport, and data consulting engagements." data-zh="歡迎交流空間分析、運輸資料、都市成長預測與資料工程相關合作。讓資料不只是數字，也成為理解城市的一扇窗。">Open to spatial, transport, and data consulting engagements.</p>
+      </div>
+      <div class="links">
+        <a href="mailto:wilson0313@gmail.com">Email</a>
+        <a href="https://www.linkedin.com/in/wilson-yung" target="_blank" rel="noopener">LinkedIn</a>
+        <a href="../map_list.html" data-i18n data-en="Portfolio" data-zh="作品集">Portfolio</a>
+      </div>
+    </div>
+
+    <div class="inner" style="padding-top:0;">
+      <img class="visitor-badge" alt="Visitor count" loading="lazy"
+        src="https://api.visitorbadge.io/api/visitors?path=https%3A%2F%2Fwilsonyungsh.github.io%2Farticles%2F30daymapchallenge-2025.html&label=Visitors&labelColor=%23f7f6f2&countColor=%232B5F8E&style=flat-square">
+    </div>
+  </footer>
+
+  <script>
+    var currentLang = localStorage.getItem("wy_lang") || "en";
+    function applyLang(lang) {
+      currentLang = lang;
+      localStorage.setItem("wy_lang", lang);
+      document.documentElement.lang = lang === "zh" ? "zh-TW" : "en";
+      document.querySelectorAll("[data-i18n]").forEach(function(el) {
+        var text = el.getAttribute("data-" + lang);
+        if (text) { if (el.tagName === 'IMG') el.alt = text; else el.innerHTML = text; }
+      });
+      var btn = document.getElementById("langToggle");
+      btn.textContent = lang === "zh" ? "EN" : "繁中";
+      btn.setAttribute("aria-label", lang === "zh" ? "Switch to English" : "切換為繁體中文");
+    }
+    document.getElementById("langToggle").addEventListener("click", function() {
+      applyLang(currentLang === "en" ? "zh" : "en");
+    });
+    applyLang(currentLang);
+
+    function systemPrefersDark() {
+      return window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+    }
+    function isDarkActive() {
+      var forced = document.documentElement.getAttribute("data-theme");
+      return forced === "dark" || (!forced && systemPrefersDark());
+    }
+    function updateThemeBtn() {
+      var themeBtn = document.getElementById("themeToggle");
+      var dark = isDarkActive();
+      themeBtn.textContent = dark ? "☀️" : "🌙";
+      themeBtn.setAttribute("aria-label", dark ? "Switch to light mode" : "Switch to dark mode");
+    }
+    var savedTheme = localStorage.getItem("wy_theme");
+    if (savedTheme) document.documentElement.setAttribute("data-theme", savedTheme);
+    updateThemeBtn();
+    document.getElementById("themeToggle").addEventListener("click", function() {
+      var next = isDarkActive() ? "light" : "dark";
+      document.documentElement.setAttribute("data-theme", next);
+      localStorage.setItem("wy_theme", next);
+      updateThemeBtn();
+    });
+  </script>
+  <script>
+    (function() {
+      if (!location.hash) return;
+      var userMoved = false;
+      ["wheel", "touchstart", "keydown"].forEach(function(ev) {
+        window.addEventListener(ev, function() { userMoved = true; }, { once: true, passive: true });
+      });
+      function realign() {
+        if (userMoved) return;
+        var el = document.getElementById(decodeURIComponent(location.hash.slice(1)));
+        if (el) el.scrollIntoView({ behavior: "instant" });
+      }
+      if (document.fonts) document.fonts.ready.then(realign);
+      window.addEventListener("load", realign);
+    })();
+  </script>
+
+</body>
+</html>

@@ -255,11 +255,13 @@ content <- list(
         url      = "https://huggingface.co/spaces/wilsonyung/bne_pt_service_explorer"
       ),
       list(
-        icon     = "📈",
-        title_en = "Bus route accumulative patronage", title_zh = "公車路線累積乘客分析",
-        desc_en  = "Stop-level boarding analysis · R + MapGL",
-        desc_zh  = "站點累積上車乘人數分析 · R + MapGL",
-        url      = "https://wilsonyungsh.github.io/interactive/bus431_capacity.html"
+        icon     = "🚌",
+        title_en = "Bus route 431 stop load explorer", title_zh = "431 公車路線各站載客量探索",
+        desc_en  = "Monthly 3D stop loads, 2022–2026 · R + React + D3 + MapLibre",
+        desc_zh  = "2022–2026 逐月各站 3D 載客量 · R + React + D3 + MapLibre",
+        url      = "https://wilsonyungsh.github.io/interactive/rocket_431/",
+        extra    = list(label_en = "Original cumulative passenger map", label_zh = "原版累積乘客地圖",
+                        url = "https://wilsonyungsh.github.io/interactive/bus431_capacity.html")
       )
     )
   ),
@@ -291,8 +293,8 @@ content <- list(
 
       list(
         label_en = "2024 Map Challenge", label_zh = "2024 地圖挑戰",
-        note_en = "For the full 30 Day Map Challenge repo, see <a href='https://github.com/wilsonyungsh/30DayMapChallenge2024' target='_blank' rel='noopener'>github.com/wilsonyungsh/30DayMapChallenge2024</a>.",
-        note_zh = "完整的 30 天地圖挑戰原始碼請見 <a href='https://github.com/wilsonyungsh/30DayMapChallenge2024' target='_blank' rel='noopener'>github.com/wilsonyungsh/30DayMapChallenge2024</a>。",
+        note_en = "For the full 30 Day Map Challenge repo, see <a href='https://github.com/wilsonyungsh/30DayMapChallenge2024' target='_blank' rel='noopener'>github.com/wilsonyungsh/30DayMapChallenge2024</a>. The stories behind the maps are in my article, <a href='articles/30daymapchallenge-2024.html'>My #30DayMapChallenge 2024</a>.",
+        note_zh = "完整的 30 天地圖挑戰原始碼請見 <a href='https://github.com/wilsonyungsh/30DayMapChallenge2024' target='_blank' rel='noopener'>github.com/wilsonyungsh/30DayMapChallenge2024</a>。每張地圖背後的故事，請看我的文章<a href='articles/30daymapchallenge-2024.html'>〈我的 2024 三十天地圖挑戰〉</a>。",
         items = list(
           list(badge="Day 4",  tool="R + MapGL",       title_en="Hexagon — Brisbane Dwelling Hexagon Map", title_zh="六角格 — 布里斯本住宅六角格地圖",
                links=list(list(label_en="View map", label_zh="查看地圖", url="https://wilsonyungsh.github.io/interactive/30DayMapChallenge2024/Map4_Brisbane_Dwelling.html"))),
@@ -315,8 +317,8 @@ content <- list(
 
       list(
         label_en = "2025 Map Challenge", label_zh = "2025 地圖挑戰",
-        note_en = "For the full 30 Day Map Challenge repo, see <a href='https://github.com/wilsonyungsh/30DayMapChallenge2025' target='_blank' rel='noopener'>github.com/wilsonyungsh/30DayMapChallenge2025</a>.",
-        note_zh = "完整的 30 天地圖挑戰原始碼請見 <a href='https://github.com/wilsonyungsh/30DayMapChallenge2025' target='_blank' rel='noopener'>github.com/wilsonyungsh/30DayMapChallenge2025</a>。",
+        note_en = "For the full 30 Day Map Challenge repo, see <a href='https://github.com/wilsonyungsh/30DayMapChallenge2025' target='_blank' rel='noopener'>github.com/wilsonyungsh/30DayMapChallenge2025</a>. The stories behind the maps are in my article, <a href='articles/30daymapchallenge-2025.html'>My #30DayMapChallenge 2025</a>.",
+        note_zh = "完整的 30 天地圖挑戰原始碼請見 <a href='https://github.com/wilsonyungsh/30DayMapChallenge2025' target='_blank' rel='noopener'>github.com/wilsonyungsh/30DayMapChallenge2025</a>。每張地圖背後的故事，請看我的文章<a href='articles/30daymapchallenge-2025.html'>〈我的 2025 三十天地圖挑戰〉</a>。",
         items = list(
           list(badge="Day 1", tool="R + duckdb + MapGL", title_en="Overture Map — Ipswich Suburb Address Count Map", title_zh="Overture Map — Ipswich 郊區地址數量地圖",
                links=list(list(label_en="View map", label_zh="查看地圖", url="https://wilsonyungsh.github.io/interactive/30DayMapChallenge2025/map1_ipswich_address_map.html"))),
@@ -353,16 +355,6 @@ content <- list(
       list(
         label_en = "Other projects", label_zh = "其他專案",
         items = list(
-          list(tool="R + mapgl (MapLibre GL)", title_en="Career Location Map", title_zh="職涯地點地圖",
-               desc_en="Every stop in my career, connected by animated arcs — click ▶ Play career tour for a guided fly-through.",
-               desc_zh="用動態弧線連接職涯中的每一站，點選 ▶ Play career tour 可以自動飛覽整段旅程。",
-               links=list(list(label_en="View map", label_zh="查看地圖", url="career_map.html"))),
-          list(tool="R + Mapdeck", title_en="Bus Route Cumulative Passenger Count — Brisbane Bus Route 431", title_zh="公車路線累積乘客人數 — 布里斯本 431 公車路線",
-               links=list(list(label_en="View map", label_zh="查看地圖", url="https://wilsonyungsh.github.io/interactive/bus431_capacity.html"))),
-          list(tool="R + React + D3 + MapLibre", title_en="Bus Route 431 Stop Load Explorer — Monthly, 2022–2026", title_zh="431 公車路線各站載客量探索 — 每月（2022–2026）",
-               desc_en="Updated version of the route 431 map: 3D stop bars month by month, a brushable timeline and a follow-the-bus camera. Built with Claude as a coding partner.",
-               desc_zh="431 公車路線地圖的更新版：逐月顯示各站 3D 載客柱，可拖曳選取的時間軸，以及跟隨公車的鏡頭。與 Claude 協作開發。",
-               links=list(list(label_en="View map", label_zh="查看地圖", url="https://wilsonyungsh.github.io/interactive/rocket_431/"))),
           list(tool="R + MapGL",   title_en="2025 June PT Usage by Time Bucket and Trip Direction", title_zh="2025年6月大眾運輸依時段與方向使用量",
                links=list(list(label_en="View map", label_zh="查看地圖", url="https://wilsonyungsh.github.io/interactive/Commuting_trips.html"))),
           list(tool="R + Mapgl",   title_en="Dwelling Proportion by Motor Vehicle Ownership", title_zh="依汽車持有數量劃分的住宅比例",
@@ -377,19 +369,6 @@ content <- list(
                desc_en="Includes time-lapse rent animations for houses and flats across Brisbane.",
                desc_zh="內含布里斯本獨棟與公寓的租金縮時動畫。",
                links=list(list(label_en="View Analysis", label_zh="查看分析", url="interactive/brisbane_rental_trend.html")))
-        )
-      ),
-
-      list(
-        label_en = "Shiny dashboards", label_zh = "Shiny 儀表板",
-        items = list(
-          list(title_en="PT Service Explorer", title_zh="公共運輸服務探索器",
-               desc_en="Explore stop service-level trends (max headway, service counts), route geometry, switchable layers, and a frequency slider with auto-zoom to route or stops.",
-               desc_zh="探索站點服務趨勢（最大班距、服務班次數）、路線幾何、可切換圖層，並可用班距篩選滑桿自動縮放至路線或站點。",
-               links=list(
-                 list(label_en="Dashboard",    label_zh="儀表板",    url="https://wilsonyung.shinyapps.io/BNE_PT_Service_explorer/"),
-                 list(label_en="HF dashboard", label_zh="HF 儀表板", url="https://huggingface.co/spaces/wilsonyung/bne_pt_service_explorer")
-               ))
         )
       ),
 

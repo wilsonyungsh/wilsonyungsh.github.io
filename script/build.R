@@ -57,6 +57,20 @@ port_card <- function(p) {
   has_bilingual <- !is.null(p$desc_en)
   desc_attr <- if (has_bilingual) paste0(" ", i18n(p$desc_en, p$desc_zh)) else ""
   desc_text <- if (has_bilingual) p$desc_en else p$desc
+  # 有附加連結（extra）時，卡片不能整張包在 <a> 裡（連結不能巢狀），
+  # 改成 <div>，主連結用 ::after 撐滿整張卡片，附加連結疊在上面可以單獨點
+  if (!is.null(p$extra)) {
+    return(paste0(
+      '\n        <div class="port-card has-extra">',
+      '\n          <div class="port-thumb">', p$icon, "</div>",
+      '\n          <div class="port-info">',
+      '\n            <h3><a class="port-main" href="', p$url, '" target="_blank" rel="noopener" ', i18n(p$title_en, p$title_zh), ">", p$title_en, "</a></h3>",
+      "\n            <p", desc_attr, ">", desc_text, "</p>",
+      '\n            <a class="port-extra" href="', p$extra$url, '" target="_blank" rel="noopener"><span ', i18n(p$extra$label_en, p$extra$label_zh), ">", p$extra$label_en, "</span> →</a>",
+      "\n          </div>",
+      "\n        </div>"
+    ))
+  }
   paste0(
     '\n        <a class="port-card" href="', p$url, '" target="_blank" rel="noopener">',
     '\n          <div class="port-thumb">', p$icon, "</div>",
@@ -285,7 +299,12 @@ css_portfolio <- '
     .port-thumb { height:72px;background:var(--bg);display:flex;align-items:center;justify-content:center;font-size:24px;border-bottom:1px solid var(--border); }
     .port-info { padding:12px 14px; }
     .port-info h3 { font-size:15px;font-weight:500;margin-bottom:3px; }
-    .port-info p { font-size:13px;color:var(--text-3); }'
+    .port-info p { font-size:13px;color:var(--text-3); }
+    .port-card.has-extra { position:relative; }
+    .port-main { color:inherit;text-decoration:none; }
+    .port-main::after { content:"";position:absolute;inset:0; }
+    .port-extra { position:relative;z-index:1;display:inline-block;margin-top:8px;font-size:12px;color:var(--accent);text-decoration:none; }
+    .port-extra:hover { text-decoration:underline; }'
 
 css <- paste0(css, css_shared)
 

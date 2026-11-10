@@ -108,6 +108,11 @@
     .port-info { padding:12px 14px; }
     .port-info h3 { font-size:15px;font-weight:500;margin-bottom:3px; }
     .port-info p { font-size:13px;color:var(--text-3); }
+    .port-card.has-extra { position:relative; }
+    .port-main { color:inherit;text-decoration:none; }
+    .port-main::after { content:"";position:absolute;inset:0; }
+    .port-extra { position:relative;z-index:1;display:inline-block;margin-top:8px;font-size:12px;color:var(--accent);text-decoration:none; }
+    .port-extra:hover { text-decoration:underline; }
   </style>
 </head>
 <body>
@@ -196,13 +201,14 @@
             <p data-i18n data-en="R Shiny dashboard · Brisbane GTFS on Hugging Face" data-zh="R Shiny 儀表板 · 布里斯本 GTFS · Hugging Face">R Shiny dashboard · Brisbane GTFS on Hugging Face</p>
           </div>
         </a>
-        <a class="port-card" href="https://wilsonyungsh.github.io/interactive/bus431_capacity.html" target="_blank" rel="noopener">
-          <div class="port-thumb">📈</div>
+        <div class="port-card has-extra">
+          <div class="port-thumb">🚌</div>
           <div class="port-info">
-            <h3 data-i18n data-en="Bus route accumulative patronage" data-zh="公車路線累積乘客分析">Bus route accumulative patronage</h3>
-            <p data-i18n data-en="Stop-level boarding analysis · R + MapGL" data-zh="站點累積上車乘人數分析 · R + MapGL">Stop-level boarding analysis · R + MapGL</p>
+            <h3><a class="port-main" href="https://wilsonyungsh.github.io/interactive/rocket_431/" target="_blank" rel="noopener" data-i18n data-en="Bus route 431 stop load explorer" data-zh="431 公車路線各站載客量探索">Bus route 431 stop load explorer</a></h3>
+            <p data-i18n data-en="Monthly 3D stop loads, 2022–2026 · R + React + D3 + MapLibre" data-zh="2022–2026 逐月各站 3D 載客量 · R + React + D3 + MapLibre">Monthly 3D stop loads, 2022–2026 · R + React + D3 + MapLibre</p>
+            <a class="port-extra" href="https://wilsonyungsh.github.io/interactive/bus431_capacity.html" target="_blank" rel="noopener"><span data-i18n data-en="Original cumulative passenger map" data-zh="原版累積乘客地圖">Original cumulative passenger map</span> →</a>
           </div>
-        </a>
+        </div>
       </div>
     </section>
   </div>
@@ -271,7 +277,7 @@
           </div>
         </div>
       </div>
-      <p class="note" data-i18n data-en="For the full 30 Day Map Challenge repo, see <a href='https://github.com/wilsonyungsh/30DayMapChallenge2024' target='_blank' rel='noopener'>github.com/wilsonyungsh/30DayMapChallenge2024</a>." data-zh="完整的 30 天地圖挑戰原始碼請見 <a href='https://github.com/wilsonyungsh/30DayMapChallenge2024' target='_blank' rel='noopener'>github.com/wilsonyungsh/30DayMapChallenge2024</a>。">For the full 30 Day Map Challenge repo, see <a href='https://github.com/wilsonyungsh/30DayMapChallenge2024' target='_blank' rel='noopener'>github.com/wilsonyungsh/30DayMapChallenge2024</a>.</p>
+      <p class="note" data-i18n data-en="For the full 30 Day Map Challenge repo, see <a href='https://github.com/wilsonyungsh/30DayMapChallenge2024' target='_blank' rel='noopener'>github.com/wilsonyungsh/30DayMapChallenge2024</a>. The stories behind the maps are in my article, <a href='articles/30daymapchallenge-2024.html'>My #30DayMapChallenge 2024</a>." data-zh="完整的 30 天地圖挑戰原始碼請見 <a href='https://github.com/wilsonyungsh/30DayMapChallenge2024' target='_blank' rel='noopener'>github.com/wilsonyungsh/30DayMapChallenge2024</a>。每張地圖背後的故事，請看我的文章<a href='articles/30daymapchallenge-2024.html'>〈我的 2024 三十天地圖挑戰〉</a>。">For the full 30 Day Map Challenge repo, see <a href='https://github.com/wilsonyungsh/30DayMapChallenge2024' target='_blank' rel='noopener'>github.com/wilsonyungsh/30DayMapChallenge2024</a>. The stories behind the maps are in my article, <a href='articles/30daymapchallenge-2024.html'>My #30DayMapChallenge 2024</a>.</p>
     </section>
   </div>
 
@@ -304,7 +310,7 @@
           </div>
         </div>
       </div>
-      <p class="note" data-i18n data-en="For the full 30 Day Map Challenge repo, see <a href='https://github.com/wilsonyungsh/30DayMapChallenge2025' target='_blank' rel='noopener'>github.com/wilsonyungsh/30DayMapChallenge2025</a>." data-zh="完整的 30 天地圖挑戰原始碼請見 <a href='https://github.com/wilsonyungsh/30DayMapChallenge2025' target='_blank' rel='noopener'>github.com/wilsonyungsh/30DayMapChallenge2025</a>。">For the full 30 Day Map Challenge repo, see <a href='https://github.com/wilsonyungsh/30DayMapChallenge2025' target='_blank' rel='noopener'>github.com/wilsonyungsh/30DayMapChallenge2025</a>.</p>
+      <p class="note" data-i18n data-en="For the full 30 Day Map Challenge repo, see <a href='https://github.com/wilsonyungsh/30DayMapChallenge2025' target='_blank' rel='noopener'>github.com/wilsonyungsh/30DayMapChallenge2025</a>. The stories behind the maps are in my article, <a href='articles/30daymapchallenge-2025.html'>My #30DayMapChallenge 2025</a>." data-zh="完整的 30 天地圖挑戰原始碼請見 <a href='https://github.com/wilsonyungsh/30DayMapChallenge2025' target='_blank' rel='noopener'>github.com/wilsonyungsh/30DayMapChallenge2025</a>。每張地圖背後的故事，請看我的文章<a href='articles/30daymapchallenge-2025.html'>〈我的 2025 三十天地圖挑戰〉</a>。">For the full 30 Day Map Challenge repo, see <a href='https://github.com/wilsonyungsh/30DayMapChallenge2025' target='_blank' rel='noopener'>github.com/wilsonyungsh/30DayMapChallenge2025</a>. The stories behind the maps are in my article, <a href='articles/30daymapchallenge-2025.html'>My #30DayMapChallenge 2025</a>.</p>
     </section>
   </div>
 
@@ -374,32 +380,9 @@
     <section>
       <div class="section-head">
         <p class="section-label" data-i18n data-en="Other projects" data-zh="其他專案">Other projects</p>
-        <p class="section-count" data-i18n data-en="7 maps" data-zh="7 個作品">7 maps</p>
+        <p class="section-count" data-i18n data-en="4 maps" data-zh="4 個作品">4 maps</p>
       </div>
       <div class="map-grid">
-        <div class="map-card">
-          <div class="map-card-top"><span class="map-tool">R + mapgl (MapLibre GL)</span></div>
-          <p class="map-title" data-i18n data-en="Career Location Map" data-zh="職涯地點地圖">Career Location Map</p>
-          <p data-i18n data-en="Every stop in my career, connected by animated arcs — click ▶ Play career tour for a guided fly-through." data-zh="用動態弧線連接職涯中的每一站，點選 ▶ Play career tour 可以自動飛覽整段旅程。" style="font-size:13px;color:var(--text-2);line-height:1.6;">Every stop in my career, connected by animated arcs — click ▶ Play career tour for a guided fly-through.</p>
-          <div class="map-links">
-            <a href="career_map.html" target="_blank" rel="noopener"><span data-i18n data-en="View map" data-zh="查看地圖">View map</span> <span class="arrow">→</span></a>
-          </div>
-        </div>
-        <div class="map-card">
-          <div class="map-card-top"><span class="map-tool">R + Mapdeck</span></div>
-          <p class="map-title" data-i18n data-en="Bus Route Cumulative Passenger Count — Brisbane Bus Route 431" data-zh="公車路線累積乘客人數 — 布里斯本 431 公車路線">Bus Route Cumulative Passenger Count — Brisbane Bus Route 431</p>
-          <div class="map-links">
-            <a href="https://wilsonyungsh.github.io/interactive/bus431_capacity.html" target="_blank" rel="noopener"><span data-i18n data-en="View map" data-zh="查看地圖">View map</span> <span class="arrow">→</span></a>
-          </div>
-        </div>
-        <div class="map-card">
-          <div class="map-card-top"><span class="map-tool">R + React + D3 + MapLibre</span></div>
-          <p class="map-title" data-i18n data-en="Bus Route 431 Stop Load Explorer — Monthly, 2022–2026" data-zh="431 公車路線各站載客量探索 — 每月（2022–2026）">Bus Route 431 Stop Load Explorer — Monthly, 2022–2026</p>
-          <p data-i18n data-en="Updated version of the route 431 map: 3D stop bars month by month, a brushable timeline and a follow-the-bus camera. Built with Claude as a coding partner." data-zh="431 公車路線地圖的更新版：逐月顯示各站 3D 載客柱，可拖曳選取的時間軸，以及跟隨公車的鏡頭。與 Claude 協作開發。" style="font-size:13px;color:var(--text-2);line-height:1.6;">Updated version of the route 431 map: 3D stop bars month by month, a brushable timeline and a follow-the-bus camera. Built with Claude as a coding partner.</p>
-          <div class="map-links">
-            <a href="https://wilsonyungsh.github.io/interactive/rocket_431/" target="_blank" rel="noopener"><span data-i18n data-en="View map" data-zh="查看地圖">View map</span> <span class="arrow">→</span></a>
-          </div>
-        </div>
         <div class="map-card">
           <div class="map-card-top"><span class="map-tool">R + MapGL</span></div>
           <p class="map-title" data-i18n data-en="2025 June PT Usage by Time Bucket and Trip Direction" data-zh="2025年6月大眾運輸依時段與方向使用量">2025 June PT Usage by Time Bucket and Trip Direction</p>
@@ -429,24 +412,6 @@
           <p data-i18n data-en="Includes time-lapse rent animations for houses and flats across Brisbane." data-zh="內含布里斯本獨棟與公寓的租金縮時動畫。" style="font-size:13px;color:var(--text-2);line-height:1.6;">Includes time-lapse rent animations for houses and flats across Brisbane.</p>
           <div class="map-links">
             <a href="interactive/brisbane_rental_trend.html" target="_blank" rel="noopener"><span data-i18n data-en="View Analysis" data-zh="查看分析">View Analysis</span> <span class="arrow">→</span></a>
-          </div>
-        </div>
-      </div>
-    </section>
-  </div>
-
-  <div class="container">
-    <section>
-      <div class="section-head">
-        <p class="section-label" data-i18n data-en="Shiny dashboards" data-zh="Shiny 儀表板">Shiny dashboards</p>
-      </div>
-      <div class="map-grid">
-        <div class="map-card">
-          <p class="map-title" data-i18n data-en="PT Service Explorer" data-zh="公共運輸服務探索器">PT Service Explorer</p>
-          <p data-i18n data-en="Explore stop service-level trends (max headway, service counts), route geometry, switchable layers, and a frequency slider with auto-zoom to route or stops." data-zh="探索站點服務趨勢（最大班距、服務班次數）、路線幾何、可切換圖層，並可用班距篩選滑桿自動縮放至路線或站點。" style="font-size:13px;color:var(--text-2);line-height:1.6;">Explore stop service-level trends (max headway, service counts), route geometry, switchable layers, and a frequency slider with auto-zoom to route or stops.</p>
-          <div class="map-links">
-            <a href="https://wilsonyung.shinyapps.io/BNE_PT_Service_explorer/" target="_blank" rel="noopener"><span data-i18n data-en="Dashboard" data-zh="儀表板">Dashboard</span> <span class="arrow">→</span></a>
-            <a href="https://huggingface.co/spaces/wilsonyung/bne_pt_service_explorer" target="_blank" rel="noopener"><span data-i18n data-en="HF dashboard" data-zh="HF 儀表板">HF dashboard</span> <span class="arrow">→</span></a>
           </div>
         </div>
       </div>

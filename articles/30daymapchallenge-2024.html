@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <script>(function(){try{var t=localStorage.getItem("wy_theme");if(t)document.documentElement.setAttribute("data-theme",t);}catch(e){}})();</script>
+  <title>#30DayMapChallenge 2024 — Wilson Yung</title>
+  <meta name="description" content="Wilson Yung's first #30DayMapChallenge in 2024: 20 maps, the data behind them and a reflection on the month.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&family=DM+Mono:wght@400;500&family=LXGW+WenKai+TC:wght@300;400;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg:#f7f6f2;--surface:#ffffff;--border:rgba(0,0,0,0.08);--border-md:rgba(0,0,0,0.13);
+      --text-1:#1a1917;--text-2:#4a4845;--text-3:#8a8784;
+      --accent:#2B5F8E;--accent-lt:#e8f0f8;--accent-border:#b8cfe4;
+      --pivot:#C4783A;--pivot-lt:#fdf0e6;--pivot-border:#e8c9a8;
+      --nav-bg:rgba(247,246,242,0.88);--map-placeholder-bg:#eef2f6;
+      --stack-old-bg:#f5f4f0;--stack-new-bg:#edf4ee;--stack-new-text:#2d6b35;--stack-new-border:#c8dfc9;
+      --mono:"DM Mono","LXGW WenKai TC",monospace;--sans:"DM Sans","LXGW WenKai TC",system-ui,sans-serif;
+      --radius-sm:6px;--radius-md:10px;--radius-lg:16px;
+    }
+    @media(prefers-color-scheme:dark){
+      :root:not([data-theme="light"]) {
+        --bg:#15151a;--surface:#1e1e25;--border:rgba(255,255,255,0.08);--border-md:rgba(255,255,255,0.14);
+        --text-1:#f0efec;--text-2:#b7b4ad;--text-3:#7d7a73;
+        --accent:#6FA8D8;--accent-lt:rgba(111,168,216,0.14);--accent-border:rgba(111,168,216,0.35);
+        --pivot:#E0985C;--pivot-lt:rgba(224,152,92,0.14);--pivot-border:rgba(224,152,92,0.35);
+        --nav-bg:rgba(21,21,26,0.85);--map-placeholder-bg:#1c1c22;
+        --stack-old-bg:#232228;--stack-new-bg:rgba(76,175,120,0.14);--stack-new-text:#6fcf97;--stack-new-border:rgba(111,207,151,0.35);
+      }
+    }
+    :root[data-theme="dark"] {
+      --bg:#15151a;--surface:#1e1e25;--border:rgba(255,255,255,0.08);--border-md:rgba(255,255,255,0.14);
+      --text-1:#f0efec;--text-2:#b7b4ad;--text-3:#7d7a73;
+      --accent:#6FA8D8;--accent-lt:rgba(111,168,216,0.14);--accent-border:rgba(111,168,216,0.35);
+      --pivot:#E0985C;--pivot-lt:rgba(224,152,92,0.14);--pivot-border:rgba(224,152,92,0.35);
+      --nav-bg:rgba(21,21,26,0.85);--map-placeholder-bg:#1c1c22;
+      --stack-old-bg:#232228;--stack-new-bg:rgba(76,175,120,0.14);--stack-new-text:#6fcf97;--stack-new-border:rgba(111,207,151,0.35);
+    }
+    html { scroll-behavior: smooth; }
+    body { font-family:var(--sans);background:var(--bg);color:var(--text-1);font-size:17px;line-height:1.7;-webkit-font-smoothing:antialiased;transition:background-color 0.25s ease,color 0.25s ease; }
+    .container { max-width:960px;margin:0 auto;padding:0 24px; }
+    nav { position:sticky;top:0;z-index:100;background:var(--nav-bg);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:14px 0;transition:background-color 0.25s ease,border-color 0.25s ease; }
+    nav .inner { max-width:960px;margin:0 auto;padding:0 24px;display:flex;align-items:center;gap:28px; }
+    .nav-logo { font-size:15px;font-weight:500;color:var(--text-1);text-decoration:none;margin-right:auto;letter-spacing:-0.01em; }
+    .nav-logo span { color:var(--text-3);font-weight:300; }
+    nav a.back { font-size:14px;color:var(--text-3);text-decoration:none;transition:color 0.15s;display:flex;align-items:center;gap:6px; }
+    nav a.back:hover { color:var(--text-1); }
+    .lang-toggle { font-family:var(--mono);font-size:11px;font-weight:500;padding:5px 12px;border-radius:100px;border:1.5px solid var(--accent);background:var(--accent-lt);color:var(--accent);cursor:pointer;transition:all 0.2s;white-space:nowrap;flex-shrink:0;letter-spacing:0.03em; }
+    .lang-toggle:hover { background:var(--accent);color:#ffffff;border-color:var(--accent); }
+    .theme-toggle { font-size:14px;width:32px;height:32px;border-radius:50%;border:1.5px solid var(--accent);background:var(--accent-lt);color:var(--accent);cursor:pointer;transition:all 0.2s;display:flex;align-items:center;justify-content:center;flex-shrink:0;padding:0;line-height:1; }
+    .theme-toggle:hover { background:var(--accent);color:#ffffff;border-color:var(--accent); }
+    .hero { padding:56px 0 40px; }
+    .hero-eyebrow { font-family:var(--mono);font-size:12px;color:var(--text-3);letter-spacing:0.04em;margin-bottom:16px; }
+    .hero h1 { font-size:clamp(28px,4.5vw,42px);font-weight:300;letter-spacing:-0.03em;line-height:1.2;color:var(--text-1);margin-bottom:14px; }
+    .hero-desc { font-size:16px;color:var(--text-2);max-width:600px; }
+    section { padding:44px 0;border-top:1px solid var(--border); }
+    .section-head { display:flex;align-items:baseline;justify-content:space-between;gap:16px;margin-bottom:20px;flex-wrap:wrap; }
+    .section-label { font-family:var(--mono);font-size:12px;color:var(--text-3);letter-spacing:0.06em;text-transform:uppercase; }
+    .section-count { font-family:var(--mono);font-size:12px;color:var(--text-3); }
+    .map-grid { display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px; }
+    .map-card { background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md);padding:16px 18px;display:flex;flex-direction:column;gap:8px;transition:border-color 0.15s,transform 0.15s; }
+    .map-card:hover { border-color:var(--border-md);transform:translateY(-2px); }
+    .map-card-top { display:flex;align-items:center;justify-content:space-between;gap:8px; }
+    .map-badge { font-family:var(--mono);font-size:11px;padding:3px 9px;border-radius:100px;background:var(--accent-lt);color:var(--accent);white-space:nowrap; }
+    .map-tool { font-family:var(--mono);font-size:11px;color:var(--text-3);white-space:nowrap; }
+    .map-title { font-size:15px;font-weight:500;letter-spacing:-0.01em;color:var(--text-1);line-height:1.4; }
+    .map-links { display:flex;flex-direction:column;gap:4px;margin-top:2px; }
+    .map-links a { font-size:13px;color:var(--accent);text-decoration:none;display:inline-flex;align-items:center;gap:4px; }
+    .map-links a:hover { text-decoration:underline; }
+    .map-links a .arrow { transition:transform 0.15s; }
+    .map-links a:hover .arrow { transform:translateX(2px); }
+    .note { font-size:14px;color:var(--text-3);margin-top:20px; }
+    .note a { color:var(--accent);text-decoration:none; }
+    .note a:hover { text-decoration:underline; }
+    footer { border-top:1px solid var(--border);padding:36px 0; }
+    footer .inner { max-width:960px;margin:0 auto;padding:0 24px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px; }
+    footer .name { font-size:16px;font-weight:500;color:var(--text-1); }
+    footer .name span { color:var(--text-3);font-weight:300; }
+    footer .links { display:flex;gap:20px; }
+    footer .links a { font-size:15px;color:var(--text-3);text-decoration:none;transition:color 0.15s; }
+    footer .links a:hover { color:var(--text-1); }
+    .visitor-badge { display:block;margin-top:14px;opacity:0.7;height:20px; }
+    @media(max-width:600px){ .hero{padding:40px 0 32px;} .map-grid{grid-template-columns:1fr;} }
+    nav .inner { flex-wrap:wrap;row-gap:8px; }
+    .nav-links { display:flex;align-items:center;gap:28px; }
+    nav a { font-size:14px;color:var(--text-3);text-decoration:none;transition:color 0.15s; }
+    nav a:hover, nav a.active { color:var(--text-1); }
+    nav a.active { font-weight:500; }
+    .page-head { padding:56px 0 8px;border:none; }
+    .page-head .eyebrow { font-family:var(--mono);font-size:12px;color:var(--text-3);letter-spacing:0.04em;margin-bottom:14px; }
+    .page-head h1 { font-size:clamp(28px,4.5vw,42px);font-weight:300;letter-spacing:-0.03em;line-height:1.2;color:var(--text-1); }
+    .explore-grid { display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px; }
+    .explore-card { background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md);padding:20px 22px;text-decoration:none;color:inherit;display:block;transition:border-color 0.15s,transform 0.15s; }
+    .explore-card:hover { border-color:var(--accent-border);transform:translateY(-2px); }
+    .explore-card .icon { font-size:20px;display:block;margin-bottom:10px; }
+    .explore-card h3 { font-size:17px;font-weight:500;letter-spacing:-0.01em;margin-bottom:6px; }
+    .explore-card p { font-size:14px;color:var(--text-3);line-height:1.6; }
+    .explore-card .go { font-size:13px;color:var(--accent);margin-top:12px;display:block; }
+    @media(max-width:640px){ nav .inner{gap:12px;} .nav-links{order:3;width:100%;gap:20px;overflow-x:auto;} .nav-logo span{display:none;} }
+    .portfolio-grid { display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px; }
+    .port-card { background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md);overflow:hidden;text-decoration:none;color:inherit;transition:border-color 0.15s,transform 0.15s;display:block; }
+    .port-card:hover { border-color:var(--border-md);transform:translateY(-2px); }
+    .port-thumb { height:72px;background:var(--bg);display:flex;align-items:center;justify-content:center;font-size:24px;border-bottom:1px solid var(--border); }
+    .port-info { padding:12px 14px; }
+    .port-info h3 { font-size:15px;font-weight:500;margin-bottom:3px; }
+    .port-info p { font-size:13px;color:var(--text-3); }
+    .port-card.has-extra { position:relative; }
+    .port-main { color:inherit;text-decoration:none; }
+    .port-main::after { content:"";position:absolute;inset:0; }
+    .port-extra { position:relative;z-index:1;display:inline-block;margin-top:8px;font-size:12px;color:var(--accent);text-decoration:none; }
+    .port-extra:hover { text-decoration:underline; }
+    .article { max-width:720px; }
+    .article-toc { display:flex;flex-wrap:wrap;gap:8px;margin-top:24px; }
+    .article-toc a { font-family:var(--mono);font-size:12px;padding:5px 11px;border-radius:100px;border:1px solid var(--accent-border);background:var(--accent-lt);color:var(--accent);text-decoration:none; }
+    .article-toc a:hover { background:var(--accent);color:#ffffff; }
+    .article-body h2 { font-size:clamp(22px,3.5vw,28px);font-weight:400;letter-spacing:-0.02em;line-height:1.3;margin:0 0 4px;scroll-margin-top:80px; }
+    .article-body h2:not(:first-child) { margin-top:64px;padding-top:44px;border-top:1px solid var(--border); }
+    .article-body .post-date { font-family:var(--mono);font-size:12px;color:var(--text-3);margin-bottom:24px; }
+    .article-body h3 { font-size:18px;font-weight:500;letter-spacing:-0.01em;margin:36px 0 10px; }
+    .article-body p { color:var(--text-2);margin-bottom:18px; }
+    .article-body ul { color:var(--text-2);margin:0 0 18px;padding-left:22px; }
+    .article-body ul.plain { list-style:none;padding-left:0; }
+    .article-body li { margin-bottom:8px; }
+    .article-body a { color:var(--accent);text-decoration:none; }
+    .article-body a:hover { text-decoration:underline; }
+    .article-body figure { margin:28px 0; }
+    .article-body figure img { width:100%;height:auto;display:block;border-radius:var(--radius-md);border:1px solid var(--border); }
+    .article-body figcaption { font-family:var(--mono);font-size:12px;color:var(--text-3);margin-top:10px;line-height:1.6; }
+    .post-links { display:flex;flex-wrap:wrap;gap:8px 22px;margin-top:28px;padding:14px 0;border-top:1px solid var(--border);border-bottom:1px solid var(--border);font-size:14px; }
+    .article-outro { font-size:15px;color:var(--text-3);margin-top:56px; }
+    .article-outro a { color:var(--accent);text-decoration:none; }
+    .article-outro a:hover { text-decoration:underline; }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <div class="inner">
+      <a class="nav-logo" href="../index.html">Wilson Yung <span>雍士賢</span></a>
+      <div class="nav-links">
+        <a href="../expertise.html" data-i18n data-en="Expertise" data-zh="專業領域">Expertise</a>
+        <a href="../career.html" data-i18n data-en="Career" data-zh="工作歷程">Career</a>
+        <a href="../map_list.html" data-i18n data-en="Portfolio" data-zh="作品集">Portfolio</a>
+        <a href="#contact" data-i18n data-en="Contact" data-zh="聯絡">Contact</a>
+      </div>
+      <button class="theme-toggle" id="themeToggle" aria-label="切換深色模式">🌙</button>
+      <button class="lang-toggle" id="langToggle" aria-label="切換為繁體中文">繁中</button>
+    </div>
+  </nav>
+
+  <div class="container article">
+    <section class="hero" style="border:none;padding-bottom:8px;">
+      <p class="hero-eyebrow" data-i18n data-en="Article · November 2024" data-zh="文章 · 2024 年 11 月">Article · November 2024</p>
+      <h1 data-i18n data-en="My #30DayMapChallenge 2024" data-zh="我的 2024 #30DayMapChallenge 三十天地圖挑戰">My #30DayMapChallenge 2024</h1>
+      <p class="hero-desc" data-i18n data-en="2024 was my first year taking part in the #30DayMapChallenge. I didn’t finish all 30 days, but I made 20 maps and put the code on GitHub. These are the maps and the notes I shared on LinkedIn along the way, ending with my reflection on the month." data-zh="2024 年是我第一次參加 #30DayMapChallenge。雖然沒有完成全部 30 天，但做了 20 張地圖，程式碼也都放上了 GitHub。這篇整理了我當時在 LinkedIn 上分享的地圖和筆記，最後是這個月的心得。">2024 was my first year taking part in the #30DayMapChallenge. I didn’t finish all 30 days, but I made 20 maps and put the code on GitHub. These are the maps and the notes I shared on LinkedIn along the way, ending with my reflection on the month.</p>
+      <div class="article-toc">
+        <a href="#day-1" data-i18n data-en="Day 1 · Points 🚆" data-zh="第 1 天 · 點 🚆">Day 1 · Points 🚆</a>
+        <a href="#day-2" data-i18n data-en="Day 2 · Lines 🚌" data-zh="第 2 天 · 線 🚌">Day 2 · Lines 🚌</a>
+        <a href="#day-3" data-i18n data-en="Day 3 · Polygons 👥" data-zh="第 3 天 · 多邊形 👥">Day 3 · Polygons 👥</a>
+        <a href="#day-4" data-i18n data-en="Day 4 · Hexagons 🔷" data-zh="第 4 天 · 六角格 🔷">Day 4 · Hexagons 🔷</a>
+        <a href="#day-5" data-i18n data-en="Day 5 · Journey 🚴" data-zh="第 5 天 · 旅程 🚴">Day 5 · Journey 🚴</a>
+        <a href="#day-6" data-i18n data-en="Day 6 · Raster ⛰️" data-zh="第 6 天 · 網格資料 ⛰️">Day 6 · Raster ⛰️</a>
+        <a href="#day-7" data-i18n data-en="Day 7 · Vintage 📜" data-zh="第 7 天 · 復古風 📜">Day 7 · Vintage 📜</a>
+        <a href="#day-8" data-i18n data-en="Day 8 · HDX 🌏" data-zh="第 8 天 · HDX 🌏">Day 8 · HDX 🌏</a>
+        <a href="#day-9" data-i18n data-en="Day 9 · AI only 🤖" data-zh="第 9 天 · 只用 AI 🤖">Day 9 · AI only 🤖</a>
+        <a href="#day-10" data-i18n data-en="Day 10 · Pen &amp; paper ✏️" data-zh="第 10 天 · 紙筆 ✏️">Day 10 · Pen &amp; paper ✏️</a>
+        <a href="#day-11" data-i18n data-en="Day 11 · Arctic 🧊" data-zh="第 11 天 · 北極 🧊">Day 11 · Arctic 🧊</a>
+        <a href="#day-12" data-i18n data-en="Day 12 · Time &amp; space ⏳" data-zh="第 12 天 · 時間與空間 ⏳">Day 12 · Time &amp; space ⏳</a>
+        <a href="#day-13" data-i18n data-en="Day 13 · A new tool 🧰" data-zh="第 13 天 · 嘗試新工具 🧰">Day 13 · A new tool 🧰</a>
+        <a href="#day-14" data-i18n data-en="Day 14 · A world map 🌊" data-zh="第 14 天 · 世界地圖 🌊">Day 14 · A world map 🌊</a>
+        <a href="#day-15" data-i18n data-en="Day 15 · My data 🚙" data-zh="第 15 天 · 我的資料 🚙">Day 15 · My data 🚙</a>
+        <a href="#day-16" data-i18n data-en="Day 16 · Choropleth 🗺️" data-zh="第 16 天 · 面量圖 🗺️">Day 16 · Choropleth 🗺️</a>
+        <a href="#day-18" data-i18n data-en="Day 18 · 3D 🏙️" data-zh="第 18 天 · 3D 🏙️">Day 18 · 3D 🏙️</a>
+        <a href="#day-24" data-i18n data-en="Day 24 · Only circular shapes ⭕" data-zh="第 24 天 · 只用圓形 ⭕">Day 24 · Only circular shapes ⭕</a>
+        <a href="#day-26" data-i18n data-en="Day 26 · Projection 🌐" data-zh="第 26 天 · 投影 🌐">Day 26 · Projection 🌐</a>
+        <a href="#day-29" data-i18n data-en="Day 29 · Overture Maps 🏢" data-zh="第 29 天 · Overture Maps 🏢">Day 29 · Overture Maps 🏢</a>
+        <a href="#reflection" data-i18n data-en="Reflection 💭" data-zh="心得 💭">Reflection 💭</a>
+      </div>
+    </section>
+    <section class="article-body">
+
+      <h2 id="day-1" data-i18n data-en="Day 1 · Points 🚆" data-zh="第 1 天 · 點 🚆">Day 1 · Points 🚆</h2>
+      <p class="post-date" data-i18n data-en="31 Oct 2024" data-zh="2024 年 10 月 31 日">31 Oct 2024</p>
+      <p data-i18n data-en="Here’s my first map for the #30DayMapChallenge! The brief is Points." data-zh="這是我 #30DayMapChallenge 的第一張地圖！主題是「點」。">Here’s my first map for the #30DayMapChallenge! The brief is Points.</p>
+      <p data-i18n data-en="Focusing on train stations in the Brisbane area, this map shows the total number of train services at each station. It’s designed to reveal disparities in service allocation, emphasising the areas that receive fewer services." data-zh="這張地圖聚焦在布里斯本地區的火車站，呈現每個車站的列車服務總班次，目的是看出服務分配的落差，特別凸顯班次較少的地區。">Focusing on train stations in the Brisbane area, this map shows the total number of train services at each station. It’s designed to reveal disparities in service allocation, emphasising the areas that receive fewer services.</p>
+      <figure>
+        <img src="../img/articles/30daymapchallenge-2024/day1-train-service.jpg" width="2048" height="1024" data-i18n data-en="Map of Brisbane train stations sized and coloured by total train service count" data-zh="布里斯本火車站地圖，依列車服務總班次調整大小與顏色" alt="Map of Brisbane train stations sized and coloured by total train service count" loading="lazy">
+        <figcaption data-i18n data-en="Train service counts by station across the Brisbane area." data-zh="布里斯本地區各火車站的列車服務班次。">Train service counts by station across the Brisbane area.</figcaption>
+      </figure>
+      <h2 id="day-2" data-i18n data-en="Day 2 · Lines 🚌" data-zh="第 2 天 · 線 🚌">Day 2 · Lines 🚌</h2>
+      <p class="post-date" data-i18n data-en="1 Nov 2024" data-zh="2024 年 11 月 1 日">1 Nov 2024</p>
+      <p data-i18n data-en="For Day 2, with the theme of “Lines”, I mapped Brisbane’s public transport routes to highlight the reach of bus, rail and ferry services across the city." data-zh="第二天的主題是「線」，我畫出布里斯本的大眾運輸路線，呈現公車、火車和渡輪在全市的服務範圍。">For Day 2, with the theme of “Lines”, I mapped Brisbane’s public transport routes to highlight the reach of bus, rail and ferry services across the city.</p>
+      <p data-i18n data-en="Seeing these services mapped out gives a clearer understanding of the “as is” transport network. This takes on added significance as Brisbane prepares for major events like the 2032 Olympics and pushes towards Net Zero goals." data-zh="把這些服務畫在地圖上，更能看清楚交通路網的「現況」。在布里斯本準備迎接 2032 年奧運、並朝淨零目標前進的此刻，這件事更顯重要。">Seeing these services mapped out gives a clearer understanding of the “as is” transport network. This takes on added significance as Brisbane prepares for major events like the 2032 Olympics and pushes towards Net Zero goals.</p>
+      <p data-i18n data-en="As someone living in the west, it’s noticeable how this area misses out on much of Brisbane’s big public transport infrastructure. This map is my way of backing up my personal experience with data. It only shows spatial reach, without factoring in temporal reach (off-peak vs peak), so the real picture might be even more challenging." data-zh="住在西區的我很明顯感受到，布里斯本許多大型大眾運輸建設都沒有照顧到這一帶。這張地圖是我用資料來印證自己的親身經驗。它只呈現空間上的覆蓋範圍，沒有考慮時間上的覆蓋（離峰與尖峰），所以真實情況可能更不樂觀。">As someone living in the west, it’s noticeable how this area misses out on much of Brisbane’s big public transport infrastructure. This map is my way of backing up my personal experience with data. It only shows spatial reach, without factoring in temporal reach (off-peak vs peak), so the real picture might be even more challenging.</p>
+      <figure>
+        <img src="../img/articles/30daymapchallenge-2024/day2-pt-routes.jpg" width="2048" height="1024" data-i18n data-en="Map of Brisbane's bus, rail and ferry routes" data-zh="布里斯本公車、火車與渡輪路線地圖" alt="Map of Brisbane's bus, rail and ferry routes" loading="lazy">
+        <figcaption data-i18n data-en="Brisbane’s bus, rail and ferry routes. Data: Translink GTFS, ABS 2021. Made in R with ggplot2 and sf." data-zh="布里斯本的公車、火車與渡輪路線。資料：Translink GTFS、ABS 2021。以 R 的 ggplot2 和 sf 製作。">Brisbane’s bus, rail and ferry routes. Data: Translink GTFS, ABS 2021. Made in R with ggplot2 and sf.</figcaption>
+      </figure>
+      <h2 id="day-3" data-i18n data-en="Day 3 · Polygons 👥" data-zh="第 3 天 · 多邊形 👥">Day 3 · Polygons 👥</h2>
+      <p class="post-date" data-i18n data-en="1 Nov 2024" data-zh="2024 年 11 月 1 日">1 Nov 2024</p>
+      <p data-i18n data-en="Today I focused on population concentrations in the Brisbane area, to better understand the demand for infrastructure and public transport." data-zh="今天聚焦在布里斯本地區的人口集中情形，以更了解對基礎建設和大眾運輸的需求。">Today I focused on population concentrations in the Brisbane area, to better understand the demand for infrastructure and public transport.</p>
+      <p data-i18n data-en="The map highlights the top 10 percentile SA2s (Statistical Areas Level 2) for total population within Greater Brisbane. By pinpointing these regions, I want to find where demand for services and infrastructure is likely to grow fastest." data-zh="地圖標出大布里斯本地區總人口排名前 10% 的 SA2（第二級統計區），藉此找出服務和基礎建設需求可能成長最快的地方。">The map highlights the top 10 percentile SA2s (Statistical Areas Level 2) for total population within Greater Brisbane. By pinpointing these regions, I want to find where demand for services and infrastructure is likely to grow fastest.</p>
+      <p data-i18n data-en="It complements my Day 1 and Day 2 maps on public transport stop services and routes. By understanding where people live and the current reach of public transport, we can plan better for the future." data-zh="這張地圖和第 1、2 天的大眾運輸站點服務與路線地圖互相搭配。了解人們住在哪裡、大眾運輸目前覆蓋到哪裡，才能更好地規劃未來。">It complements my Day 1 and Day 2 maps on public transport stop services and routes. By understanding where people live and the current reach of public transport, we can plan better for the future.</p>
+      <figure>
+        <img src="../img/articles/30daymapchallenge-2024/day3-population.jpg" width="2048" height="1024" data-i18n data-en="Map of Greater Brisbane highlighting the SA2s in the top 10 percentile for population" data-zh="大布里斯本地圖，標出人口排名前 10% 的 SA2" alt="Map of Greater Brisbane highlighting the SA2s in the top 10 percentile for population" loading="lazy">
+        <figcaption data-i18n data-en="The top 10 percentile SA2s by population in Greater Brisbane." data-zh="大布里斯本人口排名前 10% 的 SA2。">The top 10 percentile SA2s by population in Greater Brisbane.</figcaption>
+      </figure>
+      <h2 id="day-4" data-i18n data-en="Day 4 · Hexagons 🔷" data-zh="第 4 天 · 六角格 🔷">Day 4 · Hexagons 🔷</h2>
+      <p class="post-date" data-i18n data-en="4 Nov 2024" data-zh="2024 年 11 月 4 日">4 Nov 2024</p>
+      <p data-i18n data-en="To be honest, I spent more time than I expected on this hex map! I tried several mapping libraries and chose mapgl for its interactive features. It was rewarding to add touches like highlighting hexagons in red and showing tooltips." data-zh="老實說，這張六角格地圖花的時間比我預期的多！我試了好幾個製圖套件，最後選了互動功能比較完整的 mapgl。能加上把六角格標紅、顯示提示框這些細節，很有成就感。">To be honest, I spent more time than I expected on this hex map! I tried several mapping libraries and chose mapgl for its interactive features. It was rewarding to add touches like highlighting hexagons in red and showing tooltips.</p>
+      <p data-i18n data-en="Each hexagon is around 1 km². The data is the 2021 ABS Census Mesh Block dwelling count, associated and aggregated to each hexagon." data-zh="每個六角格大約 1 平方公里。資料是 2021 年 ABS 人口普查的網格區塊住宅數，對應並加總到每個六角格。">Each hexagon is around 1 km². The data is the 2021 ABS Census Mesh Block dwelling count, associated and aggregated to each hexagon.</p>
+      <p data-i18n data-en="Interestingly, dwelling concentrations often follow the train lines, which shows how much transport infrastructure shapes where people live." data-zh="有趣的是，住宅集中的地方常常沿著鐵路線分布，可見交通建設對居住型態的影響有多大。">Interestingly, dwelling concentrations often follow the train lines, which shows how much transport infrastructure shapes where people live.</p>
+      <figure>
+        <img src="../img/articles/30daymapchallenge-2024/day4-hexagon.jpg" width="2048" height="1299" data-i18n data-en="Hexagon map of dwelling counts across Brisbane" data-zh="布里斯本住宅數量六角格地圖" alt="Hexagon map of dwelling counts across Brisbane" loading="lazy">
+        <figcaption data-i18n data-en="Dwellings per hexagon (about 1 km² each), from the 2021 Census." data-zh="每個六角格（約 1 平方公里）的住宅數，資料來自 2021 年人口普查。">Dwellings per hexagon (about 1 km² each), from the 2021 Census.</figcaption>
+      </figure>
+      <div class="post-links">
+        <a href="https://wilsonyungsh.github.io/interactive/30DayMapChallenge2024/Map4_Brisbane_Dwelling.html" target="_blank" rel="noopener">🗺️ <span data-i18n data-en="Interactive map" data-zh="互動地圖">Interactive map</span> →</a>
+      </div>
+      <h2 id="day-5" data-i18n data-en="Day 5 · Journey 🚴" data-zh="第 5 天 · 旅程 🚴">Day 5 · Journey 🚴</h2>
+      <p class="post-date" data-i18n data-en="5 Nov 2024" data-zh="2024 年 11 月 5 日">5 Nov 2024</p>
+      <p data-i18n data-en="I found my first cycling journey in Brisbane, exported from Strava! Using Mapdeck and R, I mapped the route and its elevation changes. Cycling in Brisbane’s western suburbs is clearly a challenge, especially around Toowong, Indooroopilly and Kenmore, where the elevation goes up and down a lot." data-zh="我找到了在布里斯本第一次騎單車的紀錄，從 Strava 匯出！我用 R 和 Mapdeck 畫出路線和沿途的高度變化。在布里斯本西區騎車顯然不輕鬆，尤其是 Toowong、Indooroopilly 和 Kenmore 一帶，起伏很大。">I found my first cycling journey in Brisbane, exported from Strava! Using Mapdeck and R, I mapped the route and its elevation changes. Cycling in Brisbane’s western suburbs is clearly a challenge, especially around Toowong, Indooroopilly and Kenmore, where the elevation goes up and down a lot.</p>
+      <p data-i18n data-en="This was also my first time parsing GPX data in R. I’d only done it in QGIS before. I’m learning something new every day!" data-zh="這也是我第一次在 R 裡解析 GPX 資料，以前都是用 QGIS。每天都在學新東西！">This was also my first time parsing GPX data in R. I’d only done it in QGIS before. I’m learning something new every day!</p>
+      <p data-i18n data-en="So far I’ve only cycled between Kenmore and Indooroopilly, and between Toowong and Indooroopilly, but I’m keen to explore more of the city. The riverside bikeway is flat, but I need to get over the hills to reach it first. I cycled much more in Sydney, where the terrain and bike paths are quite different." data-zh="目前我只騎過 Kenmore 到 Indooroopilly、Toowong 到 Indooroopilly 這兩段，很想多探索這個城市。河濱自行車道很平，但得先翻過山丘才到得了。以前在雪梨騎得多很多，那裡的地形和自行車道都很不一樣。">So far I’ve only cycled between Kenmore and Indooroopilly, and between Toowong and Indooroopilly, but I’m keen to explore more of the city. The riverside bikeway is flat, but I need to get over the hills to reach it first. I cycled much more in Sydney, where the terrain and bike paths are quite different.</p>
+      <figure>
+        <img src="../img/articles/30daymapchallenge-2024/day5-cycle-journey.jpg" width="2048" height="1148" data-i18n data-en="3D map of a cycling route through Brisbane's western suburbs, coloured by elevation" data-zh="布里斯本西區單車路線的 3D 地圖，依高度上色" alt="3D map of a cycling route through Brisbane's western suburbs, coloured by elevation" loading="lazy">
+        <figcaption data-i18n data-en="My first Brisbane ride from Strava, with the elevation along the way." data-zh="我在布里斯本第一次騎車的 Strava 紀錄，以及沿途的高度。">My first Brisbane ride from Strava, with the elevation along the way.</figcaption>
+      </figure>
+      <div class="post-links">
+        <a href="https://wilsonyungsh.github.io/interactive/30DayMapChallenge2024/Map5_Brisbane_cycle_journey.html" target="_blank" rel="noopener">🗺️ <span data-i18n data-en="Interactive map" data-zh="互動地圖">Interactive map</span> →</a>
+        <a href="https://github.com/wilsonyungsh/30DayMapChallenge2024" target="_blank" rel="noopener">💻 <span data-i18n data-en="Code" data-zh="程式碼">Code</span> →</a>
+        <a href="https://www.linkedin.com/feed/update/urn:li:activity:7259395073631477760/" target="_blank" rel="noopener">💬 <span data-i18n data-en="LinkedIn post" data-zh="LinkedIn 貼文">LinkedIn post</span> →</a>
+      </div>
+      <h2 id="day-6" data-i18n data-en="Day 6 · Raster ⛰️" data-zh="第 6 天 · 網格資料 ⛰️">Day 6 · Raster ⛰️</h2>
+      <p class="post-date" data-i18n data-en="6 Nov 2024" data-zh="2024 年 11 月 6 日">6 Nov 2024</p>
+      <p data-i18n data-en="Here’s a hillshade map of Brisbane in summer, with a sun altitude of 45° and azimuth of 270°. The data is Geoscience Australia’s Queensland LiDAR Data – Brisbane 2019 Project, on a 1 m grid." data-zh="這是布里斯本夏季的山體陰影圖，太陽高度角 45°、方位角 270°。資料來自澳洲地球科學局（Geoscience Australia）的昆士蘭光達資料「Brisbane 2019」計畫，解析度 1 公尺。">Here’s a hillshade map of Brisbane in summer, with a sun altitude of 45° and azimuth of 270°. The data is Geoscience Australia’s Queensland LiDAR Data – Brisbane 2019 Project, on a 1 m grid.</p>
+      <p data-i18n data-en="I used the terra package in R to mosaic and crop the 96 GeoTIFFs. I hit a roadblock trying to render the raster in Mapbox GL, which was a bit disappointing, so I fell back on QGIS. It gave me the flexibility to work with the high-resolution LiDAR and bring out Brisbane’s terrain." data-zh="我用 R 的 terra 套件拼接並裁切 96 個 GeoTIFF 檔。想把網格資料放到 Mapbox GL 上顯示時卡住了，有點可惜，最後改用 QGIS。它讓我能靈活處理高解析度的光達資料，把布里斯本的地形細節呈現出來。">I used the terra package in R to mosaic and crop the 96 GeoTIFFs. I hit a roadblock trying to render the raster in Mapbox GL, which was a bit disappointing, so I fell back on QGIS. It gave me the flexibility to work with the high-resolution LiDAR and bring out Brisbane’s terrain.</p>
+      <figure>
+        <img src="../img/articles/30daymapchallenge-2024/day6-hillshade.jpg" width="2048" height="1448" data-i18n data-en="Hillshade map of Brisbane's terrain from 1 m LiDAR" data-zh="以 1 公尺光達資料製作的布里斯本地形山體陰影圖" alt="Hillshade map of Brisbane's terrain from 1 m LiDAR" loading="lazy">
+        <figcaption data-i18n data-en="Brisbane hillshade from 1 m LiDAR, made in QGIS." data-zh="以 1 公尺光達資料製作的布里斯本山體陰影圖，使用 QGIS。">Brisbane hillshade from 1 m LiDAR, made in QGIS.</figcaption>
+      </figure>
+      <div class="post-links">
+        <a href="https://www.linkedin.com/feed/update/urn:li:activity:7259765426274861056/" target="_blank" rel="noopener">💬 <span data-i18n data-en="LinkedIn post" data-zh="LinkedIn 貼文">LinkedIn post</span> →</a>
+      </div>
+      <h2 id="day-7" data-i18n data-en="Day 7 · Vintage 📜" data-zh="第 7 天 · 復古風 📜">Day 7 · Vintage 📜</h2>
+      <p class="post-date" data-i18n data-en="7 Nov 2024" data-zh="2024 年 11 月 7 日">7 Nov 2024</p>
+      <p data-i18n data-en="Today I stepped out of my comfort zone to make my first vintage-style map, experimenting with textures and colours. It was a challenge, but I’m happy with the result!" data-zh="今天我跳出舒適圈，第一次嘗試復古風格的地圖，實驗了各種紋理和配色。雖然不容易，但我很滿意成果！">Today I stepped out of my comfort zone to make my first vintage-style map, experimenting with textures and colours. It was a challenge, but I’m happy with the result!</p>
+      <p data-i18n data-en="Using OpenStreetMap data and the 1 m LiDAR from Day 6, I mapped train service coverage across Brisbane. I called it “Brisbane Rail’s Wild West” to highlight the big gap in rail coverage, especially in the western suburbs. It’s an issue I think is important to show and discuss." data-zh="我用 OpenStreetMap 資料和第 6 天的 1 公尺光達資料，畫出布里斯本的鐵路服務覆蓋範圍，取名為「布里斯本鐵路的狂野西部」，凸顯鐵路覆蓋的巨大落差，尤其是西區。我覺得這是值得被看見、被討論的議題。">Using OpenStreetMap data and the 1 m LiDAR from Day 6, I mapped train service coverage across Brisbane. I called it “Brisbane Rail’s Wild West” to highlight the big gap in rail coverage, especially in the western suburbs. It’s an issue I think is important to show and discuss.</p>
+      <figure>
+        <img src="../img/articles/30daymapchallenge-2024/day7-vintage.jpg" width="2048" height="1448" data-i18n data-en="Vintage-style map titled Brisbane Rail's Wild West, showing rail coverage over terrain" data-zh="名為「布里斯本鐵路的狂野西部」的復古風地圖，呈現地形上的鐵路覆蓋範圍" alt="Vintage-style map titled Brisbane Rail's Wild West, showing rail coverage over terrain" loading="lazy">
+        <figcaption data-i18n data-en="“Brisbane Rail’s Wild West”. Data processed in R, styled in QGIS." data-zh="「布里斯本鐵路的狂野西部」。資料以 R 處理，在 QGIS 中設計樣式。">“Brisbane Rail’s Wild West”. Data processed in R, styled in QGIS.</figcaption>
+      </figure>
+      <div class="post-links">
+        <a href="https://www.linkedin.com/feed/update/urn:li:activity:7260205538020319234/" target="_blank" rel="noopener">💬 <span data-i18n data-en="LinkedIn post" data-zh="LinkedIn 貼文">LinkedIn post</span> →</a>
+      </div>
+      <h2 id="day-8" data-i18n data-en="Day 8 · HDX 🌏" data-zh="第 8 天 · HDX 🌏">Day 8 · HDX 🌏</h2>
+      <p class="post-date" data-i18n data-en="8 Nov 2024" data-zh="2024 年 11 月 8 日">8 Nov 2024</p>
+      <p data-i18n data-en="I used Meta’s movement data from HDX (the Humanitarian Data Exchange) to map the percentage of people who stayed within 0–10 km of home across Australia and New Zealand. It reminds me of the telco mobility data I used to work with, so I wanted to explore it at a broader scale." data-zh="我用 HDX（人道資料交換平台）上 Meta 的移動資料，畫出澳洲和紐西蘭各地有多少比例的人待在離家 0–10 公里內。這份資料讓我想起以前處理過的電信移動資料，所以想在更大的範圍上看看。">I used Meta’s movement data from HDX (the Humanitarian Data Exchange) to map the percentage of people who stayed within 0–10 km of home across Australia and New Zealand. It reminds me of the telco mobility data I used to work with, so I wanted to explore it at a broader scale.</p>
+      <p data-i18n data-en="Movement within 10 km says something about local mobility, but what counts as “nearby” depends on geography. Where I live in Brisbane, the CBD is about 10 km away. In Sydney, I’d need to travel 30 km to reach the city centre. Making sense of movement data depends on the question you’re asking and the local context." data-zh="10 公里內的移動可以反映在地的移動型態，但「附近」的定義會因地理而不同。我在布里斯本的住處離市中心大約 10 公里；在雪梨，得走 30 公里才到得了市中心。要讀懂移動資料，取決於你想問的問題，以及各地的脈絡。">Movement within 10 km says something about local mobility, but what counts as “nearby” depends on geography. Where I live in Brisbane, the CBD is about 10 km away. In Sydney, I’d need to travel 30 km to reach the city centre. Making sense of movement data depends on the question you’re asking and the local context.</p>
+      <figure>
+        <img src="../img/articles/30daymapchallenge-2024/day8-hdx-movement.jpg" width="1906" height="936" data-i18n data-en="Map of Australia and New Zealand showing the share of people staying within 10 km of home" data-zh="澳洲與紐西蘭地圖，呈現待在離家 10 公里內的人口比例" alt="Map of Australia and New Zealand showing the share of people staying within 10 km of home" loading="lazy">
+        <figcaption data-i18n data-en="Share of people staying within 0–10 km of home, monthly data as of October 2024." data-zh="待在離家 0–10 公里內的人口比例，2024 年 10 月的月資料。">Share of people staying within 0–10 km of home, monthly data as of October 2024.</figcaption>
+      </figure>
+      <div class="post-links">
+        <a href="https://github.com/wilsonyungsh/30DayMapChallenge2024" target="_blank" rel="noopener">💻 <span data-i18n data-en="Code" data-zh="程式碼">Code</span> →</a>
+        <a href="https://www.linkedin.com/feed/update/urn:li:activity:7260504833399365632/" target="_blank" rel="noopener">💬 <span data-i18n data-en="LinkedIn post" data-zh="LinkedIn 貼文">LinkedIn post</span> →</a>
+      </div>
+      <h2 id="day-9" data-i18n data-en="Day 9 · AI only 🤖" data-zh="第 9 天 · 只用 AI 🤖">Day 9 · AI only 🤖</h2>
+      <p class="post-date" data-i18n data-en="9 Nov 2024" data-zh="2024 年 11 月 9 日">9 Nov 2024</p>
+      <p data-i18n data-en="I asked ChatGPT to make a map of Australia showing each capital city’s vibe and culture, plus the size of each city’s economy and population. My prompt was: “Can you create an Australia map highlighting the vibes and cultures for each capital city. Also use ways to reflect the size of each city’s economy size and population. Try making it in both ArcGIS and QGIS styles.”" data-zh="我請 ChatGPT 畫一張澳洲地圖，呈現每個首府城市的氛圍和文化，以及各城市的經濟規模和人口。我的提示詞是：「Can you create an Australia map highlighting the vibes and cultures for each capital city. Also use ways to reflect the size of each city’s economy size and population. Try making it in both ArcGIS and QGIS styles.」">I asked ChatGPT to make a map of Australia showing each capital city’s vibe and culture, plus the size of each city’s economy and population. My prompt was: “Can you create an Australia map highlighting the vibes and cultures for each capital city. Also use ways to reflect the size of each city’s economy size and population. Try making it in both ArcGIS and QGIS styles.”</p>
+      <p data-i18n data-en="The result? An imaginative Australia where some capital cities ended up in unexpected places, in a unique “blend” of ArcGIS and QGIS styles! It’s fascinating, and sometimes funny, to see how AI interprets geography and cartography. As always, check generated content against your own knowledge and common sense. I was a bit disappointed that it didn’t reflect city population and economy size as asked." data-zh="結果呢？一個充滿想像力的澳洲，有些首府跑到了意想不到的位置，風格則是 ArcGIS 和 QGIS 的獨特「混搭」！看 AI 怎麼理解地理和製圖，既有趣又有點好笑。一如往常，生成的內容都要用自己的知識和常識再檢查一遍。有點可惜的是，它沒有照要求呈現城市的人口和經濟規模。">The result? An imaginative Australia where some capital cities ended up in unexpected places, in a unique “blend” of ArcGIS and QGIS styles! It’s fascinating, and sometimes funny, to see how AI interprets geography and cartography. As always, check generated content against your own knowledge and common sense. I was a bit disappointed that it didn’t reflect city population and economy size as asked.</p>
+      <figure>
+        <img src="../img/articles/30daymapchallenge-2024/day9-ai-only.jpg" width="1792" height="1024" data-i18n data-en="AI-generated illustrated map of Australia with stylised capital cities" data-zh="AI 生成的澳洲插畫地圖，標示風格化的首府城市" alt="AI-generated illustrated map of Australia with stylised capital cities" loading="lazy">
+        <figcaption data-i18n data-en="ChatGPT’s map of Australia’s capital cities. Some are not where they should be." data-zh="ChatGPT 畫的澳洲首府地圖，有些城市的位置不太對。">ChatGPT’s map of Australia’s capital cities. Some are not where they should be.</figcaption>
+      </figure>
+      <div class="post-links">
+        <a href="https://www.linkedin.com/feed/update/urn:li:activity:7260979952911540225/" target="_blank" rel="noopener">💬 <span data-i18n data-en="LinkedIn post" data-zh="LinkedIn 貼文">LinkedIn post</span> →</a>
+      </div>
+      <h2 id="day-10" data-i18n data-en="Day 10 · Pen &amp; paper ✏️" data-zh="第 10 天 · 紙筆 ✏️">Day 10 · Pen &amp; paper ✏️</h2>
+      <p class="post-date" data-i18n data-en="10 Nov 2024" data-zh="2024 年 11 月 10 日">10 Nov 2024</p>
+      <p data-i18n data-en="I’ve never been good at drawing, but my 6-year-old surprised me with her first map a few days ago, so I wanted to share it. Her sense of aesthetics is already way beyond mine. She even labelled the map in a style that looks like ggrepel, and rotated Australia at a slight angle! I tried to recreate her map in ggplot2, but haven’t managed it yet." data-zh="我一直不太會畫畫，但我 6 歲的女兒前幾天畫了她的第一張地圖，讓我很驚喜，所以想分享出來。她的美感已經遠遠超過我了：地圖上的標籤排得像 ggrepel，還把澳洲稍微轉了個角度！我試著用 ggplot2 重現她的地圖，到現在還沒成功。">I’ve never been good at drawing, but my 6-year-old surprised me with her first map a few days ago, so I wanted to share it. Her sense of aesthetics is already way beyond mine. She even labelled the map in a style that looks like ggrepel, and rotated Australia at a slight angle! I tried to recreate her map in ggplot2, but haven’t managed it yet.</p>
+      <p data-i18n data-en="It’s inspiring to see her creativity, and a reminder of how much we can learn from kids’ fresh perspectives." data-zh="看到她的創意很受啟發，也提醒我，孩子們嶄新的觀點有很多值得我們學習的地方。">It’s inspiring to see her creativity, and a reminder of how much we can learn from kids’ fresh perspectives.</p>
+      <figure>
+        <img src="../img/articles/30daymapchallenge-2024/day10-pen-and-paper.jpg" width="2048" height="1508" data-i18n data-en="A child's hand-drawn map of Australia with labelled cities" data-zh="孩子手繪的澳洲地圖，標有城市名稱" alt="A child's hand-drawn map of Australia with labelled cities" loading="lazy">
+        <figcaption data-i18n data-en="My daughter’s first map, drawn when she was 6." data-zh="我女兒 6 歲時畫的第一張地圖。">My daughter’s first map, drawn when she was 6.</figcaption>
+      </figure>
+      <div class="post-links">
+        <a href="https://www.linkedin.com/feed/update/urn:li:activity:7261376593636282369/" target="_blank" rel="noopener">💬 <span data-i18n data-en="LinkedIn post" data-zh="LinkedIn 貼文">LinkedIn post</span> →</a>
+      </div>
+      <h2 id="day-11" data-i18n data-en="Day 11 · Arctic 🧊" data-zh="第 11 天 · 北極 🧊">Day 11 · Arctic 🧊</h2>
+      <p class="post-date" data-i18n data-en="12 Nov 2024" data-zh="2024 年 11 月 12 日">12 Nov 2024</p>
+      <p data-i18n data-en="This was my first time working with Arctic data, and I’m still learning about how it’s used and how accurate it is. I made an interactive map with three layers:" data-zh="這是我第一次處理北極的資料，還在學習它的用途和準確度。我做了一張有三個圖層的互動地圖：">This was my first time working with Arctic data, and I’m still learning about how it’s used and how accurate it is. I made an interactive map with three layers:</p>
+      <ul>
+        <li data-i18n data-en="Daily Arctic ice: areas with and without ice (US National Ice Center)" data-zh="每日北極海冰：有冰與無冰的區域（美國國家冰雪中心）">Daily Arctic ice: areas with and without ice (US National Ice Center)</li>
+        <li data-i18n data-en="Arctic maritime boundaries: a subset of global maritime boundaries for the Arctic region" data-zh="北極海域邊界：全球海域邊界中北極地區的部分">Arctic maritime boundaries: a subset of global maritime boundaries for the Arctic region</li>
+        <li data-i18n data-en="Arctic DEM: summit elevations in the region" data-zh="北極數值高程模型（Arctic DEM）：區域內的山頂高度">Arctic DEM: summit elevations in the region</li>
+      </ul>
+      <figure>
+        <img src="../img/articles/30daymapchallenge-2024/day11-arctic.jpg" width="902" height="778" data-i18n data-en="Map of the Arctic showing ice extent, maritime boundaries and summit elevations" data-zh="北極地圖，呈現海冰範圍、海域邊界與山頂高度" alt="Map of the Arctic showing ice extent, maritime boundaries and summit elevations" loading="lazy">
+        <figcaption data-i18n data-en="Arctic ice, maritime boundaries and summits. Built in R with mapgl." data-zh="北極海冰、海域邊界與山頂。以 R 的 mapgl 製作。">Arctic ice, maritime boundaries and summits. Built in R with mapgl.</figcaption>
+      </figure>
+      <div class="post-links">
+        <a href="https://wilsonyungsh.github.io/interactive/30DayMapChallenge2024/Map11_artic_ice_boundary.html" target="_blank" rel="noopener">🗺️ <span data-i18n data-en="Interactive map" data-zh="互動地圖">Interactive map</span> →</a>
+        <a href="https://github.com/wilsonyungsh/30DayMapChallenge2024" target="_blank" rel="noopener">💻 <span data-i18n data-en="Code" data-zh="程式碼">Code</span> →</a>
+        <a href="https://www.linkedin.com/feed/update/urn:li:activity:7261856174046683136/" target="_blank" rel="noopener">💬 <span data-i18n data-en="LinkedIn post" data-zh="LinkedIn 貼文">LinkedIn post</span> →</a>
+      </div>
+      <h2 id="day-12" data-i18n data-en="Day 12 · Time &amp; space ⏳" data-zh="第 12 天 · 時間與空間 ⏳">Day 12 · Time &amp; space ⏳</h2>
+      <p class="post-date" data-i18n data-en="12 Nov 2024" data-zh="2024 年 11 月 12 日">12 Nov 2024</p>
+      <p data-i18n data-en="With so much discussion about housing shortages and affordable housing in Australia, I wanted to look at land use change between the 2016 and 2021 Censuses. The map compares Residential and Parkland land use at Mesh Block level, using ABS 2016 and 2021 Mesh Blocks, across the Greater Capital Cities. Zooming into growth areas such as Sydney’s north-west shows the change even more clearly." data-zh="澳洲對住房短缺和可負擔住宅的討論持續不斷，我想看看 2016 年到 2021 年兩次人口普查之間的土地使用變化。地圖以網格區塊為單位，使用 ABS 2016 和 2021 年的網格區塊資料，比較各首府都會區的住宅用地和公園綠地。放大到雪梨西北區這類成長地區，變化會更明顯。">With so much discussion about housing shortages and affordable housing in Australia, I wanted to look at land use change between the 2016 and 2021 Censuses. The map compares Residential and Parkland land use at Mesh Block level, using ABS 2016 and 2021 Mesh Blocks, across the Greater Capital Cities. Zooming into growth areas such as Sydney’s north-west shows the change even more clearly.</p>
+      <p data-i18n data-en="Key findings:" data-zh="主要發現：">Key findings:</p>
+      <ul>
+        <li data-i18n data-en="Sydney and Melbourne lead residential land use expansion, with a 15–17% increase since 2016." data-zh="雪梨和墨爾本的住宅用地擴張最多，自 2016 年以來增加了 15–17%。">Sydney and Melbourne lead residential land use expansion, with a 15–17% increase since 2016.</li>
+        <li data-i18n data-en="Parkland land use has stayed relatively stable in total area." data-zh="公園綠地的總面積則相對穩定。">Parkland land use has stayed relatively stable in total area.</li>
+      </ul>
+      <p data-i18n data-en="This was my first try at a comparison slider, built in R with Mapbox GL, which is a great way to show land use change. The data for all capital cities was too large to host, so the interactive map covers Brisbane only. You can use my code to produce all the capital cities." data-zh="這是我第一次嘗試比較滑桿，用 R 和 Mapbox GL 製作，很適合呈現土地使用的變化。所有首府的資料太大放不上網，所以互動地圖只有布里斯本，你可以用我的程式碼產生所有首府的版本。">This was my first try at a comparison slider, built in R with Mapbox GL, which is a great way to show land use change. The data for all capital cities was too large to host, so the interactive map covers Brisbane only. You can use my code to produce all the capital cities.</p>
+      <figure>
+        <img src="../img/articles/30daymapchallenge-2024/day12-land-use-2.jpg" width="1094" height="1030" data-i18n data-en="Comparison slider map of Sydney showing residential and parkland land use in 2016 and 2021" data-zh="雪梨的比較滑桿地圖，呈現 2016 與 2021 年的住宅用地與公園綠地" alt="Comparison slider map of Sydney showing residential and parkland land use in 2016 and 2021" loading="lazy">
+        <figcaption data-i18n data-en="Sydney’s residential (red) and parkland (green) land use, 2016 vs 2021." data-zh="雪梨的住宅用地（紅）與公園綠地（綠），2016 年與 2021 年對照。">Sydney’s residential (red) and parkland (green) land use, 2016 vs 2021.</figcaption>
+      </figure>
+      <figure>
+        <img src="../img/articles/30daymapchallenge-2024/day12-land-use-1.jpg" width="856" height="750" data-i18n data-en="Table of residential and parkland area by capital city in 2016 and 2021, with percentage change" data-zh="各首府 2016 與 2021 年住宅用地與公園綠地面積及變化百分比表" alt="Table of residential and parkland area by capital city in 2016 and 2021, with percentage change" loading="lazy">
+        <figcaption data-i18n data-en="Residential and parkland area (km²) by Greater Capital City, 2016 vs 2021, sorted by % change." data-zh="各首府都會區的住宅用地與公園綠地面積（平方公里），2016 與 2021 年對照，依變化百分比排序。">Residential and parkland area (km²) by Greater Capital City, 2016 vs 2021, sorted by % change.</figcaption>
+      </figure>
+      <div class="post-links">
+        <a href="https://wilsonyungsh.github.io/interactive/30DayMapChallenge2024/map12_brisbane_lu_map.html" target="_blank" rel="noopener">🗺️ <span data-i18n data-en="Interactive map" data-zh="互動地圖">Interactive map</span> →</a>
+        <a href="https://github.com/wilsonyungsh/30DayMapChallenge2024" target="_blank" rel="noopener">💻 <span data-i18n data-en="Code" data-zh="程式碼">Code</span> →</a>
+        <a href="https://www.linkedin.com/feed/update/urn:li:activity:7262073023401205761/" target="_blank" rel="noopener">💬 <span data-i18n data-en="LinkedIn post" data-zh="LinkedIn 貼文">LinkedIn post</span> →</a>
+      </div>
+      <h2 id="day-13" data-i18n data-en="Day 13 · A new tool 🧰" data-zh="第 13 天 · 嘗試新工具 🧰">Day 13 · A new tool 🧰</h2>
+      <p class="post-date" data-i18n data-en="14 Nov 2024" data-zh="2024 年 11 月 14 日">14 Nov 2024</p>
+      <p data-i18n data-en="I came across <a href='https://atlas.co/' target='_blank' rel='noopener'>Atlas.co</a> in a post by Fredrik Moger and decided to give it a try. In just 5–10 minutes I made this bus stop walk catchment map, showing 5- and 10-minute walking zones, with data pulled straight from OpenStreetMap." data-zh="我在 Fredrik Moger 的貼文裡看到 <a href='https://atlas.co/' target='_blank' rel='noopener'>Atlas.co</a>，決定試試看。只花 5 到 10 分鐘，就做出這張公車站步行範圍地圖，呈現步行 5 分鐘和 10 分鐘的範圍，資料直接取自 OpenStreetMap。">I came across <a href='https://atlas.co/' target='_blank' rel='noopener'>Atlas.co</a> in a post by Fredrik Moger and decided to give it a try. In just 5–10 minutes I made this bus stop walk catchment map, showing 5- and 10-minute walking zones, with data pulled straight from OpenStreetMap.</p>
+      <p data-i18n data-en="Its integration with OpenStreetMap and DEM data makes it easy to build datasets for suitability analysis. It’s a promising tool for no-code spatial analysis and map collaboration. The catchment colours looked a little different on export than in the data view, but that’s minor. The export layout is impressive: it adds a mini map, legend and scale bar automatically. Auto-attributing the data sources would make it even better. I’m curious how it performs on larger datasets, and what the architecture behind it looks like." data-zh="它整合了 OpenStreetMap 和數值高程資料，要做適宜性分析的資料集很方便，是很有潛力的免寫程式空間分析與地圖協作工具。步行範圍的顏色在匯出後和資料檢視時有點不同，但只是小問題。匯出的版面很出色，會自動加上小地圖、圖例和比例尺。如果還能自動標註資料來源就更好了。我很好奇它在大型資料集上的表現，以及背後的架構。">Its integration with OpenStreetMap and DEM data makes it easy to build datasets for suitability analysis. It’s a promising tool for no-code spatial analysis and map collaboration. The catchment colours looked a little different on export than in the data view, but that’s minor. The export layout is impressive: it adds a mini map, legend and scale bar automatically. Auto-attributing the data sources would make it even better. I’m curious how it performs on larger datasets, and what the architecture behind it looks like.</p>
+      <figure>
+        <img src="../img/articles/30daymapchallenge-2024/day13-atlas.jpg" width="2048" height="1448" data-i18n data-en="Map of 5- and 10-minute walking catchments around bus stops in Brisbane's western suburbs" data-zh="布里斯本西區公車站周邊步行 5 分鐘與 10 分鐘範圍地圖" alt="Map of 5- and 10-minute walking catchments around bus stops in Brisbane's western suburbs" loading="lazy">
+        <figcaption data-i18n data-en="Bus stop walk catchments in Brisbane’s western suburbs, made in Atlas.co." data-zh="布里斯本西區公車站的步行範圍，以 Atlas.co 製作。">Bus stop walk catchments in Brisbane’s western suburbs, made in Atlas.co.</figcaption>
+      </figure>
+      <div class="post-links">
+        <a href="https://www.linkedin.com/feed/update/urn:li:activity:7262620476206718976/" target="_blank" rel="noopener">💬 <span data-i18n data-en="LinkedIn post" data-zh="LinkedIn 貼文">LinkedIn post</span> →</a>
+      </div>
+      <h2 id="day-14" data-i18n data-en="Day 14 · A world map 🌊" data-zh="第 14 天 · 世界地圖 🌊">Day 14 · A world map 🌊</h2>
+      <p class="post-date" data-i18n data-en="15 Nov 2024" data-zh="2024 年 11 月 15 日">15 Nov 2024</p>
+      <p data-i18n data-en="For this one I stepped away from R and QGIS. Inspired by Milan Janosov’s tutorial, I used Python in a notebook, with a little help from ChatGPT." data-zh="這次我暫時離開 R 和 QGIS。受到 Milan Janosov 教學的啟發，我在 notebook 裡用 Python 製作，還請 ChatGPT 幫了點忙。">For this one I stepped away from R and QGIS. Inspired by Milan Janosov’s tutorial, I used Python in a notebook, with a little help from ChatGPT.</p>
+      <p data-i18n data-en="The data is NOAA’s WOA23 (World Ocean Atlas 2023), showing the mean sea surface temperature on a ¼° grid for 2015–2022. I didn’t draw the continents, but you can still see the outline of the world." data-zh="資料是 NOAA 的 WOA23（2023 年世界海洋圖集），呈現 2015–2022 年間 ¼ 度網格的平均海面溫度。我沒有畫出陸地，但還是看得出世界的輪廓。">The data is NOAA’s WOA23 (World Ocean Atlas 2023), showing the mean sea surface temperature on a ¼° grid for 2015–2022. I didn’t draw the continents, but you can still see the outline of the world.</p>
+      <figure>
+        <img src="../img/articles/30daymapchallenge-2024/day14-ocean-temperature.jpg" width="2048" height="1352" data-i18n data-en="World map of mean sea surface temperature, with the continents left blank" data-zh="全球平均海面溫度地圖，陸地部分留白" alt="World map of mean sea surface temperature, with the continents left blank" loading="lazy">
+        <figcaption data-i18n data-en="Mean sea surface temperature, 2015–2022 (NOAA WOA23). Made in Python." data-zh="2015–2022 年平均海面溫度（NOAA WOA23）。以 Python 製作。">Mean sea surface temperature, 2015–2022 (NOAA WOA23). Made in Python.</figcaption>
+      </figure>
+      <div class="post-links">
+        <a href="https://www.linkedin.com/feed/update/urn:li:activity:7263067526186569728/" target="_blank" rel="noopener">💬 <span data-i18n data-en="LinkedIn post" data-zh="LinkedIn 貼文">LinkedIn post</span> →</a>
+      </div>
+      <h2 id="day-15" data-i18n data-en="Day 15 · My data 🚙" data-zh="第 15 天 · 我的資料 🚙">Day 15 · My data 🚙</h2>
+      <p class="post-date" data-i18n data-en="16 Nov 2024" data-zh="2024 年 11 月 16 日">16 Nov 2024</p>
+      <p data-i18n data-en="I’m a bit behind, but here’s Day 15! I went back to GPS traces I collected with my HTC phone on several epic field trips at the end of 2013 and the start of 2014. With the phone powered in the car, it ran all day and collected an incredible 660,000 GPS records." data-zh="進度有點落後，但第 15 天來了！我翻出 2013 年底到 2014 年初幾趟田野調查時，用 HTC 手機收集的 GPS 軌跡。手機在車上一直充電，整天開著，總共收集了驚人的 66 萬筆 GPS 紀錄。">I’m a bit behind, but here’s Day 15! I went back to GPS traces I collected with my HTC phone on several epic field trips at the end of 2013 and the start of 2014. With the phone powered in the car, it ran all day and collected an incredible 660,000 GPS records.</p>
+      <p data-i18n data-en="Those field trips are among the most unforgettable experiences of my life. I explored vast stretches of rural NSW and the ACT, including the Murrumbidgee Irrigation Area, the Snowy River and the Snowy Mountains, a real highlight of my time in Australia. I still remember pulling over to admire the scenery, and passing drivers kindly stopping to check I was okay." data-zh="那幾趟田野調查是我這輩子最難忘的經驗之一。我走遍了新南威爾斯鄉間和首都領地的廣大地區，包括馬蘭比吉灌溉區、雪河和雪山，是我在澳洲最精彩的回憶。我還記得停在路邊欣賞風景時，路過的駕駛會好心停下來，問我是不是一切都好。">Those field trips are among the most unforgettable experiences of my life. I explored vast stretches of rural NSW and the ACT, including the Murrumbidgee Irrigation Area, the Snowy River and the Snowy Mountains, a real highlight of my time in Australia. I still remember pulling over to admire the scenery, and passing drivers kindly stopping to check I was okay.</p>
+      <figure>
+        <img src="../img/articles/30daymapchallenge-2024/day15-fieldtrip-2.jpg" width="1692" height="739" data-i18n data-en="Map of GPS traces from field trips across New South Wales and the ACT, coloured by trip" data-zh="新南威爾斯與首都領地田野調查的 GPS 軌跡地圖，依行程上色" alt="Map of GPS traces from field trips across New South Wales and the ACT, coloured by trip" loading="lazy">
+        <figcaption data-i18n data-en="GPS traces from my 2013–14 field trips, coloured by trip. Processed in R, mapped with mapdeck." data-zh="2013–14 年田野調查的 GPS 軌跡，依行程上色。以 R 處理，用 mapdeck 製圖。">GPS traces from my 2013–14 field trips, coloured by trip. Processed in R, mapped with mapdeck.</figcaption>
+      </figure>
+      <p data-i18n data-en="Some quick stats from the trips:" data-zh="這幾趟旅程的數據：">Some quick stats from the trips:</p>
+      <ul class="plain">
+        <li data-i18n data-en="📍 Distance travelled: 12,801 km over 43 days of fieldwork" data-zh="📍 行駛距離：43 天田野調查共 12,801 公里">📍 Distance travelled: 12,801 km over 43 days of fieldwork</li>
+        <li data-i18n data-en="📍 Elevation range: 7.7 m to 1,149 m" data-zh="📍 海拔範圍：7.7 公尺到 1,149 公尺">📍 Elevation range: 7.7 m to 1,149 m</li>
+        <li data-i18n data-en="📍 Trips: 8 major overnight trips and several day trips" data-zh="📍 行程：8 趟過夜的長途行程，以及數趟當日來回">📍 Trips: 8 major overnight trips and several day trips</li>
+      </ul>
+      <figure>
+        <img src="../img/articles/30daymapchallenge-2024/day15-fieldtrip-3.jpg" width="2048" height="1158" data-i18n data-en="A country road crossing a bridge next to a Snowy River sign" data-zh="鄉間道路通往一座橋，路旁立著雪河的標誌" alt="A country road crossing a bridge next to a Snowy River sign" loading="lazy">
+        <figcaption data-i18n data-en="Crossing the Snowy River." data-zh="跨越雪河。">Crossing the Snowy River.</figcaption>
+      </figure>
+      <figure>
+        <img src="../img/articles/30daymapchallenge-2024/day15-fieldtrip-photo.jpg" width="1280" height="2263" data-i18n data-en="View through a four-wheel drive's windscreen of a dirt track across open grassland" data-zh="從四輪傳動車擋風玻璃望出去，一條穿越開闊草原的泥土路" alt="View through a four-wheel drive's windscreen of a dirt track across open grassland" loading="lazy">
+        <figcaption data-i18n data-en="On the road during fieldwork." data-zh="田野調查途中。">On the road during fieldwork.</figcaption>
+      </figure>
+      <div class="post-links">
+        <a href="https://wilsonyungsh.github.io/interactive/30DayMapChallenge2024/Map15_fieldtrips.html" target="_blank" rel="noopener">🗺️ <span data-i18n data-en="Interactive map" data-zh="互動地圖">Interactive map</span> →</a>
+        <a href="https://www.linkedin.com/feed/update/urn:li:activity:7263539664937000960/" target="_blank" rel="noopener">💬 <span data-i18n data-en="LinkedIn post" data-zh="LinkedIn 貼文">LinkedIn post</span> →</a>
+      </div>
+      <h2 id="day-16" data-i18n data-en="Day 16 · Choropleth 🗺️" data-zh="第 16 天 · 面量圖 🗺️">Day 16 · Choropleth 🗺️</h2>
+      <p class="post-date" data-i18n data-en="18 Nov 2024" data-zh="2024 年 11 月 18 日">18 Nov 2024</p>
+      <p data-i18n data-en="Today I explored the 2021 SEIFA data to map socio-economic advantage and disadvantage across SA1s in Greater Brisbane. The map focuses on Brisbane, but the code can produce SA1-level results for all of Australia." data-zh="今天我用 2021 年的 SEIFA 資料，畫出大布里斯本各 SA1 的社會經濟優勢與劣勢。地圖聚焦在布里斯本，但程式碼可以產生全澳洲 SA1 層級的結果。">Today I explored the 2021 SEIFA data to map socio-economic advantage and disadvantage across SA1s in Greater Brisbane. The map focuses on Brisbane, but the code can produce SA1-level results for all of Australia.</p>
+      <p data-i18n data-en="I also took the top 20 (most advantaged) and bottom 20 (most disadvantaged) SA1s nationwide on the Index of Relative Socio-economic Advantage and Disadvantage (IRSAD), and grouped them by Greater Capital City to compare the population in “well-off” and “disadvantaged” areas." data-zh="我也依「相對社會經濟優勢與劣勢指數」（IRSAD），找出全國最優勢的前 20 名和最劣勢的後 20 名 SA1，再依首府都會區分組，比較「優勢」與「劣勢」地區的人口。">I also took the top 20 (most advantaged) and bottom 20 (most disadvantaged) SA1s nationwide on the Index of Relative Socio-economic Advantage and Disadvantage (IRSAD), and grouped them by Greater Capital City to compare the population in “well-off” and “disadvantaged” areas.</p>
+      <ul>
+        <li data-i18n data-en="The ACT has by far the highest share of advantaged areas." data-zh="首都領地的優勢地區比例遠遠領先。">The ACT has by far the highest share of advantaged areas.</li>
+        <li data-i18n data-en="Most capital cities have more advantaged than disadvantaged areas, except Adelaide and Hobart, where the balance tips the other way." data-zh="大多數首府的優勢地區多於劣勢地區，只有阿德雷德和荷巴特相反。">Most capital cities have more advantaged than disadvantaged areas, except Adelaide and Hobart, where the balance tips the other way.</li>
+        <li data-i18n data-en="In regional areas, disadvantaged populations consistently outnumber advantaged ones." data-zh="在非首府地區，劣勢地區的人口一律多於優勢地區。">In regional areas, disadvantaged populations consistently outnumber advantaged ones.</li>
+      </ul>
+      <figure>
+        <img src="../img/articles/30daymapchallenge-2024/day16-seifa-1.jpg" width="975" height="689" data-i18n data-en="Choropleth map of IRSAD deciles across SA1s in Greater Brisbane" data-zh="大布里斯本各 SA1 的 IRSAD 十分位面量圖" alt="Choropleth map of IRSAD deciles across SA1s in Greater Brisbane" loading="lazy">
+        <figcaption data-i18n data-en="IRSAD across Greater Brisbane SA1s. Data processed in R, mapped in ArcGIS Pro." data-zh="大布里斯本各 SA1 的 IRSAD。資料以 R 處理，用 ArcGIS Pro 製圖。">IRSAD across Greater Brisbane SA1s. Data processed in R, mapped in ArcGIS Pro.</figcaption>
+      </figure>
+      <figure>
+        <img src="../img/articles/30daymapchallenge-2024/day16-seifa-2.jpg" width="491" height="297" data-i18n data-en="Table of population in the most advantaged and most disadvantaged areas by Greater Capital City" data-zh="各首府都會區最優勢與最劣勢地區人口表" alt="Table of population in the most advantaged and most disadvantaged areas by Greater Capital City" loading="lazy">
+        <figcaption data-i18n data-en="Population in the bottom 20 and top 20 SA1 groups, and the ratio, by region." data-zh="各地區最劣勢與最優勢 SA1 群組的人口及比值。">Population in the bottom 20 and top 20 SA1 groups, and the ratio, by region.</figcaption>
+      </figure>
+      <div class="post-links">
+        <a href="https://github.com/wilsonyungsh/30DayMapChallenge2024" target="_blank" rel="noopener">💻 <span data-i18n data-en="Code" data-zh="程式碼">Code</span> →</a>
+        <a href="https://www.linkedin.com/feed/update/urn:li:activity:7264201738897747970/" target="_blank" rel="noopener">💬 <span data-i18n data-en="LinkedIn post" data-zh="LinkedIn 貼文">LinkedIn post</span> →</a>
+      </div>
+      <h2 id="day-18" data-i18n data-en="Day 18 · 3D 🏙️" data-zh="第 18 天 · 3D 🏙️">Day 18 · 3D 🏙️</h2>
+      <p class="post-date" data-i18n data-en="26 Nov 2024" data-zh="2024 年 11 月 26 日">26 Nov 2024</p>
+      <p data-i18n data-en="I reused the GTFS data from Day 1 and turned it into a 3D view of bus stop service density. Zoom out to explore Greater Brisbane, including the Gold Coast. Bar height and colour both show the number of services." data-zh="我重新使用第 1 天的 GTFS 資料，把它變成公車站服務密度的 3D 視覺化。縮小地圖可以看到包含黃金海岸在內的大布里斯本地區。柱子的高度和顏色都代表服務班次的多寡。">I reused the GTFS data from Day 1 and turned it into a 3D view of bus stop service density. Zoom out to explore Greater Brisbane, including the Gold Coast. Bar height and colour both show the number of services.</p>
+      <figure>
+        <img src="../img/articles/30daymapchallenge-2024/day18-3d-bus.jpg" width="1272" height="978" data-i18n data-en="3D map of bus stop service density in South East Queensland, with taller bars for more services" data-zh="昆士蘭東南區公車站服務密度 3D 地圖，柱子越高代表班次越多" alt="3D map of bus stop service density in South East Queensland, with taller bars for more services" loading="lazy">
+        <figcaption data-i18n data-en="Bus stop service density in 3D. Made with R and deck.gl." data-zh="公車站服務密度 3D 圖。以 R 和 deck.gl 製作。">Bus stop service density in 3D. Made with R and deck.gl.</figcaption>
+      </figure>
+      <div class="post-links">
+        <a href="https://wilsonyungsh.github.io/interactive/30DayMapChallenge2024/map18_seq_bus_service_density.html" target="_blank" rel="noopener">🗺️ <span data-i18n data-en="Interactive map" data-zh="互動地圖">Interactive map</span> →</a>
+        <a href="https://github.com/wilsonyungsh/30DayMapChallenge2024" target="_blank" rel="noopener">💻 <span data-i18n data-en="Code" data-zh="程式碼">Code</span> →</a>
+        <a href="https://www.linkedin.com/feed/update/urn:li:activity:7266994974909440002/" target="_blank" rel="noopener">💬 <span data-i18n data-en="LinkedIn post" data-zh="LinkedIn 貼文">LinkedIn post</span> →</a>
+      </div>
+      <h2 id="day-24" data-i18n data-en="Day 24 · Only circular shapes ⭕" data-zh="第 24 天 · 只用圓形 ⭕">Day 24 · Only circular shapes ⭕</h2>
+      <p class="post-date" data-i18n data-en="24 Nov 2024" data-zh="2024 年 11 月 24 日">24 Nov 2024</p>
+      <p data-i18n data-en="For this one I mapped something practical: public toilets across Brisbane, from OpenStreetMap. As someone who often needs to find one, it felt like a meaningful and fun project!" data-zh="這次我畫了很實用的東西：布里斯本的公共廁所，資料來自 OpenStreetMap。身為常常需要找廁所的人，這個題目既有意義又好玩！">For this one I mapped something practical: public toilets across Brisbane, from OpenStreetMap. As someone who often needs to find one, it felt like a meaningful and fun project!</p>
+      <p data-i18n data-en="It was also my first time using Mapbox’s clustering, and I was impressed by how intuitive and useful it is for dense datasets. Even simple everyday data can be presented in creative and useful ways." data-zh="這也是我第一次使用 Mapbox 的群集功能，處理密集資料時直覺又好用，讓我印象深刻。即使是日常的簡單資料，也能用有創意又實用的方式呈現。">It was also my first time using Mapbox’s clustering, and I was impressed by how intuitive and useful it is for dense datasets. Even simple everyday data can be presented in creative and useful ways.</p>
+      <figure>
+        <img src="../img/articles/30daymapchallenge-2024/day24-toilets.jpg" width="1193" height="802" data-i18n data-en="Map of public toilets in Brisbane shown as clustered circles" data-zh="布里斯本公共廁所地圖，以群集圓圈呈現" alt="Map of public toilets in Brisbane shown as clustered circles" loading="lazy">
+        <figcaption data-i18n data-en="Brisbane’s public toilets, clustered into circles." data-zh="布里斯本的公共廁所，以群集圓圈呈現。">Brisbane’s public toilets, clustered into circles.</figcaption>
+      </figure>
+      <div class="post-links">
+        <a href="https://wilsonyungsh.github.io/interactive/30DayMapChallenge2024/Map24_brisbane_toilets.html" target="_blank" rel="noopener">🗺️ <span data-i18n data-en="Interactive map" data-zh="互動地圖">Interactive map</span> →</a>
+        <a href="https://github.com/wilsonyungsh/30DayMapChallenge2024" target="_blank" rel="noopener">💻 <span data-i18n data-en="Code" data-zh="程式碼">Code</span> →</a>
+        <a href="https://www.linkedin.com/feed/update/urn:li:activity:7266418144703856640/" target="_blank" rel="noopener">💬 <span data-i18n data-en="LinkedIn post" data-zh="LinkedIn 貼文">LinkedIn post</span> →</a>
+      </div>
+      <h2 id="day-26" data-i18n data-en="Day 26 · Projection 🌐" data-zh="第 26 天 · 投影 🌐">Day 26 · Projection 🌐</h2>
+      <p class="post-date" data-i18n data-en="26 Nov 2024" data-zh="2024 年 11 月 26 日">26 Nov 2024</p>
+      <p data-i18n data-en="Today I mapped Australia in two coordinate reference systems: EPSG:3112 (GDA94 / Geoscience Australia Lambert) and EPSG:4326 (WGS84). I used to rely on EPSG:3112 for planar distances within Australia, but calculating great-circle distances has become much simpler and more common." data-zh="今天我用兩種座標參考系統畫澳洲：EPSG:3112（GDA94 / 澳洲地球科學局 Lambert 投影）和 EPSG:4326（WGS84）。以前我常用 EPSG:3112 計算澳洲境內的平面距離，但現在計算大圓距離已經簡單、普遍得多。">Today I mapped Australia in two coordinate reference systems: EPSG:3112 (GDA94 / Geoscience Australia Lambert) and EPSG:4326 (WGS84). I used to rely on EPSG:3112 for planar distances within Australia, but calculating great-circle distances has become much simpler and more common.</p>
+      <p data-i18n data-en="The map shows the distortion between a local projection (GDA94) and a global one (WGS84)." data-zh="這張地圖呈現在地投影（GDA94）和全球投影（WGS84）之間的變形差異。">The map shows the distortion between a local projection (GDA94) and a global one (WGS84).</p>
+      <figure>
+        <img src="../img/articles/30daymapchallenge-2024/day26-projection.jpg" width="1303" height="1536" data-i18n data-en="Two maps of Australia comparing the GDA94 Lambert and WGS84 projections" data-zh="比較 GDA94 Lambert 與 WGS84 投影的兩張澳洲地圖" alt="Two maps of Australia comparing the GDA94 Lambert and WGS84 projections" loading="lazy">
+        <figcaption data-i18n data-en="Australia in GDA94 / Lambert and WGS84. Made in R with ggplot2, ABS 2021 data." data-zh="以 GDA94 / Lambert 和 WGS84 呈現的澳洲。以 R 的 ggplot2 製作，資料來自 ABS 2021。">Australia in GDA94 / Lambert and WGS84. Made in R with ggplot2, ABS 2021 data.</figcaption>
+      </figure>
+      <div class="post-links">
+        <a href="https://github.com/wilsonyungsh/30DayMapChallenge2024" target="_blank" rel="noopener">💻 <span data-i18n data-en="Code" data-zh="程式碼">Code</span> →</a>
+        <a href="https://www.linkedin.com/feed/update/urn:li:activity:7267154522727157762/" target="_blank" rel="noopener">💬 <span data-i18n data-en="LinkedIn post" data-zh="LinkedIn 貼文">LinkedIn post</span> →</a>
+      </div>
+      <h2 id="day-29" data-i18n data-en="Day 29 · Overture Maps 🏢" data-zh="第 29 天 · Overture Maps 🏢">Day 29 · Overture Maps 🏢</h2>
+      <p class="post-date" data-i18n data-en="1 Dec 2024" data-zh="2024 年 12 月 1 日">1 Dec 2024</p>
+      <p data-i18n data-en="This was my first time using Overture Maps. I thought I could use Spark to access and work with the data directly, but ran into issues, so I used the Python command line to download data clipped to a bounding box instead." data-zh="這是我第一次使用 Overture Maps。原本以為可以用 Spark 直接讀取和處理資料，結果遇到問題，最後改用 Python 命令列下載依範圍框裁切的資料。">This was my first time using Overture Maps. I thought I could use Spark to access and work with the data directly, but ran into issues, so I used the Python command line to download data clipped to a bounding box instead.</p>
+      <p data-i18n data-en="I mapped building heights in the Greater Taipei area. I got to know these places in my first two years of work after moving on from social services, especially Tamsui, a satellite city of Taipei." data-zh="我畫了大台北地區的建築高度。這些地方是我從社福領域轉職後、工作頭兩年熟悉起來的，尤其是台北的衛星城市淡水。">I mapped building heights in the Greater Taipei area. I got to know these places in my first two years of work after moving on from social services, especially Tamsui, a satellite city of Taipei.</p>
+      <p data-i18n data-en="The map was made in R with Mapdeck. I only just realised Mapdeck uses deck.gl under the hood, which makes efficient 3D rendering much easier." data-zh="地圖用 R 的 Mapdeck 製作。我這才發現 Mapdeck 底層用的是 deck.gl，所以要有效率地呈現 3D 容易多了。">The map was made in R with Mapdeck. I only just realised Mapdeck uses deck.gl under the hood, which makes efficient 3D rendering much easier.</p>
+      <figure>
+        <img src="../img/articles/30daymapchallenge-2024/day29-taipei-buildings.jpg" width="1689" height="761" data-i18n data-en="3D map of building heights across Greater Taipei" data-zh="大台北建築高度 3D 地圖" alt="3D map of building heights across Greater Taipei" loading="lazy">
+        <figcaption data-i18n data-en="Building heights in Greater Taipei, from Overture Maps." data-zh="大台北的建築高度，資料來自 Overture Maps。">Building heights in Greater Taipei, from Overture Maps.</figcaption>
+      </figure>
+      <div class="post-links">
+        <a href="https://wilsonyungsh.github.io/interactive/30DayMapChallenge2024/Map29.html" target="_blank" rel="noopener">🗺️ <span data-i18n data-en="Interactive map" data-zh="互動地圖">Interactive map</span> →</a>
+        <a href="https://github.com/wilsonyungsh/30DayMapChallenge2024" target="_blank" rel="noopener">💻 <span data-i18n data-en="Code" data-zh="程式碼">Code</span> →</a>
+        <a href="https://www.linkedin.com/feed/update/urn:li:activity:7268636816952422400/" target="_blank" rel="noopener">💬 <span data-i18n data-en="LinkedIn post" data-zh="LinkedIn 貼文">LinkedIn post</span> →</a>
+      </div>
+      <h2 id="reflection" data-i18n data-en="Reflection 💭" data-zh="心得 💭">Reflection 💭</h2>
+      <p class="post-date" data-i18n data-en="4 Dec 2024" data-zh="2024 年 12 月 4 日">4 Dec 2024</p>
+      <p data-i18n data-en="This was my first year in the #30DayMapChallenge, and I gave it my best shot! I focused on making my code, data sources and maps reproducible on GitHub. I didn’t complete all 30 days, but I’m proud to have finished 20 maps. Here are my key takeaways." data-zh="這是我第一年參加 #30DayMapChallenge，我盡了全力！我把重點放在讓程式碼、資料來源和地圖都能在 GitHub 上重現。雖然沒有完成全部 30 天，但很自豪做出了 20 張地圖。以下是我的主要心得。">This was my first year in the #30DayMapChallenge, and I gave it my best shot! I focused on making my code, data sources and maps reproducible on GitHub. I didn’t complete all 30 days, but I’m proud to have finished 20 maps. Here are my key takeaways.</p>
+      <figure>
+        <img src="../img/articles/30daymapchallenge-2024/reflection.jpg" width="1280" height="1700" data-i18n data-en="A child jumping at the water's edge on a beach, with kitesurfers in the background" data-zh="一個孩子在海邊淺灘跳起來，背景有風箏衝浪的人" alt="A child jumping at the water's edge on a beach, with kitesurfers in the background" loading="lazy">
+      </figure>
+      <h3 data-i18n data-en="Building a personal website" data-zh="建立個人網站">Building a personal website</h3>
+      <p data-i18n data-en="I learned how to build a personal website with GitHub Pages. GitHub has a 100 MB limit per file, so I’ve had to keep the content lightweight and strategic." data-zh="我學會了用 GitHub Pages 架設個人網站。GitHub 單一檔案上限是 100 MB，所以內容必須精簡、有取捨。">I learned how to build a personal website with GitHub Pages. GitHub has a 100 MB limit per file, so I’ve had to keep the content lightweight and strategic.</p>
+      <h3 data-i18n data-en="Diverse data sources" data-zh="多樣的資料來源">Diverse data sources</h3>
+      <p data-i18n data-en="I worked with GTFS, ABS, OSM, Strava, GPS traces, LiDAR, HDX movement data, Arctic DEM, WOA and Overture Maps. Using Arctic DEM, WOA and Overture Maps for the first time added new ingredients I can use in the future." data-zh="我用了 GTFS、ABS、OSM、Strava、GPS 軌跡、光達、HDX 移動資料、Arctic DEM、WOA 和 Overture Maps。第一次使用 Arctic DEM、WOA 和 Overture Maps，為未來能運用的資料來源增添了新素材。">I worked with GTFS, ABS, OSM, Strava, GPS traces, LiDAR, HDX movement data, Arctic DEM, WOA and Overture Maps. Using Arctic DEM, WOA and Overture Maps for the first time added new ingredients I can use in the future.</p>
+      <h3 data-i18n data-en="Tools and techniques" data-zh="工具與技巧">Tools and techniques</h3>
+      <p data-i18n data-en="I used R, Python, ArcGIS Pro, QGIS, deck.gl and Mapbox. The challenge improved my ability to make interactive maps that are both functional and good-looking, and taught me how to fine-tune the aesthetics." data-zh="我用了 R、Python、ArcGIS Pro、QGIS、deck.gl 和 Mapbox。這個挑戰讓我更會做既實用又好看的互動地圖，也學會了怎麼細修美感。">I used R, Python, ArcGIS Pro, QGIS, deck.gl and Mapbox. The challenge improved my ability to make interactive maps that are both functional and good-looking, and taught me how to fine-tune the aesthetics.</p>
+      <h3 data-i18n data-en="Themes" data-zh="探索的主題">Themes</h3>
+      <p data-i18n data-en="My maps covered public transport, population, dwellings, building heights, land use, walk catchments, field trips and temperature." data-zh="我的地圖涵蓋了大眾運輸、人口、住宅、建築高度、土地使用、步行範圍、田野調查和溫度。">My maps covered public transport, population, dwellings, building heights, land use, walk catchments, field trips and temperature.</p>
+      <h3 data-i18n data-en="Beyond the map" data-zh="地圖之外">Beyond the map</h3>
+      <p data-i18n data-en="The real effort went beyond making maps. It meant:" data-zh="真正的功夫不只是畫地圖，還包括：">The real effort went beyond making maps. It meant:</p>
+      <ul>
+        <li data-i18n data-en="Building and refining the idea" data-zh="構思並打磨想法">Building and refining the idea</li>
+        <li data-i18n data-en="Sourcing data to support it" data-zh="找到支撐想法的資料">Sourcing data to support it</li>
+        <li data-i18n data-en="Choosing the tools and workflow to bring it together" data-zh="選擇工具和流程把一切串起來">Choosing the tools and workflow to bring it together</li>
+        <li data-i18n data-en="Publishing reproducible code to share the process" data-zh="公開可重現的程式碼，分享整個過程">Publishing reproducible code to share the process</li>
+      </ul>
+      <p data-i18n data-en="I was often indecisive and tried several tools before landing on the one that fit the topic best. And sometimes I stuck too closely to the brief. Next time, I want to think more creatively and look for different angles." data-zh="我常常猶豫不決，試了好幾種工具才找到最適合主題的那個。有時候也太拘泥於題目。下次我想更有創意，從不同的角度切入。">I was often indecisive and tried several tools before landing on the one that fit the topic best. And sometimes I stuck too closely to the brief. Next time, I want to think more creatively and look for different angles.</p>
+      <p data-i18n data-en="A big thank you to everyone who engaged with my maps and gave feedback! I was blown away by so many great maps in the challenge, such as Maayke Leenstra’s river REM map (I’m definitely inspired to make one) and Glenn Kong’s Taiwanese restaurant map. Special thanks to Milan Janosov, Milos Popovic and Kyle Walker for generously sharing their code and knowledge. Their work has been a constant source of inspiration and practical guidance." data-zh="衷心感謝所有看過我的地圖、給我回饋的人！挑戰中有好多精彩的地圖讓我驚豔，例如 Maayke Leenstra 的河流相對高程地圖（我一定也要做一張），還有 Glenn Kong 的台灣餐廳地圖。特別感謝 Milan Janosov、Milos Popovic 和 Kyle Walker 大方分享程式碼和知識，他們的作品一直是我的靈感來源和實用指引。">A big thank you to everyone who engaged with my maps and gave feedback! I was blown away by so many great maps in the challenge, such as Maayke Leenstra’s river REM map (I’m definitely inspired to make one) and Glenn Kong’s Taiwanese restaurant map. Special thanks to Milan Janosov, Milos Popovic and Kyle Walker for generously sharing their code and knowledge. Their work has been a constant source of inspiration and practical guidance.</p>
+      <p data-i18n data-en="Here’s to the many maps still waiting to be made. Cheers to the journey and the community!" data-zh="敬那些還在等著被畫出來的地圖。敬這段旅程，也敬這個社群！">Here’s to the many maps still waiting to be made. Cheers to the journey and the community!</p>
+      <div class="post-links">
+        <a href="https://www.linkedin.com/feed/update/urn:li:activity:7269910795516305408/" target="_blank" rel="noopener">💬 <span data-i18n data-en="LinkedIn post" data-zh="LinkedIn 貼文">LinkedIn post</span> →</a>
+      </div>
+
+      <p class="article-outro" data-i18n data-en="Every interactive map from 2024 is listed in my <a href='../map_list.html'>full portfolio</a>, and the code is on <a href='https://github.com/wilsonyungsh/30DayMapChallenge2024' target='_blank' rel='noopener'>GitHub</a>. My later challenges have their own articles: <a href='30daymapchallenge-2025.html'>2025</a> and <a href='30daymapchallenge-2026.html'>2026</a>." data-zh="2024 年的所有互動地圖都列在<a href='../map_list.html'>完整作品集</a>，程式碼放在 <a href='https://github.com/wilsonyungsh/30DayMapChallenge2024' target='_blank' rel='noopener'>GitHub</a>。之後的挑戰也各有一篇文章：<a href='30daymapchallenge-2025.html'>2025</a> 和 <a href='30daymapchallenge-2026.html'>2026</a>。">Every interactive map from 2024 is listed in my <a href='../map_list.html'>full portfolio</a>, and the code is on <a href='https://github.com/wilsonyungsh/30DayMapChallenge2024' target='_blank' rel='noopener'>GitHub</a>. My later challenges have their own articles: <a href='30daymapchallenge-2025.html'>2025</a> and <a href='30daymapchallenge-2026.html'>2026</a>.</p>
+    </section>
+  </div>
+
+  <footer id="contact">
+    <div class="inner">
+      <div>
+        <p class="name">Wilson Shih-Hsien Yung <span>雍士賢</span></p>
+        <p style="font-size:12px;color:var(--text-3);margin-top:3px;" data-i18n data-en="Open to spatial, transport, and data consulting engagements." data-zh="歡迎交流空間分析、運輸資料、都市成長預測與資料工程相關合作。讓資料不只是數字，也成為理解城市的一扇窗。">Open to spatial, transport, and data consulting engagements.</p>
+      </div>
+      <div class="links">
+        <a href="mailto:wilson0313@gmail.com">Email</a>
+        <a href="https://www.linkedin.com/in/wilson-yung" target="_blank" rel="noopener">LinkedIn</a>
+        <a href="../map_list.html" data-i18n data-en="Portfolio" data-zh="作品集">Portfolio</a>
+      </div>
+    </div>
+
+    <div class="inner" style="padding-top:0;">
+      <img class="visitor-badge" alt="Visitor count" loading="lazy"
+        src="https://api.visitorbadge.io/api/visitors?path=https%3A%2F%2Fwilsonyungsh.github.io%2Farticles%2F30daymapchallenge-2024.html&label=Visitors&labelColor=%23f7f6f2&countColor=%232B5F8E&style=flat-square">
+    </div>
+  </footer>
+
+  <script>
+    var currentLang = localStorage.getItem("wy_lang") || "en";
+    function applyLang(lang) {
+      currentLang = lang;
+      localStorage.setItem("wy_lang", lang);
+      document.documentElement.lang = lang === "zh" ? "zh-TW" : "en";
+      document.querySelectorAll("[data-i18n]").forEach(function(el) {
+        var text = el.getAttribute("data-" + lang);
+        if (text) { if (el.tagName === 'IMG') el.alt = text; else el.innerHTML = text; }
+      });
+      var btn = document.getElementById("langToggle");
+      btn.textContent = lang === "zh" ? "EN" : "繁中";
+      btn.setAttribute("aria-label", lang === "zh" ? "Switch to English" : "切換為繁體中文");
+    }
+    document.getElementById("langToggle").addEventListener("click", function() {
+      applyLang(currentLang === "en" ? "zh" : "en");
+    });
+    applyLang(currentLang);
+
+    function systemPrefersDark() {
+      return window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+    }
+    function isDarkActive() {
+      var forced = document.documentElement.getAttribute("data-theme");
+      return forced === "dark" || (!forced && systemPrefersDark());
+    }
+    function updateThemeBtn() {
+      var themeBtn = document.getElementById("themeToggle");
+      var dark = isDarkActive();
+      themeBtn.textContent = dark ? "☀️" : "🌙";
+      themeBtn.setAttribute("aria-label", dark ? "Switch to light mode" : "Switch to dark mode");
+    }
+    var savedTheme = localStorage.getItem("wy_theme");
+    if (savedTheme) document.documentElement.setAttribute("data-theme", savedTheme);
+    updateThemeBtn();
+    document.getElementById("themeToggle").addEventListener("click", function() {
+      var next = isDarkActive() ? "light" : "dark";
+      document.documentElement.setAttribute("data-theme", next);
+      localStorage.setItem("wy_theme", next);
+      updateThemeBtn();
+    });
+  </script>
+  <script>
+    (function() {
+      if (!location.hash) return;
+      var userMoved = false;
+      ["wheel", "touchstart", "keydown"].forEach(function(ev) {
+        window.addEventListener(ev, function() { userMoved = true; }, { once: true, passive: true });
+      });
+      function realign() {
+        if (userMoved) return;
+        var el = document.getElementById(decodeURIComponent(location.hash.slice(1)));
+        if (el) el.scrollIntoView({ behavior: "instant" });
+      }
+      if (document.fonts) document.fonts.ready.then(realign);
+      window.addEventListener("load", realign);
+    })();
+  </script>
+
+</body>
+</html>
