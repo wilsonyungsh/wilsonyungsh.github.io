@@ -661,6 +661,13 @@ post_link <- function(url, icon, en, zh) {
   paste0('<a href="', url, '" target="_blank" rel="noopener">', icon, ' <span ', i18n(en, zh), ">", en, "</span> →</a>")
 }
 
+# 圖片寫上實際寬高，讓瀏覽器在 lazy 載入前先預留空間；
+# 不然點目錄錨點時，上方圖片載入後會把內容往下推，第一次跳轉會跑掉
+img_size_attr <- function(src) {
+  info <- magick::image_info(magick::image_read(src))
+  paste0('width="', info$width, '" height="', info$height, '" ')
+}
+
 article_block <- function(b) {
   switch(b$type,
     h2   = paste0('\n      <h2 id="', b$id, '" ', i18n(b$en, b$zh), ">", b$en, "</h2>"),
@@ -674,7 +681,7 @@ article_block <- function(b) {
     ),
     img  = paste0(
       "\n      <figure>",
-      '\n        <img src="../', b$src, '" ', i18n(b$alt_en, b$alt_zh), ' alt="', b$alt_en, '" loading="lazy">',
+      '\n        <img src="../', b$src, '" ', img_size_attr(b$src), i18n(b$alt_en, b$alt_zh), ' alt="', b$alt_en, '" loading="lazy">',
       if (!is.null(b$cap_en)) paste0("\n        <figcaption ", i18n(b$cap_en, b$cap_zh), ">", b$cap_en, "</figcaption>") else "",
       "\n      </figure>"
     ),
@@ -761,6 +768,24 @@ for (a in articles) {
     "  </footer>",
     "",
     page_script,
+    # 帶錨點開頁面時，smooth scroll 動畫進行中字型才載完，版面一動動畫就停在半路。
+    # 等字型和頁面都載完後再直接對準一次（使用者已經自己捲動的話就不動）。
+    "  <script>",
+    "    (function() {",
+    "      if (!location.hash) return;",
+    "      var userMoved = false;",
+    '      ["wheel", "touchstart", "keydown"].forEach(function(ev) {',
+    "        window.addEventListener(ev, function() { userMoved = true; }, { once: true, passive: true });",
+    "      });",
+    "      function realign() {",
+    "        if (userMoved) return;",
+    "        var el = document.getElementById(decodeURIComponent(location.hash.slice(1)));",
+    '        if (el) el.scrollIntoView({ behavior: "instant" });',
+    "      }",
+    "      if (document.fonts) document.fonts.ready.then(realign);",
+    '      window.addEventListener("load", realign);',
+    "    })();",
+    "  </script>",
     "",
     "</body>",
     "</html>"
