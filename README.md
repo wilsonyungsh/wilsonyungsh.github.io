@@ -2,7 +2,7 @@
 
 Personal website，純靜態 GitHub Pages（沒有後端）。
 
-這份 README 是給自己看的維護筆記：之後要改內容、加作品時，照這裡的步驟做，不要直接手改 `index.html` / `map_list.html`，因為這兩個檔案是**產生出來的**，重跑 build 腳本就會被蓋掉。
+這份 README 是給自己看的維護筆記：之後要改內容、加作品時，照這裡的步驟做，不要直接手改 `index.html` / `expertise.html` / `career.html` / `map_list.html`，因為這些檔案是**產生出來的**，重跑 build 腳本就會被蓋掉。
 
 整個網站的架構總覽（兩條各自獨立的 build pipeline、目錄結構、設計系統）寫在 [ARCHITECTURE.md](ARCHITECTURE.md)。
 
@@ -10,11 +10,13 @@ Personal website，純靜態 GitHub Pages（沒有後端）。
 
 | 檔案 / 資料夾 | 說明 |
 |---|---|
-| `index.html` | 首頁。由 `script/build.R` 從 `script/content.R` 產生，**不要手改**。 |
-| `map_list.html` | 完整作品集頁面。同樣由 `script/build.R` 產生，**不要手改**。 |
+| `index.html` | 首頁（封面、介紹、足跡地圖、連到各頁的「探索更多」卡片）。由 `script/build.R` 從 `script/content.R` 產生，**不要手改**。 |
+| `expertise.html` | 專業領域頁。同樣由 `script/build.R` 產生，**不要手改**。 |
+| `career.html` | 工作歷程頁（職涯篇章、技術演進、工作地點地圖）。同樣由 `script/build.R` 產生，**不要手改**。 |
+| `map_list.html` | 作品集頁（最上面是精選集，下面是完整清單）。導覽列的「作品集」連到這裡。同樣由 `script/build.R` 產生，**不要手改**。 |
 | `script/content.R` | 所有文字內容（中英文）、作品清單資料，集中在這裡。**要改內容改這裡**。 |
-| `script/build.R` | 讀 `content.R`，組出 `index.html` 和 `map_list.html` 的 HTML。改版面/樣式才需要動這個檔案。 |
-| `script/career_map.R` | 產生 `career_map.html`（工作地點地圖），用 `mapgl` 畫的獨立 widget，`index.html` 用 `<iframe>` 嵌入。這個是獨立產生的檔案，跟 `build.R` 無關。 |
+| `script/build.R` | 讀 `content.R`，組出所有頁面的 HTML（各頁共用同一組導覽列、頁尾和 script：`site_nav()` / `site_footer()` / `site_script`）。改版面/樣式才需要動這個檔案。 |
+| `script/career_map.R` | 產生 `career_map.html`（工作地點地圖），用 `mapgl` 畫的獨立 widget，`career.html` 用 `<iframe>` 嵌入。這個是獨立產生的檔案，跟 `build.R` 無關。 |
 | `career_map.html` | `career_map.R` 的輸出，同樣是產生檔，不要手改，改完 `career_map.R` 要重新 render。 |
 | `img/` | 首頁 hero banner、大頭貼照片。用法見下面「更換首頁 Hero Banner」跟 [img/README.md](img/README.md)。 |
 | `interactive/` | 每張互動地圖／小工具各自的獨立 HTML（R + mapgl / mapdeck / deck.gl 輸出），是各作品實際的內容頁，被首頁和 `map_list.html` 用連結指過去。 |
@@ -39,7 +41,7 @@ list(tool="R + MapGL", title_en="New map title", title_zh="新地圖標題",
 - 全新分類：在 `sections` 直接加一整個 `list(label_en="...", label_zh="...", items=list(...))`
 - 如果分類要加說明文字（像「2025 Map Challenge」下面那行連結原始碼的 `note_en`/`note_zh`），裡面若有 `<a href="...">` 這種 HTML，記得用單引號寫屬性（`href='...'`），不要用雙引號，不然會跟外層的 `data-en="..."` 屬性衝突把字串截斷。
 
-### 2. 把作品加進首頁「精選集」(index.html #portfolio)
+### 2. 把作品加進「精選集」(map_list.html 最上面)
 
 編輯 `script/content.R`，在 `content$portfolio$cards` 加一筆：
 
@@ -52,7 +54,7 @@ list(
 )
 ```
 
-首頁精選集是策展過的一小部分（現在 7 筆），不用每個作品都放進去，重要/代表性的才放。
+精選集是策展過的一小部分，不用每個作品都放進去，重要/代表性的才放。
 
 ### 3. 改文字內容（Hero、專長、職涯篇章、Footer 等）
 
@@ -66,7 +68,7 @@ list(
 Rscript script/build.R
 ```
 
-會同時重新產生 `index.html` 和 `map_list.html`。跑完檢查一下 `git diff` 再 commit / push。
+會同時重新產生 `index.html`、`expertise.html`、`career.html`、`map_list.html` 和 `articles/` 裡的文章。跑完檢查一下 `git diff` 再 commit / push。
 
 ### 5. 更新工作地點地圖 (career_map.html)
 
@@ -99,7 +101,7 @@ Rscript script/career_map.R
 - 圖片放在 `img/articles/<slug>/`，`src` 從 repo 根目錄寫起（build 會自動加 `../`）。
 - 文字裡不要用雙引號 `"`，改用 `“ ”`；連結用單引號 `<a href='...'>`（理由同第 1 點）。
 - LinkedIn 貼文的原始備份在 `scratch/linkedin-posts-archive/`（已加進 `.gitignore`，不會上傳）。
-- 寫好後記得在 `content.R` 加入口連結（首頁精選集或作品集分類的 `note`）。
+- 寫好後記得在 `content.R` 加入口連結（精選集或作品集分類的 `note`）。
 
 ### 7. 更換首頁 Hero Banner / 大頭貼照片
 

@@ -18,7 +18,7 @@ about the other, and running one never touches the other's output:
 
 ```
 script/content.R ──┐
-                    ├─▶ script/build.R ──▶ index.html, map_list.html
+                    ├─▶ script/build.R ──▶ index.html, expertise.html, career.html, map_list.html, articles/*.html
       (data)        │        (templates)
                     ─┘
 
@@ -28,7 +28,7 @@ script/career_map.R ────────────────────
 
 ## The two build pipelines
 
-### 1. `content.R` + `build.R` → `index.html`, `map_list.html`
+### 1. `content.R` + `build.R` → `index.html`, `expertise.html`, `career.html`, `map_list.html`
 
 - **`content.R`** is pure data — every string of text on the homepage and
   the full-portfolio page, in English and Traditional Chinese side by
@@ -62,7 +62,7 @@ script/career_map.R ────────────────────
 ### 2. `career_map.R` → `career_map.html`
 
 A single R script that builds one self-contained interactive MapLibre GL
-map (via the `mapgl` package) and embeds it into `index.html` through an
+map (via the `mapgl` package) and embeds it into `career.html` through an
 `<iframe>`. Deliberately **not** wired into `build.R`'s pipeline — it's a
 different kind of artifact (a `mapgl`/`htmlwidgets` widget, not a hand-built
 HTML template) with its own much heavier dependency chain (`mapgl`, `sf`,
@@ -84,10 +84,12 @@ controls, and three sibling asset folders (`career_logos/`,
 | Path | Generated? | What |
 |---|---|---|
 | `index.html` | ✅ by `build.R` | Homepage. |
-| `map_list.html` | ✅ by `build.R` | Full portfolio / map list page. |
-| `career_map.html` | ✅ by `career_map.R` | Interactive career-location map, embedded into `index.html` via `<iframe>`. |
+| `expertise.html` | ✅ by `build.R` | Expertise page. |
+| `career.html` | ✅ by `build.R` | Career page (chapters, stack evolution, career map). |
+| `map_list.html` | ✅ by `build.R` | Portfolio page: selected work, then the full map list. |
+| `career_map.html` | ✅ by `career_map.R` | Interactive career-location map, embedded into `career.html` via `<iframe>`. |
 | `script/content.R` | — (source of truth) | All homepage/portfolio-page text, bilingual. |
-| `script/build.R` | — (source of truth) | Templates + CSS for `index.html`/`map_list.html`. |
+| `script/build.R` | — (source of truth) | Templates + CSS for every generated page. |
 | `script/career_map.R` | — (source of truth) | Everything for `career_map.html`: data, map layers, JS. |
 | `career_logos/` | Assets | Company/institution logos for the career map. Own `README.md`. |
 | `career_photos/` | Assets | Team/self photos for the career map's tour story-cards. Own `README.md`. |
@@ -104,11 +106,17 @@ controls, and three sibling asset folders (`career_logos/`,
 
 - **`index.html`**: full-bleed hero banner (photo, breaks out of the page's
   max-width) → hero content (circular avatar overlapping the banner edge,
-  title, description, chips) → footprint map embed → expertise domain
-  cards → career chapters + stack-evolution comparison + career map embed
-  → selected-work portfolio grid → footer/contact. All from `content.R`
+  title, description, chips) → footprint map embed → "Explore" cards
+  linking to the other pages → footer/contact. All from `content.R`
   (`hero$photo`/`hero$avatar` for the two images, `img/` on disk).
-- **`map_list.html`**: every interactive map/tool grouped into sections
+- **`expertise.html`**: expertise domain cards (`content$expertise`).
+- **`career.html`**: career chapters + stack-evolution comparison + career
+  map embed (`content$career`).
+- Every page shares one nav (`site_nav()`, current page highlighted), one
+  footer (`site_footer()`, `id="contact"`, which the nav's Contact link jumps
+  to) and one language/theme script (`site_script`), all in `build.R`.
+- **`map_list.html`**: selected-work grid (`content$portfolio$cards`) at the
+  top, then every interactive map/tool grouped into sections
   (`content$map_list$sections`), each item optionally bilingual, optionally
   multiple links. Also EN/ZH toggle, also from `content.R`.
 - **`career_map.html`**: not content-driven from `content.R` at all — its

@@ -85,6 +85,29 @@
     footer .links a:hover { color:var(--text-1); }
     .visitor-badge { display:block;margin-top:14px;opacity:0.7;height:20px; }
     @media(max-width:600px){ .hero{padding:40px 0 32px;} .map-grid{grid-template-columns:1fr;} }
+    nav .inner { flex-wrap:wrap;row-gap:8px; }
+    .nav-links { display:flex;align-items:center;gap:28px; }
+    nav a { font-size:14px;color:var(--text-3);text-decoration:none;transition:color 0.15s; }
+    nav a:hover, nav a.active { color:var(--text-1); }
+    nav a.active { font-weight:500; }
+    .page-head { padding:56px 0 8px;border:none; }
+    .page-head .eyebrow { font-family:var(--mono);font-size:12px;color:var(--text-3);letter-spacing:0.04em;margin-bottom:14px; }
+    .page-head h1 { font-size:clamp(28px,4.5vw,42px);font-weight:300;letter-spacing:-0.03em;line-height:1.2;color:var(--text-1); }
+    .explore-grid { display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px; }
+    .explore-card { background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md);padding:20px 22px;text-decoration:none;color:inherit;display:block;transition:border-color 0.15s,transform 0.15s; }
+    .explore-card:hover { border-color:var(--accent-border);transform:translateY(-2px); }
+    .explore-card .icon { font-size:20px;display:block;margin-bottom:10px; }
+    .explore-card h3 { font-size:17px;font-weight:500;letter-spacing:-0.01em;margin-bottom:6px; }
+    .explore-card p { font-size:14px;color:var(--text-3);line-height:1.6; }
+    .explore-card .go { font-size:13px;color:var(--accent);margin-top:12px;display:block; }
+    @media(max-width:640px){ nav .inner{gap:12px;} .nav-links{order:3;width:100%;gap:20px;overflow-x:auto;} .nav-logo span{display:none;} }
+    .portfolio-grid { display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px; }
+    .port-card { background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md);overflow:hidden;text-decoration:none;color:inherit;transition:border-color 0.15s,transform 0.15s;display:block; }
+    .port-card:hover { border-color:var(--border-md);transform:translateY(-2px); }
+    .port-thumb { height:72px;background:var(--bg);display:flex;align-items:center;justify-content:center;font-size:24px;border-bottom:1px solid var(--border); }
+    .port-info { padding:12px 14px; }
+    .port-info h3 { font-size:15px;font-weight:500;margin-bottom:3px; }
+    .port-info p { font-size:13px;color:var(--text-3); }
   </style>
 </head>
 <body>
@@ -92,7 +115,12 @@
   <nav>
     <div class="inner">
       <a class="nav-logo" href="index.html">Wilson Yung <span>雍士賢</span></a>
-      <a class="back" href="index.html" data-i18n data-en="← Home" data-zh="← 首頁">← Home</a>
+      <div class="nav-links">
+        <a href="expertise.html" data-i18n data-en="Expertise" data-zh="專業領域">Expertise</a>
+        <a href="career.html" data-i18n data-en="Career" data-zh="工作歷程">Career</a>
+        <a href="map_list.html" class="active" aria-current="page" data-i18n data-en="Portfolio" data-zh="作品集">Portfolio</a>
+        <a href="#contact" data-i18n data-en="Contact" data-zh="聯絡">Contact</a>
+      </div>
       <button class="theme-toggle" id="themeToggle" aria-label="切換深色模式">🌙</button>
       <button class="lang-toggle" id="langToggle" aria-label="切換為繁體中文">繁中</button>
     </div>
@@ -103,6 +131,79 @@
       <p class="hero-eyebrow" data-i18n data-en="Full portfolio" data-zh="完整作品集">Full portfolio</p>
       <h1 data-i18n data-en="Interactive maps, dashboards &amp; tools." data-zh="互動地圖、儀表板與工具。">Interactive maps, dashboards &amp; tools.</h1>
       <p class="hero-desc" data-i18n data-en="A complete list of interactive maps, Shiny dashboards, and small tools built with R and the open-source spatial stack — including entries from the 2024, 2025 and 2026 30 Day Map Challenges." data-zh="完整的互動地圖、Shiny 儀表板與小工具清單，皆以 R 與開源空間分析工具打造， 包含 2024、2025 與 2026 年 30 天地圖挑戰（30 Day Map Challenge）的作品。">A complete list of interactive maps, Shiny dashboards, and small tools built with R and the open-source spatial stack — including entries from the 2024, 2025 and 2026 30 Day Map Challenges.</p>
+    </section>
+  </div>
+  <div class="container">
+    <section id="selected">
+      <div class="section-head">
+        <p class="section-label" data-i18n data-en="Selected work" data-zh="精選集">Selected work</p>
+      </div>
+      <div class="portfolio-grid">
+
+        <a class="port-card" href="articles/30daymapchallenge-2026.html" target="_blank" rel="noopener">
+          <div class="port-thumb">✍️</div>
+          <div class="port-info">
+            <h3 data-i18n data-en="My #30DayMapChallenge 2026" data-zh="我的 2026 三十天地圖挑戰">My #30DayMapChallenge 2026</h3>
+            <p data-i18n data-en="Article · the maps and the stories behind them" data-zh="文章 · 每張地圖和背後的故事">Article · the maps and the stories behind them</p>
+          </div>
+        </a>
+        <a class="port-card" href="https://wilsonyungsh.github.io/career_map.html" target="_blank" rel="noopener">
+          <div class="port-thumb">🗺</div>
+          <div class="port-info">
+            <h3 data-i18n data-en="My Career Location Story Map" data-zh="我的職涯故事圖">My Career Location Story Map</h3>
+            <p>Google Timeline · R + Maglibre + Claude Code</p>
+          </div>
+        </a>
+        <a class="port-card" href="https://wilsonyungsh.github.io/interactive/30DayMapChallenge2025/Map4_Mydata_2013-2025.html" target="_blank" rel="noopener">
+          <div class="port-thumb">🗺</div>
+          <div class="port-info">
+            <h3 data-i18n data-en="My footprint 2013–2025" data-zh="我的足跡 2013–2025">My footprint 2013–2025</h3>
+            <p>Google Timeline · R + Mapdeck</p>
+          </div>
+        </a>
+        <a class="port-card" href="https://wilsonyungsh.github.io/interactive/30DayMapChallenge2024/Map29.html" target="_blank" rel="noopener">
+          <div class="port-thumb">🏙</div>
+          <div class="port-info">
+            <h3 data-i18n data-en="Greater Taipei building heights" data-zh="大台北建築高度圖">Greater Taipei building heights</h3>
+            <p>Overture Maps · R + Mapdeck</p>
+          </div>
+        </a>
+        <a class="port-card" href="https://wilsonyungsh.github.io/interactive/30DayMapChallenge2024/map18_seq_bus_service_density.html" target="_blank" rel="noopener">
+          <div class="port-thumb">🚌</div>
+          <div class="port-info">
+            <h3 data-i18n data-en="SEQ bus service density" data-zh="昆士蘭東南區公車服務密度">SEQ bus service density</h3>
+            <p>3D · R + deck.gl</p>
+          </div>
+        </a>
+        <a class="port-card" href="https://wilsonyungsh.github.io/interactive/30DayMapChallenge2024/Map4_Brisbane_Dwelling.html" target="_blank" rel="noopener">
+          <div class="port-thumb">🔷</div>
+          <div class="port-info">
+            <h3 data-i18n data-en="Brisbane dwelling hexagon map" data-zh="布里斯本住宅六角格地圖">Brisbane dwelling hexagon map</h3>
+            <p>R + MapGL</p>
+          </div>
+        </a>
+        <a class="port-card" href="https://wilsonyungsh.github.io/interactive/30DayMapChallenge2024/map12_brisbane_lu_map.html" target="_blank" rel="noopener">
+          <div class="port-thumb">🏘</div>
+          <div class="port-info">
+            <h3 data-i18n data-en="Greater Brisbane land use change" data-zh="大布里斯本土地使用變遷">Greater Brisbane land use change</h3>
+            <p data-i18n data-en="Time &amp; Space · R + MapGL" data-zh="時間與空間 · R + MapGL">Time &amp; Space · R + MapGL</p>
+          </div>
+        </a>
+        <a class="port-card" href="https://huggingface.co/spaces/wilsonyung/bne_pt_service_explorer" target="_blank" rel="noopener">
+          <div class="port-thumb">📊</div>
+          <div class="port-info">
+            <h3 data-i18n data-en="PT Service Explorer" data-zh="公共運輸服務探索器">PT Service Explorer</h3>
+            <p data-i18n data-en="R Shiny dashboard · Brisbane GTFS on Hugging Face" data-zh="R Shiny 儀表板 · 布里斯本 GTFS · Hugging Face">R Shiny dashboard · Brisbane GTFS on Hugging Face</p>
+          </div>
+        </a>
+        <a class="port-card" href="https://wilsonyungsh.github.io/interactive/bus431_capacity.html" target="_blank" rel="noopener">
+          <div class="port-thumb">📈</div>
+          <div class="port-info">
+            <h3 data-i18n data-en="Bus route accumulative patronage" data-zh="公車路線累積乘客分析">Bus route accumulative patronage</h3>
+            <p data-i18n data-en="Stop-level boarding analysis · R + MapGL" data-zh="站點累積上車乘人數分析 · R + MapGL">Stop-level boarding analysis · R + MapGL</p>
+          </div>
+        </a>
+      </div>
     </section>
   </div>
 
@@ -273,7 +374,7 @@
     <section>
       <div class="section-head">
         <p class="section-label" data-i18n data-en="Other projects" data-zh="其他專案">Other projects</p>
-        <p class="section-count" data-i18n data-en="10 maps" data-zh="10 個作品">10 maps</p>
+        <p class="section-count" data-i18n data-en="7 maps" data-zh="7 個作品">7 maps</p>
       </div>
       <div class="map-grid">
         <div class="map-card">
@@ -317,35 +418,15 @@
         </div>
         <div class="map-card">
           <div class="map-card-top"><span class="map-tool">R + MapGL</span></div>
-          <p class="map-title" data-i18n data-en="Maps with Felicity" data-zh="與 Felicity 合作的地圖">Maps with Felicity</p>
-          <div class="map-links">
-            <a href="interactive/explore.html" target="_blank" rel="noopener"><span data-i18n data-en="View map" data-zh="查看地圖">View map</span> <span class="arrow">→</span></a>
-          </div>
-        </div>
-        <div class="map-card">
-          <div class="map-card-top"><span class="map-tool">R + MapGL</span></div>
-          <p class="map-title" data-i18n data-en="Fly-through Example" data-zh="飛行穿越範例">Fly-through Example</p>
-          <div class="map-links">
-            <a href="interactive/apcs.html" target="_blank" rel="noopener"><span data-i18n data-en="View map" data-zh="查看地圖">View map</span> <span class="arrow">→</span></a>
-          </div>
-        </div>
-        <div class="map-card">
-          <div class="map-card-top"><span class="map-tool">R + MapGL</span></div>
           <p class="map-title" data-i18n data-en="Dual Frontage Map" data-zh="雙面臨路地圖">Dual Frontage Map</p>
           <div class="map-links">
             <a href="interactive/dual_frontage.html" target="_blank" rel="noopener"><span data-i18n data-en="View map" data-zh="查看地圖">View map</span> <span class="arrow">→</span></a>
           </div>
         </div>
         <div class="map-card">
-          <div class="map-card-top"><span class="map-tool">R + gganimate</span></div>
-          <p class="map-title" data-i18n data-en="Time Lapse Rent Animation — House &amp; Flat, Brisbane" data-zh="租金縮時動畫 — 布里斯本獨棟與公寓">Time Lapse Rent Animation — House &amp; Flat, Brisbane</p>
-          <div class="map-links">
-            <a href="interactive/plots/House_Flat_brisbane_rent_animation.gif" target="_blank" rel="noopener"><span data-i18n data-en="View animation" data-zh="查看動畫">View animation</span> <span class="arrow">→</span></a>
-          </div>
-        </div>
-        <div class="map-card">
-          <div class="map-card-top"><span class="map-tool">R + Quarto</span></div>
+          <div class="map-card-top"><span class="map-tool">R + Quarto + gganimate</span></div>
           <p class="map-title" data-i18n data-en="Brisbane Rental Trend Exploration" data-zh="布里斯本租房市場分析探索">Brisbane Rental Trend Exploration</p>
+          <p data-i18n data-en="Includes time-lapse rent animations for houses and flats across Brisbane." data-zh="內含布里斯本獨棟與公寓的租金縮時動畫。" style="font-size:13px;color:var(--text-2);line-height:1.6;">Includes time-lapse rent animations for houses and flats across Brisbane.</p>
           <div class="map-links">
             <a href="interactive/brisbane_rental_trend.html" target="_blank" rel="noopener"><span data-i18n data-en="View Analysis" data-zh="查看分析">View Analysis</span> <span class="arrow">→</span></a>
           </div>
@@ -376,16 +457,8 @@
     <section>
       <div class="section-head">
         <p class="section-label" data-i18n data-en="Pilot tools" data-zh="小工具試作">Pilot tools</p>
-        <p class="section-count" data-i18n data-en="2 maps" data-zh="2 個作品">2 maps</p>
       </div>
       <div class="map-grid">
-        <div class="map-card">
-          <p class="map-title" data-i18n data-en="BCC RMU Hotdesk Booking Query" data-zh="BCC RMU 彈性座位預約查詢">BCC RMU Hotdesk Booking Query</p>
-          <p data-i18n data-en="Easier view, with last update, for our team." data-zh="提供團隊更簡便的檢視方式，並顯示最後更新時間。" style="font-size:13px;color:var(--text-2);line-height:1.6;">Easier view, with last update, for our team.</p>
-          <div class="map-links">
-            <a href="https://wilsonyungsh.github.io/interactive/team_calendar.html" target="_blank" rel="noopener"><span data-i18n data-en="Open tool" data-zh="開啟工具">Open tool</span> <span class="arrow">→</span></a>
-          </div>
-        </div>
         <div class="map-card">
           <p class="map-title" data-i18n data-en="BCC Lvl 8 Hotdesk Booking Query" data-zh="BCC 8樓彈性座位預約查詢">BCC Lvl 8 Hotdesk Booking Query</p>
           <p data-i18n data-en="Easier view, with last update." data-zh="提供更簡便的檢視方式，並顯示最後更新時間。" style="font-size:13px;color:var(--text-2);line-height:1.6;">Easier view, with last update.</p>
@@ -397,7 +470,7 @@
     </section>
   </div>
 
-  <footer>
+  <footer id="contact">
     <div class="inner">
       <div>
         <p class="name">Wilson Shih-Hsien Yung <span>雍士賢</span></p>
@@ -406,7 +479,7 @@
       <div class="links">
         <a href="mailto:wilson0313@gmail.com">Email</a>
         <a href="https://www.linkedin.com/in/wilson-yung" target="_blank" rel="noopener">LinkedIn</a>
-        <a href="index.html" data-i18n data-en="Home" data-zh="首頁">Home</a>
+        <a href="map_list.html" data-i18n data-en="Portfolio" data-zh="作品集">Portfolio</a>
       </div>
     </div>
 

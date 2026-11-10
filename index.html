@@ -68,7 +68,7 @@
        text sits on the photo any more (v2: it collided with the profile
        avatar) — title/chips/desc all live below, in normal flow, so the
        avatar (straddling the banner/page boundary) never overlaps them. */
-    .hero-banner { position:relative;width:100%;height:420px;overflow:hidden; }
+    .hero-banner { position:relative;width:100%;height:420px;overflow:hidden;padding:0;border:none; }
     .hero-banner-img { width:100%;height:100%;object-fit:cover;object-position:center 60%;display:block; }
     .hero-banner-overlay { position:absolute;inset:0;background:linear-gradient(180deg, rgba(20,20,26,0) 55%, rgba(12,16,22,0.32) 100%); }
     .hero-avatar { width:104px;height:104px;border-radius:50%;object-fit:cover;border:4px solid var(--bg);box-shadow:0 6px 18px rgba(0,0,0,0.2);display:block;position:relative;z-index:2;margin:-60px 0 20px; }
@@ -123,17 +123,35 @@
     .visitor-badge { display:block;margin-top:14px;opacity:0.7;height:20px; }
     .divider { border:none;border-top:1px solid var(--border);margin:32px 0; }
     @media(max-width:600px){.hero{padding:48px 0 36px;}.stack-compare{grid-template-columns:1fr;}.stack-arrow-col{display:none;}}
+    nav .inner { flex-wrap:wrap;row-gap:8px; }
+    .nav-links { display:flex;align-items:center;gap:28px; }
+    nav a { font-size:14px;color:var(--text-3);text-decoration:none;transition:color 0.15s; }
+    nav a:hover, nav a.active { color:var(--text-1); }
+    nav a.active { font-weight:500; }
+    .page-head { padding:56px 0 8px;border:none; }
+    .page-head .eyebrow { font-family:var(--mono);font-size:12px;color:var(--text-3);letter-spacing:0.04em;margin-bottom:14px; }
+    .page-head h1 { font-size:clamp(28px,4.5vw,42px);font-weight:300;letter-spacing:-0.03em;line-height:1.2;color:var(--text-1); }
+    .explore-grid { display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px; }
+    .explore-card { background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md);padding:20px 22px;text-decoration:none;color:inherit;display:block;transition:border-color 0.15s,transform 0.15s; }
+    .explore-card:hover { border-color:var(--accent-border);transform:translateY(-2px); }
+    .explore-card .icon { font-size:20px;display:block;margin-bottom:10px; }
+    .explore-card h3 { font-size:17px;font-weight:500;letter-spacing:-0.01em;margin-bottom:6px; }
+    .explore-card p { font-size:14px;color:var(--text-3);line-height:1.6; }
+    .explore-card .go { font-size:13px;color:var(--accent);margin-top:12px;display:block; }
+    @media(max-width:640px){ nav .inner{gap:12px;} .nav-links{order:3;width:100%;gap:20px;overflow-x:auto;} .nav-logo span{display:none;} }
   </style>
 </head>
 <body>
 
   <nav>
     <div class="inner">
-      <a class="nav-logo" href="#top">Wilson Yung <span>雍士賢</span></a>
-      <a href="#expertise" data-i18n data-en="Expertise" data-zh="專業領域">Expertise</a>
-      <a href="#career"    data-i18n data-en="Career" data-zh="工作歷程">Career</a>
-      <a href="#portfolio" data-i18n data-en="Portfolio" data-zh="作品集">Portfolio</a>
-      <a href="#contact"   data-i18n data-en="Contact" data-zh="聯絡">Contact</a>
+      <a class="nav-logo" href="index.html">Wilson Yung <span>雍士賢</span></a>
+      <div class="nav-links">
+        <a href="expertise.html" data-i18n data-en="Expertise" data-zh="專業領域">Expertise</a>
+        <a href="career.html" data-i18n data-en="Career" data-zh="工作歷程">Career</a>
+        <a href="map_list.html" data-i18n data-en="Portfolio" data-zh="作品集">Portfolio</a>
+        <a href="#contact" data-i18n data-en="Contact" data-zh="聯絡">Contact</a>
+      </div>
       <button class="theme-toggle" id="themeToggle" aria-label="切換深色模式">🌙</button>
       <button class="lang-toggle" id="langToggle" aria-label="切換為繁體中文">繁中</button>
     </div>
@@ -176,171 +194,27 @@
   </div>
 
   <div class="container">
-    <section id="expertise">
-      <p class="section-label" data-i18n data-en="What I do" data-zh="領域專長">What I do</p>
-      <div class="domain-grid">
+    <section id="explore">
+      <p class="section-label" data-i18n data-en="Explore" data-zh="探索更多">Explore</p>
+      <div class="explore-grid">
 
-        <div class="domain-card">
-          <span class="domain-icon">🗺</span>
-          <h3 data-i18n data-en="Spatial analytics" data-zh="空間分析">Spatial analytics</h3>
-          <p data-i18n data-en="GIS workflows, raster analysis, land suitability modelling, PostGIS, R/Python spatial pipelines." data-zh="運用 GIS、遙測與空間模型，從土地、環境到城市活動，發掘隱藏於地理位置背後的關聯與看不見的手。">GIS workflows, raster analysis, land suitability modelling, PostGIS, R/Python spatial pipelines.</p>
-        </div>
-        <div class="domain-card">
-          <span class="domain-icon">🚌</span>
-          <h3 data-i18n data-en="Transport data" data-zh="大眾運輸資料">Transport data</h3>
-          <p data-i18n data-en="GTFS processing, trip planning data, public transport analytics, mobility insights at scale." data-zh="從 GTFS 到大樣本電信信令資料，描繪城市中的流動樣貌，理解人們如何翩翩穿梭於日常生活與都市空間。">GTFS processing, trip planning data, public transport analytics, mobility insights at scale.</p>
-        </div>
-        <div class="domain-card">
-          <span class="domain-icon">🏙</span>
-          <h3 data-i18n data-en="Urban modelling" data-zh="城市建模">Urban modelling</h3>
-          <p data-i18n data-en="Urban growth modelling (BrisUrban), 3D city visualisation, land use and activity datasets." data-zh="都市成長預測（BrisUrban)、土地使用分析與3D城市視覺化，探索城市未來可能的樣貌。">Urban growth modelling (BrisUrban), 3D city visualisation, land use and activity datasets.</p>
-        </div>
-        <div class="domain-card">
-          <span class="domain-icon">⚙️</span>
-          <h3 data-i18n data-en="Data engineering" data-zh="資料工程">Data engineering</h3>
-          <p data-i18n data-en="Cloud pipelines, Apache Spark/Sedona, R/Python packages, large-scale geospatial data processing." data-zh="打造穩定且可重現的資料流程，讓龐大的空間資料得以被有效整合、分析與應用。。">Cloud pipelines, Apache Spark/Sedona, R/Python packages, large-scale geospatial data processing.</p>
-        </div>
-      </div>
-    </section>
-  </div>
-
-  <div class="container">
-    <section id="career">
-      <p class="section-label" data-i18n data-en="Career chapters" data-zh="職涯篇章">Career chapters</p>
-      <div class="chapter-grid">
-
-        <div class="chapter-card featured">
-          <span class="chapter-badge current" data-i18n data-en="Current · 2025–present" data-zh="現職 · 2025–至今">Current · 2025–present</span>
-          <h3 data-i18n data-en="Team Lead, Research and Modelling Unit" data-zh="研究與建模部門主管">Team Lead, Research and Modelling Unit</h3>
-          <p class="org" data-i18n data-en="Brisbane City Council · City Plan and Design" data-zh="布里斯本市政府 · 都市規劃與設計處">Brisbane City Council · City Plan and Design</p>
-          <div class="tag-row">
-            <span class="tag" data-i18n data-en="BrisUrban" data-zh="BrisUrban">BrisUrban</span>
-            <span class="tag" data-i18n data-en="Virtual Brisbane" data-zh="Virtual Brisbane">Virtual Brisbane</span>
-            <span class="tag" data-i18n data-en="Land Use Activity Datasets" data-zh="土地使用活動資料集">Land Use Activity Datasets</span>
-            <span class="tag" data-i18n data-en="Development Activity Datasets" data-zh="開發活動資料集">Development Activity Datasets</span>
-            <span class="tag" data-i18n data-en="Team of 10" data-zh="10人團隊">Team of 10</span>
-          </div>
-        </div>
-        <div class="chapter-card pivot-card">
-          <span class="chapter-badge pivot" data-i18n data-en="Pivot chapter · 2019–2024" data-zh="轉型關鍵 · 2019–2024">Pivot chapter · 2019–2024</span>
-          <h3 data-i18n data-en="Principal Data Science Consultant" data-zh="首席資料科學顧問">Principal Data Science Consultant</h3>
-          <p class="org" data-i18n data-en="DSpark (Optus) · Macquarie Park, Sydney" data-zh="DSpark（Optus）· 雪梨 Macquarie Park">DSpark (Optus) · Macquarie Park, Sydney</p>
-          <div class="tag-row">
-            <span class="tag" data-i18n data-en="Telco Mobility Data (MNO Data)" data-zh="電信移動數據（MNO）">Telco Mobility Data (MNO Data)</span>
-            <span class="tag" data-i18n data-en="GTFS" data-zh="GTFS">GTFS</span>
-            <span class="tag" data-i18n data-en="Apache Sedona" data-zh="Apache Sedona">Apache Sedona</span>
-            <span class="tag" data-i18n data-en="Client management" data-zh="客戶管理">Client management</span>
-            <span class="tag" data-i18n data-en="State agencies" data-zh="州政府">State agencies</span>
-          </div>
-        </div>
-      </div>
-      <hr class="divider">
-      <p class="section-label" style="margin-bottom:20px;" data-i18n data-en="Stack evolution — the open-source pivot" data-zh="技術演進：從單機 GIS 到開源資料科學">Stack evolution — the open-source pivot</p>
-      <div class="stack-compare">
-        <div>
-          <p class="stack-col-label" data-i18n data-en="Before (2013–2018)" data-zh="轉型前 (2013–2018)">Before (2013–2018)</p>
-          <div class="stack-col">
-            <div class="stack-item old" data-i18n data-en="ESRI ArcGIS / MapInfo / QGIS DB Manager" data-zh="ESRI ArcGIS / MapInfo / QGIS DB Manager">ESRI ArcGIS / MapInfo / QGIS DB Manager</div>
-            <div class="stack-item old" data-i18n data-en="Windows" data-zh="Windows 系統">Windows</div>
-            <div class="stack-item old" data-i18n data-en="Proprietary data formats" data-zh="封閉資料格式">Proprietary data formats</div>
-            <div class="stack-item old" data-i18n data-en="Desktop GIS workflows" data-zh="桌面 GIS 工作流程">Desktop GIS workflows</div>
-            <div class="stack-item old" data-i18n data-en="Point-and-click analysis" data-zh="點擊式操作分析">Point-and-click analysis</div>
-          </div>
-        </div>
-        <div class="stack-arrow-col">→</div>
-        <div>
-          <p class="stack-col-label" data-i18n data-en="After (2019–present)" data-zh="轉型後 (2019–至今)">After (2019–present)</p>
-          <div class="stack-col">
-            <div class="stack-item new" data-i18n data-en="R · Python · SQL" data-zh="R · Python · SQL">R · Python · SQL</div>
-            <div class="stack-item new" data-i18n data-en="macOS · Cloud (AWS / Azure)" data-zh="macOS · 雲端（AWS / Azure）">macOS · Cloud (AWS / Azure)</div>
-            <div class="stack-item new" data-i18n data-en="PostGIS · QGIS · OpenStreetMap" data-zh="PostGIS · QGIS · OpenStreetMap">PostGIS · QGIS · OpenStreetMap</div>
-            <div class="stack-item new" data-i18n data-en="Apache Spark · Scala · Sedona" data-zh="Apache Spark · Scala · Sedona">Apache Spark · Scala · Sedona</div>
-            <div class="stack-item new" data-i18n data-en="Reproducible pipelines · Open data" data-zh="可重現資料流程 · 開源資料">Reproducible pipelines · Open data</div>
-          </div>
-        </div>
-      </div>
-      <hr class="divider">
-      <p class="section-label" style="margin-bottom:12px;" data-i18n data-en="Career locations" data-zh="工作地點">Career locations</p>
-      <div class="career-map-embed">
-        <iframe src="career_map.html" title="Wilson Yung career locations" loading="lazy" allow="fullscreen"></iframe>
-      </div>
-    </section>
-  </div>
-
-  <div class="container">
-    <section id="portfolio">
-      <p class="section-label" data-i18n data-en="Selected work" data-zh="精選集">Selected work</p>
-      <div class="portfolio-grid">
-
-        <a class="port-card" href="articles/30daymapchallenge-2026.html" target="_blank" rel="noopener">
-          <div class="port-thumb">✍️</div>
-          <div class="port-info">
-            <h3 data-i18n data-en="My #30DayMapChallenge 2026" data-zh="我的 2026 三十天地圖挑戰">My #30DayMapChallenge 2026</h3>
-            <p data-i18n data-en="Article · the maps and the stories behind them" data-zh="文章 · 每張地圖和背後的故事">Article · the maps and the stories behind them</p>
-          </div>
+        <a class="explore-card" href="expertise.html">
+          <span class="icon">🧭</span>
+          <h3 data-i18n data-en="Expertise" data-zh="專業領域">Expertise</h3>
+          <p data-i18n data-en="The domains I work across, from spatial analytics to transport data." data-zh="我的專業領域，從空間分析到運輸資料。">The domains I work across, from spatial analytics to transport data.</p>
+          <span class="go">→</span>
         </a>
-        <a class="port-card" href="https://wilsonyungsh.github.io/career_map.html" target="_blank" rel="noopener">
-          <div class="port-thumb">🗺</div>
-          <div class="port-info">
-            <h3 data-i18n data-en="My Career Location Story Map" data-zh="我的職涯故事圖">My Career Location Story Map</h3>
-            <p>Google Timeline · R + Maglibre + Claude Code</p>
-          </div>
+        <a class="explore-card" href="career.html">
+          <span class="icon">🛤</span>
+          <h3 data-i18n data-en="Career" data-zh="工作歷程">Career</h3>
+          <p data-i18n data-en="Career chapters, my stack evolution and a map of where I’ve worked." data-zh="職涯篇章、技術演進，以及我工作過的地方。">Career chapters, my stack evolution and a map of where I’ve worked.</p>
+          <span class="go">→</span>
         </a>
-        <a class="port-card" href="https://wilsonyungsh.github.io/interactive/30DayMapChallenge2025/Map4_Mydata_2013-2025.html" target="_blank" rel="noopener">
-          <div class="port-thumb">🗺</div>
-          <div class="port-info">
-            <h3 data-i18n data-en="My footprint 2013–2025" data-zh="我的足跡 2013–2025">My footprint 2013–2025</h3>
-            <p>Google Timeline · R + Mapdeck</p>
-          </div>
-        </a>
-        <a class="port-card" href="https://wilsonyungsh.github.io/interactive/30DayMapChallenge2024/Map29.html" target="_blank" rel="noopener">
-          <div class="port-thumb">🏙</div>
-          <div class="port-info">
-            <h3 data-i18n data-en="Greater Taipei building heights" data-zh="大台北建築高度圖">Greater Taipei building heights</h3>
-            <p>Overture Maps · R + Mapdeck</p>
-          </div>
-        </a>
-        <a class="port-card" href="https://wilsonyungsh.github.io/interactive/30DayMapChallenge2024/map18_seq_bus_service_density.html" target="_blank" rel="noopener">
-          <div class="port-thumb">🚌</div>
-          <div class="port-info">
-            <h3 data-i18n data-en="SEQ bus service density" data-zh="昆士蘭東南區公車服務密度">SEQ bus service density</h3>
-            <p>3D · R + deck.gl</p>
-          </div>
-        </a>
-        <a class="port-card" href="https://wilsonyungsh.github.io/interactive/30DayMapChallenge2024/Map4_Brisbane_Dwelling.html" target="_blank" rel="noopener">
-          <div class="port-thumb">🔷</div>
-          <div class="port-info">
-            <h3 data-i18n data-en="Brisbane dwelling hexagon map" data-zh="布里斯本住宅六角格地圖">Brisbane dwelling hexagon map</h3>
-            <p>R + MapGL</p>
-          </div>
-        </a>
-        <a class="port-card" href="https://wilsonyungsh.github.io/interactive/30DayMapChallenge2024/map12_brisbane_lu_map.html" target="_blank" rel="noopener">
-          <div class="port-thumb">🏘</div>
-          <div class="port-info">
-            <h3 data-i18n data-en="Greater Brisbane land use change" data-zh="大布里斯本土地使用變遷">Greater Brisbane land use change</h3>
-            <p data-i18n data-en="Time &amp; Space · R + MapGL" data-zh="時間與空間 · R + MapGL">Time &amp; Space · R + MapGL</p>
-          </div>
-        </a>
-        <a class="port-card" href="https://huggingface.co/spaces/wilsonyung/bne_pt_service_explorer" target="_blank" rel="noopener">
-          <div class="port-thumb">📊</div>
-          <div class="port-info">
-            <h3 data-i18n data-en="PT Service Explorer" data-zh="公共運輸服務探索器">PT Service Explorer</h3>
-            <p data-i18n data-en="R Shiny dashboard · Brisbane GTFS on Hugging Face" data-zh="R Shiny 儀表板 · 布里斯本 GTFS · Hugging Face">R Shiny dashboard · Brisbane GTFS on Hugging Face</p>
-          </div>
-        </a>
-        <a class="port-card" href="https://wilsonyungsh.github.io/interactive/bus431_capacity.html" target="_blank" rel="noopener">
-          <div class="port-thumb">📈</div>
-          <div class="port-info">
-            <h3 data-i18n data-en="Bus route accumulative patronage" data-zh="公車路線累積乘客分析">Bus route accumulative patronage</h3>
-            <p data-i18n data-en="Stop-level boarding analysis · R + MapGL" data-zh="站點累積上車乘人數分析 · R + MapGL">Stop-level boarding analysis · R + MapGL</p>
-          </div>
-        </a>
-        <a class="port-card see-all" href="https://wilsonyungsh.github.io/map_list.html" target="_blank" rel="noopener">
-          <div class="port-thumb" data-i18n data-en="View all maps →" data-zh="瀏覽所有地圖作品 →">View all maps →</div>
-          <div class="port-info">
-            <h3 data-i18n data-en="Full portfolio" data-zh="完整作品集錦">Full portfolio</h3>
-            <p>wilsonyungsh.github.io</p>
-          </div>
+        <a class="explore-card" href="map_list.html">
+          <span class="icon">🗺</span>
+          <h3 data-i18n data-en="Portfolio" data-zh="作品集">Portfolio</h3>
+          <p data-i18n data-en="Selected work, plus every interactive map, dashboard and tool." data-zh="精選作品，以及所有互動地圖、儀表板與工具。">Selected work, plus every interactive map, dashboard and tool.</p>
+          <span class="go">→</span>
         </a>
       </div>
     </section>
@@ -355,7 +229,7 @@
       <div class="links">
         <a href="mailto:wilson0313@gmail.com">Email</a>
         <a href="https://www.linkedin.com/in/wilson-yung" target="_blank" rel="noopener">LinkedIn</a>
-        <a href="https://wilsonyungsh.github.io/map_list.html" target="_blank" rel="noopener" data-i18n data-en="Portfolio" data-zh="作品集">Portfolio</a>
+        <a href="map_list.html" data-i18n data-en="Portfolio" data-zh="作品集">Portfolio</a>
       </div>
     </div>
 

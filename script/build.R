@@ -199,7 +199,7 @@ css <- '    *, *::before, *::after { box-sizing: border-box; margin: 0; padding:
        text sits on the photo any more (v2: it collided with the profile
        avatar) — title/chips/desc all live below, in normal flow, so the
        avatar (straddling the banner/page boundary) never overlaps them. */
-    .hero-banner { position:relative;width:100%;height:420px;overflow:hidden; }
+    .hero-banner { position:relative;width:100%;height:420px;overflow:hidden;padding:0;border:none; }
     .hero-banner-img { width:100%;height:100%;object-fit:cover;object-position:center 60%;display:block; }
     .hero-banner-overlay { position:absolute;inset:0;background:linear-gradient(180deg, rgba(20,20,26,0) 55%, rgba(12,16,22,0.32) 100%); }
     .hero-avatar { width:104px;height:104px;border-radius:50%;object-fit:cover;border:4px solid var(--bg);box-shadow:0 6px 18px rgba(0,0,0,0.2);display:block;position:relative;z-index:2;margin:-60px 0 20px; }
@@ -255,146 +255,137 @@ css <- '    *, *::before, *::after { box-sizing: border-box; margin: 0; padding:
     .divider { border:none;border-top:1px solid var(--border);margin:32px 0; }
     @media(max-width:600px){.hero{padding:48px 0 36px;}.stack-compare{grid-template-columns:1fr;}.stack-arrow-col{display:none;}}'
 
-# ── 組裝 HTML（用 paste0 拼接，避免 sprintf 限制）────────────────────────────
-lines <- c(
-  "<!DOCTYPE html>",
-  '<html lang="en">',
-  "<head>",
-  '  <meta charset="utf-8">',
-  '  <meta name="viewport" content="width=device-width, initial-scale=1">',
-  '  <meta name="color-scheme" content="light dark">',
-  # Applied synchronously, before CSS/paint, so a saved dark-mode choice
-  # doesn't flash light first on reload.
-  "  <script>(function(){try{var t=localStorage.getItem(\"wy_theme\");if(t)document.documentElement.setAttribute(\"data-theme\",t);}catch(e){}})();</script>",
-  paste0("  <title>", c_$meta$title_en, "</title>"),
-  paste0('  <meta name="description" content="', c_$meta$description_en, '">'),
-  '  <link rel="preconnect" href="https://fonts.googleapis.com">',
-  '  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>',
-  '  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&family=DM+Mono:wght@400;500&family=LXGW+WenKai+TC:wght@300;400;700&display=swap" rel="stylesheet">',
-  "  <style>",
-  css,
-  "  </style>",
-  "</head>",
-  "<body>",
-  "",
-  "  <nav>",
-  '    <div class="inner">',
-  '      <a class="nav-logo" href="#top">Wilson Yung <span>\u96cd\u58eb\u8ce2</span></a>',
-  paste0('      <a href="#expertise" ', i18n(nav$expertise_en, nav$expertise_zh), ">", nav$expertise_en, "</a>"),
-  paste0('      <a href="#career"    ', i18n(nav$career_en,    nav$career_zh),    ">", nav$career_en,    "</a>"),
-  paste0('      <a href="#portfolio" ', i18n(nav$portfolio_en, nav$portfolio_zh), ">", nav$portfolio_en, "</a>"),
-  paste0('      <a href="#contact"   ', i18n(nav$contact_en,   nav$contact_zh),   ">", nav$contact_en,   "</a>"),
-  '      <button class="theme-toggle" id="themeToggle" aria-label="\u5207\u63db\u6df1\u8272\u6a21\u5f0f">\ud83c\udf19</button>',
-  '      <button class="lang-toggle" id="langToggle" aria-label="\u5207\u63db\u70ba\u7e41\u9ad4\u4e2d\u6587">\u7e41\u4e2d</button>',
-  "    </div>",
-  "  </nav>",
-  "",
-  '  <section class="hero-banner" id="top">',
-  paste0('    <img class="hero-banner-img" src="', hero$photo, '" ',
-         i18n(hero$photo_alt_en, hero$photo_alt_zh), " ",
-         'alt="', hero$photo_alt_en, '" loading="eager">'),
-  '    <div class="hero-banner-overlay"></div>',
-  "  </section>",
-  "",
-  '  <div class="container">',
-  '    <section class="hero" style="border:none;padding-bottom:48px;">',
-  paste0('      <img class="hero-avatar" src="', hero$avatar, '" ',
-         i18n(hero$avatar_alt_en, hero$avatar_alt_zh), " ",
-         'alt="', hero$avatar_alt_en, '" loading="eager">'),
-  paste0('      <p class="hero-eyebrow" ', i18n(hero$eyebrow_en, hero$eyebrow_zh), ">", hero$eyebrow_en, "</p>"),
-  "      <h1>",
-  paste0("        <span ", i18n(hero$h1_line1_en, hero$h1_line1_zh), ">", hero$h1_line1_en, "</span><br>"),
-  paste0("        <em ", i18n(hero$h1_em_en, hero$h1_em_zh), ">", hero$h1_em_en, "</em>"),
-  "      </h1>",
-  paste0('      <p class="hero-desc" ', i18n(hero$desc_en, hero$desc_zh), ">", hero$desc_en, "</p>"),
-  '      <div class="chip-row">',
-  paste0("        ", chips_accent_html),
-  paste0("        ", chips_domain_html),
-  "      </div>",
-  "    </section>",
-  "  </div>",
-  "",
-  '  <div class="container">',
-  '    <section id="footprint" style="padding-top:0;border:none;">',
-  paste0('      <p class="section-label" ', i18n(fp$label_en, fp$label_zh), ">", fp$label_en, "</p>"),
-  '      <div class="map-embed">',
-  paste0('        <iframe src="', fp$iframe_src, '" title="Wilson Yung personal movement footprint" loading="lazy" allow="fullscreen"></iframe>'),
-  "      </div>",
-  paste0('      <p class="map-caption" ', i18n(fp$caption_en, fp$caption_zh), ">", fp$caption_en, "</p>"),
-  "    </section>",
-  "  </div>",
-  "",
-  '  <div class="container">',
-  '    <section id="expertise">',
-  paste0('      <p class="section-label" ', i18n(exp$label_en, exp$label_zh), ">", exp$label_en, "</p>"),
-  '      <div class="domain-grid">',
-  domain_cards_html,
-  "      </div>",
-  "    </section>",
-  "  </div>",
-  "",
-  '  <div class="container">',
-  '    <section id="career">',
-  paste0('      <p class="section-label" ', i18n(car$label_en, car$label_zh), ">", car$label_en, "</p>"),
-  '      <div class="chapter-grid">',
-  chapter_cards_html,
-  "      </div>",
-  '      <hr class="divider">',
-  paste0('      <p class="section-label" style="margin-bottom:20px;" ', i18n(car$stack_label_en, car$stack_label_zh), ">", car$stack_label_en, "</p>"),
-  '      <div class="stack-compare">',
-  "        <div>",
-  paste0('          <p class="stack-col-label" ', i18n(car$before_label_en, car$before_label_zh), ">", car$before_label_en, "</p>"),
-  '          <div class="stack-col">',
-  paste0("            ", stack_items(car$stack_before, car$stack_before_zh, "old")),
-  "          </div>",
-  "        </div>",
-  '        <div class="stack-arrow-col">\u2192</div>',
-  "        <div>",
-  paste0('          <p class="stack-col-label" ', i18n(car$after_label_en, car$after_label_zh), ">", car$after_label_en, "</p>"),
-  '          <div class="stack-col">',
-  paste0("            ", stack_items(car$stack_after, car$stack_after_zh, "new")),
-  "          </div>",
-  "        </div>",
-  "      </div>",
-  '      <hr class="divider">',
-  paste0('      <p class="section-label" style="margin-bottom:12px;" ', i18n(car$career_map_label_en, car$career_map_label_zh), ">", car$career_map_label_en, "</p>"),
-  '      <div class="career-map-embed">',
-  paste0('        <iframe src="', car$career_map_src, '" title="Wilson Yung career locations" loading="lazy" allow="fullscreen"></iframe>'),
-  "      </div>",
-  "    </section>",
-  "  </div>",
-  "",
-  '  <div class="container">',
-  '    <section id="portfolio">',
-  paste0('      <p class="section-label" ', i18n(port$label_en, port$label_zh), ">", port$label_en, "</p>"),
-  '      <div class="portfolio-grid">',
-  port_cards_html,
-  paste0('        <a class="port-card see-all" href="', port$see_all_url, '" target="_blank" rel="noopener">'),
-  paste0('          <div class="port-thumb" ', i18n(port$see_all_en, port$see_all_zh), ">", port$see_all_en, "</div>"),
-  '          <div class="port-info">',
-  paste0("            <h3 ", i18n(port$see_all_label_en, port$see_all_label_zh), ">", port$see_all_label_en, "</h3>"),
-  "            <p>wilsonyungsh.github.io</p>",
-  "          </div>",
-  "        </a>",
-  "      </div>",
-  "    </section>",
-  "  </div>",
-  "",
-  '  <footer id="contact">',
-  '    <div class="inner">',
-  "      <div>",
-  '        <p class="name">Wilson Shih-Hsien Yung <span>\u96cd\u58eb\u8ce2</span></p>',
-  paste0('        <p style="font-size:12px;color:var(--text-3);margin-top:3px;" ', i18n(ftr$tagline_en, ftr$tagline_zh), ">", ftr$tagline_en, "</p>"),
-  "      </div>",
-  '      <div class="links">',
-  paste0('        <a href="mailto:', ftr$email, '">Email</a>'),
-  paste0('        <a href="', ftr$linkedin, '" target="_blank" rel="noopener">LinkedIn</a>'),
-  paste0('        <a href="', ftr$portfolio_url, '" target="_blank" rel="noopener" ', i18n(ftr$portfolio_en, ftr$portfolio_zh), ">", ftr$portfolio_en, "</a>"),
-  "      </div>",
-  "    </div>",
-  visitor_badge(""),
-  "  </footer>",
-  "",
+# ── 共用頁面零件 ──────────────────────────────────────────────────────────────
+# 首頁、專業領域、職涯、作品集、文章都用同一組 head / 導覽列 / 頁尾 / script。
+# prefix：頁面放在子資料夾時（例如 articles/）要給 "../" 才連得回根目錄。
+
+css_shared <- '
+    nav .inner { flex-wrap:wrap;row-gap:8px; }
+    .nav-links { display:flex;align-items:center;gap:28px; }
+    nav a { font-size:14px;color:var(--text-3);text-decoration:none;transition:color 0.15s; }
+    nav a:hover, nav a.active { color:var(--text-1); }
+    nav a.active { font-weight:500; }
+    .page-head { padding:56px 0 8px;border:none; }
+    .page-head .eyebrow { font-family:var(--mono);font-size:12px;color:var(--text-3);letter-spacing:0.04em;margin-bottom:14px; }
+    .page-head h1 { font-size:clamp(28px,4.5vw,42px);font-weight:300;letter-spacing:-0.03em;line-height:1.2;color:var(--text-1); }
+    .explore-grid { display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px; }
+    .explore-card { background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md);padding:20px 22px;text-decoration:none;color:inherit;display:block;transition:border-color 0.15s,transform 0.15s; }
+    .explore-card:hover { border-color:var(--accent-border);transform:translateY(-2px); }
+    .explore-card .icon { font-size:20px;display:block;margin-bottom:10px; }
+    .explore-card h3 { font-size:17px;font-weight:500;letter-spacing:-0.01em;margin-bottom:6px; }
+    .explore-card p { font-size:14px;color:var(--text-3);line-height:1.6; }
+    .explore-card .go { font-size:13px;color:var(--accent);margin-top:12px;display:block; }
+    @media(max-width:640px){ nav .inner{gap:12px;} .nav-links{order:3;width:100%;gap:20px;overflow-x:auto;} .nav-logo span{display:none;} }'
+
+# 作品集頁（map_list.html）的精選集卡片，樣式跟原本首頁的一樣
+css_portfolio <- '
+    .portfolio-grid { display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px; }
+    .port-card { background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md);overflow:hidden;text-decoration:none;color:inherit;transition:border-color 0.15s,transform 0.15s;display:block; }
+    .port-card:hover { border-color:var(--border-md);transform:translateY(-2px); }
+    .port-thumb { height:72px;background:var(--bg);display:flex;align-items:center;justify-content:center;font-size:24px;border-bottom:1px solid var(--border); }
+    .port-info { padding:12px 14px; }
+    .port-info h3 { font-size:15px;font-weight:500;margin-bottom:3px; }
+    .port-info p { font-size:13px;color:var(--text-3); }'
+
+css <- paste0(css, css_shared)
+
+page_head <- function(title, description, page_css) {
+  c(
+    "<!DOCTYPE html>",
+    '<html lang="en">',
+    "<head>",
+    '  <meta charset="utf-8">',
+    '  <meta name="viewport" content="width=device-width, initial-scale=1">',
+    '  <meta name="color-scheme" content="light dark">',
+    # Applied synchronously, before CSS/paint, so a saved dark-mode choice
+    # doesn't flash light first on reload.
+    "  <script>(function(){try{var t=localStorage.getItem(\"wy_theme\");if(t)document.documentElement.setAttribute(\"data-theme\",t);}catch(e){}})();</script>",
+    paste0("  <title>", title, "</title>"),
+    paste0('  <meta name="description" content="', description, '">'),
+    '  <link rel="preconnect" href="https://fonts.googleapis.com">',
+    '  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>',
+    '  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&family=DM+Mono:wght@400;500&family=LXGW+WenKai+TC:wght@300;400;700&display=swap" rel="stylesheet">',
+    "  <style>",
+    page_css,
+    "  </style>",
+    "</head>",
+    "<body>",
+    ""
+  )
+}
+
+# active = 目前所在的頁面（expertise / career / portfolio），導覽列會標亮
+site_nav <- function(active = "", prefix = "") {
+  nav_link <- function(key, href) {
+    cls <- if (key == active) ' class="active" aria-current="page"' else ""
+    en <- nav[[paste0(key, "_en")]]
+    zh <- nav[[paste0(key, "_zh")]]
+    paste0('        <a href="', href, '"', cls, " ", i18n(en, zh), ">", en, "</a>")
+  }
+  c(
+    "  <nav>",
+    '    <div class="inner">',
+    paste0('      <a class="nav-logo" href="', prefix, 'index.html">Wilson Yung <span>雍士賢</span></a>'),
+    '      <div class="nav-links">',
+    nav_link("expertise", paste0(prefix, "expertise.html")),
+    nav_link("career",    paste0(prefix, "career.html")),
+    nav_link("portfolio", paste0(prefix, "map_list.html")),
+    nav_link("contact",   "#contact"),
+    "      </div>",
+    '      <button class="theme-toggle" id="themeToggle" aria-label="切換深色模式">🌙</button>',
+    '      <button class="lang-toggle" id="langToggle" aria-label="切換為繁體中文">繁中</button>',
+    "    </div>",
+    "  </nav>",
+    ""
+  )
+}
+
+# 頁尾就是「聯絡」，每一頁都有 id="contact"，導覽列的聯絡連結跳到這裡
+site_footer <- function(badge_path, prefix = "") {
+  c(
+    '  <footer id="contact">',
+    '    <div class="inner">',
+    "      <div>",
+    '        <p class="name">Wilson Shih-Hsien Yung <span>雍士賢</span></p>',
+    paste0('        <p style="font-size:12px;color:var(--text-3);margin-top:3px;" ', i18n(ftr$tagline_en, ftr$tagline_zh), ">", ftr$tagline_en, "</p>"),
+    "      </div>",
+    '      <div class="links">',
+    paste0('        <a href="mailto:', ftr$email, '">Email</a>'),
+    paste0('        <a href="', ftr$linkedin, '" target="_blank" rel="noopener">LinkedIn</a>'),
+    paste0('        <a href="', prefix, 'map_list.html" ', i18n(ftr$portfolio_en, ftr$portfolio_zh), ">", ftr$portfolio_en, "</a>"),
+    "      </div>",
+    "    </div>",
+    visitor_badge(badge_path),
+    "  </footer>",
+    ""
+  )
+}
+
+# 專業領域、職涯頁面的標題區
+page_header <- function(eyebrow_en, eyebrow_zh, h1_en, h1_zh) {
+  c(
+    '  <div class="container">',
+    '    <section class="page-head">',
+    paste0('      <p class="eyebrow" ', i18n(eyebrow_en, eyebrow_zh), ">", eyebrow_en, "</p>"),
+    paste0("      <h1 ", i18n(h1_en, h1_zh), ">", h1_en, "</h1>"),
+    "    </section>",
+    "  </div>",
+    ""
+  )
+}
+
+explore_card <- function(e) {
+  paste0(
+    '\n        <a class="explore-card" href="', e$url, '">',
+    '\n          <span class="icon">', e$icon, "</span>",
+    "\n          <h3 ", i18n(e$title_en, e$title_zh), ">", e$title_en, "</h3>",
+    "\n          <p ", i18n(e$desc_en, e$desc_zh), ">", e$desc_en, "</p>",
+    '\n          <span class="go">→</span>',
+    "\n        </a>"
+  )
+}
+
+site_script <- c(
   "  <script>",
   '    var currentLang = localStorage.getItem("wy_lang") || "en";',
   "    function applyLang(lang) {",
@@ -436,7 +427,61 @@ lines <- c(
   '      localStorage.setItem("wy_theme", next);',
   "      updateThemeBtn();",
   "    });",
-  "  </script>",
+  "  </script>"
+)
+
+# ── index.html（首頁）────────────────────────────────────────────────────────
+explore_cards_html <- paste(lapply(c_$explore$cards, explore_card), collapse = "")
+
+lines <- c(
+  page_head(c_$meta$title_en, c_$meta$description_en, css),
+  site_nav(),
+  '  <section class="hero-banner" id="top">',
+  paste0('    <img class="hero-banner-img" src="', hero$photo, '" ',
+         i18n(hero$photo_alt_en, hero$photo_alt_zh), " ",
+         'alt="', hero$photo_alt_en, '" loading="eager">'),
+  '    <div class="hero-banner-overlay"></div>',
+  "  </section>",
+  "",
+  '  <div class="container">',
+  '    <section class="hero" style="border:none;padding-bottom:48px;">',
+  paste0('      <img class="hero-avatar" src="', hero$avatar, '" ',
+         i18n(hero$avatar_alt_en, hero$avatar_alt_zh), " ",
+         'alt="', hero$avatar_alt_en, '" loading="eager">'),
+  paste0('      <p class="hero-eyebrow" ', i18n(hero$eyebrow_en, hero$eyebrow_zh), ">", hero$eyebrow_en, "</p>"),
+  "      <h1>",
+  paste0("        <span ", i18n(hero$h1_line1_en, hero$h1_line1_zh), ">", hero$h1_line1_en, "</span><br>"),
+  paste0("        <em ", i18n(hero$h1_em_en, hero$h1_em_zh), ">", hero$h1_em_en, "</em>"),
+  "      </h1>",
+  paste0('      <p class="hero-desc" ', i18n(hero$desc_en, hero$desc_zh), ">", hero$desc_en, "</p>"),
+  '      <div class="chip-row">',
+  paste0("        ", chips_accent_html),
+  paste0("        ", chips_domain_html),
+  "      </div>",
+  "    </section>",
+  "  </div>",
+  "",
+  '  <div class="container">',
+  '    <section id="footprint" style="padding-top:0;border:none;">',
+  paste0('      <p class="section-label" ', i18n(fp$label_en, fp$label_zh), ">", fp$label_en, "</p>"),
+  '      <div class="map-embed">',
+  paste0('        <iframe src="', fp$iframe_src, '" title="Wilson Yung personal movement footprint" loading="lazy" allow="fullscreen"></iframe>'),
+  "      </div>",
+  paste0('      <p class="map-caption" ', i18n(fp$caption_en, fp$caption_zh), ">", fp$caption_en, "</p>"),
+  "    </section>",
+  "  </div>",
+  "",
+  '  <div class="container">',
+  '    <section id="explore">',
+  paste0('      <p class="section-label" ', i18n(c_$explore$label_en, c_$explore$label_zh), ">", c_$explore$label_en, "</p>"),
+  '      <div class="explore-grid">',
+  explore_cards_html,
+  "      </div>",
+  "    </section>",
+  "  </div>",
+  "",
+  site_footer(""),
+  site_script,
   "",
   "</body>",
   "</html>"
@@ -444,6 +489,74 @@ lines <- c(
 
 writeLines(lines, "index.html", useBytes = TRUE)
 message("\u2713 index.html \u5df2\u7522\u751f")
+
+# ── expertise.html（專業領域）────────────────────────────────────────────────
+lines_exp <- c(
+  page_head(paste0(nav$expertise_en, " \u2014 Wilson Yung"), c_$meta$description_en, css),
+  site_nav(active = "expertise"),
+  page_header(nav$expertise_en, nav$expertise_zh, exp$label_en, exp$label_zh),
+  '  <div class="container">',
+  '    <section style="border:none;padding-top:24px;">',
+  '      <div class="domain-grid">',
+  domain_cards_html,
+  "      </div>",
+  "    </section>",
+  "  </div>",
+  "",
+  site_footer("expertise.html"),
+  site_script,
+  "",
+  "</body>",
+  "</html>"
+)
+
+writeLines(lines_exp, "expertise.html", useBytes = TRUE)
+message("\u2713 expertise.html \u5df2\u7522\u751f")
+
+# ── career.html（工作歷程）────────────────────────────────────────────────────
+lines_car <- c(
+  page_head(paste0(nav$career_en, " \u2014 Wilson Yung"), c_$meta$description_en, css),
+  site_nav(active = "career"),
+  page_header(nav$career_en, nav$career_zh, car$label_en, car$label_zh),
+  '  <div class="container">',
+  '    <section style="border:none;padding-top:24px;">',
+  '      <div class="chapter-grid">',
+  chapter_cards_html,
+  "      </div>",
+  '      <hr class="divider">',
+  paste0('      <p class="section-label" style="margin-bottom:20px;" ', i18n(car$stack_label_en, car$stack_label_zh), ">", car$stack_label_en, "</p>"),
+  '      <div class="stack-compare">',
+  "        <div>",
+  paste0('          <p class="stack-col-label" ', i18n(car$before_label_en, car$before_label_zh), ">", car$before_label_en, "</p>"),
+  '          <div class="stack-col">',
+  paste0("            ", stack_items(car$stack_before, car$stack_before_zh, "old")),
+  "          </div>",
+  "        </div>",
+  '        <div class="stack-arrow-col">\u2192</div>',
+  "        <div>",
+  paste0('          <p class="stack-col-label" ', i18n(car$after_label_en, car$after_label_zh), ">", car$after_label_en, "</p>"),
+  '          <div class="stack-col">',
+  paste0("            ", stack_items(car$stack_after, car$stack_after_zh, "new")),
+  "          </div>",
+  "        </div>",
+  "      </div>",
+  '      <hr class="divider">',
+  paste0('      <p class="section-label" style="margin-bottom:12px;" ', i18n(car$career_map_label_en, car$career_map_label_zh), ">", car$career_map_label_en, "</p>"),
+  '      <div class="career-map-embed">',
+  paste0('        <iframe src="', car$career_map_src, '" title="Wilson Yung career locations" loading="lazy" allow="fullscreen"></iframe>'),
+  "      </div>",
+  "    </section>",
+  "  </div>",
+  "",
+  site_footer("career.html"),
+  site_script,
+  "",
+  "</body>",
+  "</html>"
+)
+
+writeLines(lines_car, "career.html", useBytes = TRUE)
+message("\u2713 career.html \u5df2\u7522\u751f")
 
 # \u2500\u2500 map_list.html\uff08\u5b8c\u6574\u4f5c\u54c1\u96c6\uff09\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500
 
@@ -526,34 +639,11 @@ css_map <- '    *, *::before, *::after { box-sizing: border-box; margin: 0; padd
 
 map_sections_html <- paste(lapply(ml$sections, map_section), collapse = "\n")
 
+css_map <- paste0(css_map, css_shared, css_portfolio)
+
 lines2 <- c(
-  "<!DOCTYPE html>",
-  '<html lang="en">',
-  "<head>",
-  '  <meta charset="utf-8">',
-  '  <meta name="viewport" content="width=device-width, initial-scale=1">',
-  '  <meta name="color-scheme" content="light dark">',
-  "  <script>(function(){try{var t=localStorage.getItem(\"wy_theme\");if(t)document.documentElement.setAttribute(\"data-theme\",t);}catch(e){}})();</script>",
-  paste0("  <title>", ml$meta_title, "</title>"),
-  paste0('  <meta name="description" content="', ml$meta_description, '">'),
-  '  <link rel="preconnect" href="https://fonts.googleapis.com">',
-  '  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>',
-  '  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&family=DM+Mono:wght@400;500&family=LXGW+WenKai+TC:wght@300;400;700&display=swap" rel="stylesheet">',
-  "  <style>",
-  css_map,
-  "  </style>",
-  "</head>",
-  "<body>",
-  "",
-  "  <nav>",
-  '    <div class="inner">',
-  '      <a class="nav-logo" href="index.html">Wilson Yung <span>\u96cd\u58eb\u8ce2</span></a>',
-  paste0('      <a class="back" href="index.html" ', i18n(ml$nav_home_en, ml$nav_home_zh), ">", ml$nav_home_en, "</a>"),
-  '      <button class="theme-toggle" id="themeToggle" aria-label="\u5207\u63db\u6df1\u8272\u6a21\u5f0f">\ud83c\udf19</button>',
-  '      <button class="lang-toggle" id="langToggle" aria-label="\u5207\u63db\u70ba\u7e41\u9ad4\u4e2d\u6587">\u7e41\u4e2d</button>',
-  "    </div>",
-  "  </nav>",
-  "",
+  page_head(ml$meta_title, ml$meta_description, css_map),
+  site_nav(active = "portfolio"),
   '  <div class="container">',
   '    <section class="hero" style="border:none;padding-bottom:24px;">',
   paste0('      <p class="hero-eyebrow" ', i18n(ml$hero_eyebrow_en, ml$hero_eyebrow_zh), ">", ml$hero_eyebrow_en, "</p>"),
@@ -561,65 +651,20 @@ lines2 <- c(
   paste0('      <p class="hero-desc" ', i18n(ml$hero_desc_en, ml$hero_desc_zh), ">", ml$hero_desc_en, "</p>"),
   "    </section>",
   "  </div>",
+  '  <div class="container">',
+  '    <section id="selected">',
+  '      <div class="section-head">',
+  paste0('        <p class="section-label" ', i18n(port$label_en, port$label_zh), ">", port$label_en, "</p>"),
+  "      </div>",
+  '      <div class="portfolio-grid">',
+  port_cards_html,
+  "      </div>",
+  "    </section>",
+  "  </div>",
   map_sections_html,
   "",
-  "  <footer>",
-  '    <div class="inner">',
-  "      <div>",
-  '        <p class="name">Wilson Shih-Hsien Yung <span>\u96cd\u58eb\u8ce2</span></p>',
-  paste0('        <p style="font-size:12px;color:var(--text-3);margin-top:3px;" ', i18n(ftr$tagline_en, ftr$tagline_zh), ">", ftr$tagline_en, "</p>"),
-  "      </div>",
-  '      <div class="links">',
-  paste0('        <a href="mailto:', ftr$email, '">Email</a>'),
-  paste0('        <a href="', ftr$linkedin, '" target="_blank" rel="noopener">LinkedIn</a>'),
-  paste0('        <a href="index.html" ', i18n(ml$footer_home_en, ml$footer_home_zh), ">", ml$footer_home_en, "</a>"),
-  "      </div>",
-  "    </div>",
-  visitor_badge("map_list.html"),
-  "  </footer>",
-  "",
-  "  <script>",
-  '    var currentLang = localStorage.getItem("wy_lang") || "en";',
-  "    function applyLang(lang) {",
-  "      currentLang = lang;",
-  '      localStorage.setItem("wy_lang", lang);',
-  '      document.documentElement.lang = lang === "zh" ? "zh-TW" : "en";',
-  '      document.querySelectorAll("[data-i18n]").forEach(function(el) {',
-  '        var text = el.getAttribute("data-" + lang);',
-  "        if (text) { if (el.tagName === 'IMG') el.alt = text; else el.innerHTML = text; }",
-  "      });",
-  '      var btn = document.getElementById("langToggle");',
-  '      btn.textContent = lang === "zh" ? "EN" : "\u7e41\u4e2d";',
-  '      btn.setAttribute("aria-label", lang === "zh" ? "Switch to English" : "\u5207\u63db\u70ba\u7e41\u9ad4\u4e2d\u6587");',
-  "    }",
-  '    document.getElementById("langToggle").addEventListener("click", function() {',
-  '      applyLang(currentLang === "en" ? "zh" : "en");',
-  "    });",
-  "    applyLang(currentLang);",
-  "",
-  '    function systemPrefersDark() {',
-  '      return window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;',
-  "    }",
-  '    function isDarkActive() {',
-  '      var forced = document.documentElement.getAttribute("data-theme");',
-  '      return forced === "dark" || (!forced && systemPrefersDark());',
-  "    }",
-  '    function updateThemeBtn() {',
-  '      var themeBtn = document.getElementById("themeToggle");',
-  "      var dark = isDarkActive();",
-  '      themeBtn.textContent = dark ? "☀️" : "🌙";',
-  '      themeBtn.setAttribute("aria-label", dark ? "Switch to light mode" : "Switch to dark mode");',
-  "    }",
-  '    var savedTheme = localStorage.getItem("wy_theme");',
-  "    if (savedTheme) document.documentElement.setAttribute(\"data-theme\", savedTheme);",
-  "    updateThemeBtn();",
-  '    document.getElementById("themeToggle").addEventListener("click", function() {',
-  "      var next = isDarkActive() ? \"light\" : \"dark\";",
-  '      document.documentElement.setAttribute("data-theme", next);',
-  '      localStorage.setItem("wy_theme", next);',
-  "      updateThemeBtn();",
-  "    });",
-  "  </script>",
+  site_footer("map_list.html"),
+  site_script,
   "",
   "</body>",
   "</html>"
@@ -705,40 +750,12 @@ article_toc <- function(blocks) {
   )
 }
 
-# 語言/深色模式切換的 script 跟 map_list.html 一樣，直接沿用
-page_script <- lines2[seq(match("  <script>", lines2), match("  </script>", lines2))]
-
 dir.create("articles", showWarnings = FALSE)
 
 for (a in articles) {
   lines3 <- c(
-    "<!DOCTYPE html>",
-    '<html lang="en">',
-    "<head>",
-    '  <meta charset="utf-8">',
-    '  <meta name="viewport" content="width=device-width, initial-scale=1">',
-    '  <meta name="color-scheme" content="light dark">',
-    "  <script>(function(){try{var t=localStorage.getItem(\"wy_theme\");if(t)document.documentElement.setAttribute(\"data-theme\",t);}catch(e){}})();</script>",
-    paste0("  <title>", a$meta_title, "</title>"),
-    paste0('  <meta name="description" content="', a$meta_description, '">'),
-    '  <link rel="preconnect" href="https://fonts.googleapis.com">',
-    '  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>',
-    '  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&family=DM+Mono:wght@400;500&family=LXGW+WenKai+TC:wght@300;400;700&display=swap" rel="stylesheet">',
-    "  <style>",
-    css_article,
-    "  </style>",
-    "</head>",
-    "<body>",
-    "",
-    "  <nav>",
-    '    <div class="inner">',
-    '      <a class="nav-logo" href="../index.html">Wilson Yung <span>雍士賢</span></a>',
-    paste0('      <a class="back" href="../index.html" ', i18n(ml$nav_home_en, ml$nav_home_zh), ">", ml$nav_home_en, "</a>"),
-    '      <button class="theme-toggle" id="themeToggle" aria-label="切換深色模式">🌙</button>',
-    '      <button class="lang-toggle" id="langToggle" aria-label="切換為繁體中文">繁中</button>',
-    "    </div>",
-    "  </nav>",
-    "",
+    page_head(a$meta_title, a$meta_description, css_article),
+    site_nav(prefix = "../"),
     '  <div class="container article">',
     '    <section class="hero" style="border:none;padding-bottom:8px;">',
     paste0('      <p class="hero-eyebrow" ', i18n(a$eyebrow_en, a$eyebrow_zh), ">", a$eyebrow_en, "</p>"),
@@ -752,22 +769,8 @@ for (a in articles) {
     "    </section>",
     "  </div>",
     "",
-    "  <footer>",
-    '    <div class="inner">',
-    "      <div>",
-    '        <p class="name">Wilson Shih-Hsien Yung <span>雍士賢</span></p>',
-    paste0('        <p style="font-size:12px;color:var(--text-3);margin-top:3px;" ', i18n(ftr$tagline_en, ftr$tagline_zh), ">", ftr$tagline_en, "</p>"),
-    "      </div>",
-    '      <div class="links">',
-    paste0('        <a href="mailto:', ftr$email, '">Email</a>'),
-    paste0('        <a href="', ftr$linkedin, '" target="_blank" rel="noopener">LinkedIn</a>'),
-    paste0('        <a href="../map_list.html" ', i18n(ftr$portfolio_en, ftr$portfolio_zh), ">", ftr$portfolio_en, "</a>"),
-    "      </div>",
-    "    </div>",
-    visitor_badge(paste0("articles%2F", a$slug, ".html")),
-    "  </footer>",
-    "",
-    page_script,
+    site_footer(paste0("articles%2F", a$slug, ".html"), prefix = "../"),
+    site_script,
     # 帶錨點開頁面時，smooth scroll 動畫進行中字型才載完，版面一動動畫就停在半路。
     # 等字型和頁面都載完後再直接對準一次（使用者已經自己捲動的話就不動）。
     "  <script>",

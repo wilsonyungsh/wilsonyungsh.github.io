@@ -68,6 +68,26 @@ content <- list(
     iframe_src = "https://wilsonyungsh.github.io/interactive/30DayMapChallenge2025/Map4_Mydata_2013-2025.html"
   ),
 
+  # ── 首頁「探索更多」卡片（連到各頁面）────────────────────────────────────────
+  explore = list(
+    label_en = "Explore",
+    label_zh = "探索更多",
+    cards = list(
+      list(icon = "🧭", url = "expertise.html",
+           title_en = "Expertise", title_zh = "專業領域",
+           desc_en  = "The domains I work across, from spatial analytics to transport data.",
+           desc_zh  = "我的專業領域，從空間分析到運輸資料。"),
+      list(icon = "🛤", url = "career.html",
+           title_en = "Career", title_zh = "工作歷程",
+           desc_en  = "Career chapters, my stack evolution and a map of where I’ve worked.",
+           desc_zh  = "職涯篇章、技術演進，以及我工作過的地方。"),
+      list(icon = "🗺", url = "map_list.html",
+           title_en = "Portfolio", title_zh = "作品集",
+           desc_en  = "Selected work, plus every interactive map, dashboard and tool.",
+           desc_zh  = "精選作品，以及所有互動地圖、儀表板與工具。")
+    )
+  ),
+
   # ── Expertise / domain cards ──────────────────────────────────────────────
   expertise = list(
     label_en = "What I do",
@@ -241,13 +261,7 @@ content <- list(
         desc_zh  = "站點累積上車乘人數分析 · R + MapGL",
         url      = "https://wilsonyungsh.github.io/interactive/bus431_capacity.html"
       )
-    ),
-
-    see_all_en  = "View all maps →",
-    see_all_zh  = "瀏覽所有地圖作品 →",
-    see_all_label_en = "Full portfolio",
-    see_all_label_zh = "完整作品集錦",
-    see_all_url = "https://wilsonyungsh.github.io/map_list.html"
+    )
   ),
 
   # ── Full portfolio page (map_list.html) ──────────────────────────────────
@@ -272,10 +286,6 @@ content <- list(
       "完整的互動地圖、Shiny 儀表板與小工具清單，皆以 R 與開源空間分析工具打造，",
       "包含 2024、2025 與 2026 年 30 天地圖挑戰（30 Day Map Challenge）的作品。"
     ),
-    nav_home_en = "← Home",
-    nav_home_zh = "← 首頁",
-    footer_home_en = "Home",
-    footer_home_zh = "首頁",
 
     sections = list(
 
@@ -361,16 +371,12 @@ content <- list(
                  list(label_en="2 cars",       label_zh="2 輛車",   url="interactive/Dwelling_prop_by_mv_ownership/2_vehicles_dwelling_prop_over_30pr.html"),
                  list(label_en="3+ cars",      label_zh="3 輛以上", url="interactive/Dwelling_prop_by_mv_ownership/3_or_more_vehicles_dwelling_prop_over_15pr.html")
                )),
-          list(tool="R + MapGL", title_en="Maps with Felicity", title_zh="與 Felicity 合作的地圖",
-               links=list(list(label_en="View map", label_zh="查看地圖", url="interactive/explore.html"))),
-          list(tool="R + MapGL", title_en="Fly-through Example", title_zh="飛行穿越範例",
-               links=list(list(label_en="View map", label_zh="查看地圖", url="interactive/apcs.html"))),
           list(tool="R + MapGL", title_en="Dual Frontage Map", title_zh="雙面臨路地圖",
                links=list(list(label_en="View map", label_zh="查看地圖", url="interactive/dual_frontage.html"))),
-          list(tool="R + gganimate", title_en="Time Lapse Rent Animation — House &amp; Flat, Brisbane", title_zh="租金縮時動畫 — 布里斯本獨棟與公寓",
-               links=list(list(label_en="View animation", label_zh="查看動畫", url="interactive/plots/House_Flat_brisbane_rent_animation.gif"))),
-          list(tool="R + Quarto", title_en="Brisbane Rental Trend Exploration", title_zh="布里斯本租房市場分析探索",
-               links=list(list(label_en="View Analysis", label_zh="查看分析", url="interactive/brisbane_rental_trend.html")))               
+          list(tool="R + Quarto + gganimate", title_en="Brisbane Rental Trend Exploration", title_zh="布里斯本租房市場分析探索",
+               desc_en="Includes time-lapse rent animations for houses and flats across Brisbane.",
+               desc_zh="內含布里斯本獨棟與公寓的租金縮時動畫。",
+               links=list(list(label_en="View Analysis", label_zh="查看分析", url="interactive/brisbane_rental_trend.html")))
         )
       ),
 
@@ -390,9 +396,6 @@ content <- list(
       list(
         label_en = "Pilot tools", label_zh = "小工具試作",
         items = list(
-          list(title_en="BCC RMU Hotdesk Booking Query", title_zh="BCC RMU 彈性座位預約查詢",
-               desc_en="Easier view, with last update, for our team.", desc_zh="提供團隊更簡便的檢視方式，並顯示最後更新時間。",
-               links=list(list(label_en="Open tool", label_zh="開啟工具", url="https://wilsonyungsh.github.io/interactive/team_calendar.html"))),
           list(title_en="BCC Lvl 8 Hotdesk Booking Query", title_zh="BCC 8樓彈性座位預約查詢",
                desc_en="Easier view, with last update.", desc_zh="提供更簡便的檢視方式，並顯示最後更新時間。",
                links=list(list(label_en="Open tool", label_zh="開啟工具", url="https://wilsonyungsh.github.io/interactive/team_calendar_lv8.html")))
@@ -408,7 +411,6 @@ content <- list(
     portfolio_en = "Portfolio",
     portfolio_zh = "作品集",
     email        = "wilson0313@gmail.com",
-    linkedin     = "https://www.linkedin.com/in/wilson-yung",
-    portfolio_url = "https://wilsonyungsh.github.io/map_list.html"
+    linkedin     = "https://www.linkedin.com/in/wilson-yung"
   )
 )
