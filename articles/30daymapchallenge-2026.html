@@ -165,6 +165,7 @@
         <a href="#day-5" data-i18n data-en="Day 5 · Sense – Sight 👀" data-zh="第 5 天 · 感官：視覺 👀">Day 5 · Sense – Sight 👀</a>
         <a href="#day-7" data-i18n data-en="Day 7 · 10-Minute Map ⏱️" data-zh="第 7 天 · 十分鐘地圖 ⏱️">Day 7 · 10-Minute Map ⏱️</a>
         <a href="#day-9" data-i18n data-en="Day 9 · Urban–Rural 🏙️🌾" data-zh="第 9 天 · 城市與鄉村 🏙️🌾">Day 9 · Urban–Rural 🏙️🌾</a>
+        <a href="#day-10" data-i18n data-en="Day 10 · Prompt Only 🤖✈️" data-zh="第 10 天 · 只用提示詞 🤖✈️">Day 10 · Prompt Only 🤖✈️</a>
       </div>
     </section>
     <section class="article-body">
@@ -377,6 +378,30 @@
         <a href="https://wilsonyungsh.github.io/interactive/30DayMapChallenge2026/day9_urban_rural.html" target="_blank" rel="noopener">🗺️ <span data-i18n data-en="Interactive map" data-zh="互動地圖">Interactive map</span> →</a>
         <a href="https://github.com/wilsonyungsh/30DayMapChallenge2026/blob/main/scripts/Day9_Urban_vs_Rural.R" target="_blank" rel="noopener">💻 <span data-i18n data-en="Code" data-zh="程式碼">Code</span> →</a>
         <a href="https://www.linkedin.com/feed/update/urn:li:activity:7525569990075473921/" target="_blank" rel="noopener">💬 <span data-i18n data-en="LinkedIn post" data-zh="LinkedIn 貼文">LinkedIn post</span> →</a>
+      </div>
+
+      <h2 id="day-10" data-i18n data-en="Day 10 · Prompt Only 🤖✈️" data-zh="第 10 天 · 只用提示詞 🤖✈️">Day 10 · Prompt Only 🤖✈️</h2>
+      <p class="post-date" data-i18n data-en="10 Nov 2026" data-zh="2026 年 11 月 10 日">10 Nov 2026</p>
+      <p data-i18n data-en="Today’s rule: no hand-written code. I only wrote prompts." data-zh="今天的規則：不手寫任何程式碼，我只寫提示詞。">Today’s rule: no hand-written code. I only wrote prompts.</p>
+      <p data-i18n data-en="I used Claude Code and asked it to build a web map with D3 and React. The question I wanted it to answer was simple: where can you fly from each Australian capital city?" data-zh="我用 Claude Code，請它用 D3 和 React 做一張網頁地圖。我想回答的問題很簡單：從澳洲各個首府城市出發，你可以飛到哪裡？">I used Claude Code and asked it to build a web map with D3 and React. The question I wanted it to answer was simple: where can you fly from each Australian capital city?</p>
+      <figure>
+        <img src="../img/articles/30daymapchallenge-2026/day10-prompt-only.jpg" width="1400" height="850" data-i18n data-en="Globe of Australia and Asia showing flight routes from Brisbane: blue lines to direct destinations, amber lines from transfer airports to final destinations, with a city comparison chart and stop options in the side panel" data-zh="澳洲與亞洲的地球儀，顯示從布里斯本出發的航線：藍線通往直飛目的地，琥珀色線從轉機機場連到最終目的地，側邊欄有城市比較圖與轉機選項" alt="Globe of Australia and Asia showing flight routes from Brisbane: blue lines to direct destinations, amber lines from transfer airports to final destinations, with a city comparison chart and stop options in the side panel" loading="lazy">
+        <figcaption data-i18n data-en="Where you can reach from Brisbane with up to one stop." data-zh="從布里斯本出發，最多轉機一次可以到達的地方。">Where you can reach from Brisbane with up to one stop.</figcaption>
+      </figure>
+      <h3 data-i18n data-en="What the map does" data-zh="地圖的功能">What the map does</h3>
+      <ul class="plain">
+        <li data-i18n data-en="🛫 Pick a capital city and see every destination you can reach with a direct flight" data-zh="🛫 選一個首府城市，看看所有可以直飛的目的地">🛫 Pick a capital city and see every destination you can reach with a direct flight</li>
+        <li data-i18n data-en="🌏 Turn on the one-stop option to see how far your international reach grows with a single connection" data-zh="🌏 打開轉機一次的選項，看看多一次轉機，你的國際航程能延伸多遠">🌏 Turn on the one-stop option to see how far your international reach grows with a single connection</li>
+        <li data-i18n data-en="🎮 And a bit of fun: a cockpit view that follows the flight route to your destination" data-zh="🎮 再加一點樂趣：駕駛艙視角，沿著航線一路飛到目的地">🎮 And a bit of fun: a cockpit view that follows the flight route to your destination</li>
+      </ul>
+      <p data-i18n data-en="Choosing D3 and React myself, rather than letting the AI pick, kept me in charge of the design decisions. The prompts did the heavy lifting. My job was to know what to ask for, and to check that the result made sense." data-zh="技術選擇（D3 和 React）由我自己決定，而不是讓 AI 挑，這讓我始終掌握設計方向。提示詞負責大部分的苦工，我的工作是知道該問什麼，並檢查結果合不合理。">Choosing D3 and React myself, rather than letting the AI pick, kept me in charge of the design decisions. The prompts did the heavy lifting. My job was to know what to ask for, and to check that the result made sense.</p>
+      <p data-i18n data-en="Which capital city do you think has the best one-stop reach? Have a play and let me know." data-zh="你覺得哪個首府城市轉機一次能到的地方最多？玩玩看，再告訴我。">Which capital city do you think has the best one-stop reach? Have a play and let me know.</p>
+      <h3 data-i18n data-en="Data &amp; tools" data-zh="資料與工具">Data &amp; tools</h3>
+      <p data-i18n data-en="Flight route data: OpenSky Network, observed flights for October and November 2022. Built with React, D3 and MapLibre GL JS, with no hand-written code." data-zh="航線資料：OpenSky Network，2022 年 10 月與 11 月的實際觀測航班。使用 React、D3 與 MapLibre GL JS 製作，沒有手寫任何程式碼。">Flight route data: OpenSky Network, observed flights for October and November 2022. Built with React, D3 and MapLibre GL JS, with no hand-written code.</p>
+      <div class="post-links">
+        <a href="https://wilsonyungsh.github.io/interactive/30DayMapChallenge2026/day10_flights.html" target="_blank" rel="noopener">🗺️ <span data-i18n data-en="Interactive map" data-zh="互動地圖">Interactive map</span> →</a>
+        <a href="https://github.com/wilsonyungsh/30DayMapChallenge2026" target="_blank" rel="noopener">💻 <span data-i18n data-en="Code" data-zh="程式碼">Code</span> →</a>
+        <a href="https://www.linkedin.com/feed/update/urn:li:activity:7525848734740471808/" target="_blank" rel="noopener">💬 <span data-i18n data-en="LinkedIn post" data-zh="LinkedIn 貼文">LinkedIn post</span> →</a>
       </div>
 
       <p class="article-outro" data-i18n data-en="More days to come. Every 2026 map is listed in my <a href='../map_list.html'>full portfolio</a>, and the code is on <a href='https://github.com/wilsonyungsh/30DayMapChallenge2026' target='_blank' rel='noopener'>GitHub</a>. My earlier challenges have their own articles: <a href='30daymapchallenge-2024.html'>2024</a> and <a href='30daymapchallenge-2025.html'>2025</a>." data-zh="後續幾天的作品會陸續加上來。2026 年的所有地圖都列在<a href='../map_list.html'>完整作品集</a>，程式碼放在 <a href='https://github.com/wilsonyungsh/30DayMapChallenge2026' target='_blank' rel='noopener'>GitHub</a>。之前的挑戰也各有一篇文章：<a href='30daymapchallenge-2024.html'>2024</a> 和 <a href='30daymapchallenge-2025.html'>2025</a>。">More days to come. Every 2026 map is listed in my <a href='../map_list.html'>full portfolio</a>, and the code is on <a href='https://github.com/wilsonyungsh/30DayMapChallenge2026' target='_blank' rel='noopener'>GitHub</a>. My earlier challenges have their own articles: <a href='30daymapchallenge-2024.html'>2024</a> and <a href='30daymapchallenge-2025.html'>2025</a>.</p>
